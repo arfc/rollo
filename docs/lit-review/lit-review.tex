@@ -1,0 +1,63 @@
+\documentclass[letterpaper,11pt]{article}
+\usepackage[top=1.0in,bottom=1.0in,left=1.0in,right=1.0in]{geometry}
+\usepackage{verbatim}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{setspace}
+\def\thesection       {\arabic{section}}
+\def\thesubsection     {\thesection.\alph{subsection}}
+
+\author{Gwendolyn J. Chee}
+
+\title{Generative Reactor Design}
+\begin{document}
+\maketitle
+\hrulefill
+\onehalfspacing
+
+\section{Generative Design}
+% What is generative design? How does it work? 
+Generative design is an exploratory design method that autonomously 
+generates optimal designs by iteratively varying design geometry 
+to meet designer-defined performance metrics \cite{krish_practical_2011,oh_deep_2019}. 
+Generative design varies the parameters of the problem definition
+\cite{matejka_dream_2018}. 
+At each iteration step, the design is evaluated on the 
+performance metrics. 
+Based on the results, the generative design algorithm changes the 
+interval allowed for each design geometry variable, refining 
+design constraints (problem definition) and moving towards 
+designs that best meets performance metrics. 
+Generative design is used in the following industries: 
+automotive, space, aerospace, etc. 
+In these industries, the goal of generative design is to decrease 
+the weight of the vehicle while ensuring each part can continue to 
+withstand the stresses and strains that are put on it within a 
+safety factor. 
+These industries can rely on commerical softwares such as 
+Autodesk Fusion360 \cite{autodesk_autodesk_2020}.
+to produce their generative designs, since these softwares have 
+capabilities to evaluate the physics they require such as stress 
+and strain. 
+Whereas, for nuclear reactors, generative design is constrained by 
+variables such as mass or volume of fuel, fuel enrichment, effectiveness 
+of heat transfer, effective neutron multiplication factor, etc. 
+Nuclear reactors not only experience physical forces, they also
+require evaluation of the neutronics, therefore generative design of 
+a nuclear reactor cannot make use of tools such as Autodesk Fusion360. 
+Therefore, a framework that couples well-developed machine 
+learning tools with well-supported monte-carlo particle transport 
+codes (Serpent, MCNP, etc.) and thermal hydraulics software (RELAP7 etc.)
+must be created to successfully produce generative reactor designs. 
+
+
+
+\bibliographystyle{plain}
+\bibliography{2020-generative-reactor-design-lit-review}
+\end{document}
+
