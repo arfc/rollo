@@ -64,10 +64,10 @@ text width=1em, text centered, rounded corners, minimum height=1em]
 % What is generative design? How does it work? 
 Generative design is an exploratory design method that autonomously 
 generates optimal designs by iteratively varying design geometry 
-to meet designer-defined performance metrics 
+to meet user-defined performance metrics 
 \cite{krish_practical_2011,oh_deep_2019}.
-The human designer defines the design parameters and the generative 
-design software helps the human designer create many solutions 
+The user defines the design parameters and the generative 
+design software helps the user create many solutions 
 simultaneously \cite{autodesk_autodesk_2020}. 
 This sometimes results in unanticipated unique solutions, that 
 would have been difficult to discover using traditional methods
@@ -123,7 +123,7 @@ withstand the stresses and strains that are put on it within a
 safety factor. 
 These industries can rely on commerical softwares such as 
 Autodesk Fusion360 \cite{autodesk_autodesk_2020} and  
-SolidWorks \cite{lombard_solidworks_2008}
+SolidWorks Topology \cite{lombard_solidworks_2008}
 to produce their generative designs, since these softwares have 
 structural simulation-based generative design technology.  
 
@@ -138,7 +138,7 @@ Conflicting objectives means that there is no one perfect solution, but a set
 of equally optimal solutions \cite{byrne_evolving_2014}.
 Multi-objective problems are difficult to optimize, such problems 
 cannot be handled by classical optimization methods such as gradient 
-methods, because only the local optimum is found \cite{renner_genetic_2003}. 
+methods, because only the local optimum will be found \cite{renner_genetic_2003}. 
 Evolutionary algorithms have proven to be successful 
 methods to optimize multi-objective problems \cite{krish_practical_2011} as 
 they can find a solution near the global optimum \cite{renner_genetic_2003}. 
@@ -177,7 +177,9 @@ The key part of this process is defining evaluation and termination criteria.
                 \draw [arrow] (5) -- ([shift={(0.5cm,0cm)}]5.east)-- node[anchor=west] {no} ([shift={(0.5cm,0cm)}]3.east)--(3);
         \end{tikzpicture}
         \caption{Process of solving a problem with genetic algorithm 
-        \cite{renner_genetic_2003}. Each iteration is a generation. }
+        \cite{renner_genetic_2003}. When a population does not meet termination 
+        criteria, a new generation is created. This occurs iteratively till the 
+        termination criteria is met. }
         \label{fig:genetic_alg}
 \end{figure}
 
@@ -211,14 +213,15 @@ reactor design problem.
 For nuclear reactors, generative design is constrained by 
 variables such as mass or volume of fuel, fuel enrichment, effectiveness 
 of heat transfer, effective neutron multiplication factor, etc. 
-Nuclear reactors not only experience physical forces, they also
-require evaluation of the neutronics, therefore generative design of 
-a nuclear reactor cannot make use of tools such as Autodesk Fusion360. 
+Nuclear reactors not only experience physical forces, but also
+require evaluation of the neutronics of the system, therefore generative design of 
+a nuclear reactor cannot make use of tools such as Autodesk Fusion360 or SolidWorks 
+Topology. 
 Therefore, a framework that couples well-developed advanced genetic algorithms 
 with well-supported monte-carlo particle transport 
 codes (Serpent \cite{leppanen_serpent_2014}, 
 MCNP \cite{werner_mcnp6._2018}, etc.) and thermal hydraulics 
-software (RELAP7 \cite{andrs_relap-7_2012} etc.)
+codes (RELAP7 \cite{andrs_relap-7_2012} etc.)
 must be created to successfully produce generative reactor designs. 
 
 \subsection{Workflow}
