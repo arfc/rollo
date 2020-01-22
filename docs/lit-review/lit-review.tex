@@ -94,7 +94,7 @@ instead a few design constraints.
 Table \ref{tab:compare} summarizes the differences between generative design and 
 traditional design optimization tools. 
 
-\begin{table}[h]
+\begin{table}[!htbp]
         \caption{Comparison of generative design and traditional design optimization tools
         \cite{autodesk_fusion_2020}.}
         \label{tab:compare}
@@ -154,7 +154,7 @@ Figure \ref{fig:genetic_alg} depicts the iterative process of using a genetic
 algorithm to solve a problem. 
 The key part of this process is defining evaluation and termination criteria. 
 
-\begin{figure}[]
+\begin{figure}[!htbp]
         \centering
         \begin{tikzpicture}[node distance=1.7cm]
                 \tikzstyle{every node}=[font=\small]
@@ -185,8 +185,10 @@ The key part of this process is defining evaluation and termination criteria.
 
 Two types of genetic algorithms are typically used to solve shape 
 optimization problems: parametric and cell. 
-Parametric genetic algorithms optimize complex shapes by optimizing the shape 
-of characteristics curves \cite{renner_genetic_2003}. 
+Parametric genetic algorithms optimize complex shapes by varying parametric variables
+to meet the desired design performance \cite{von_buelow_paragen_2012}.
+Examples of parametric variables are: diameter of a sphere, twist angle of a cylinder, 
+etc.  
 Optimization of aerodynamic configurations \cite{makinen_multidisciplinary_1999}, 
 and truss and bridge structures \cite{raich_evolving_2000} used parametric 
 genetic algorithms.
@@ -201,7 +203,7 @@ process \cite{renner_genetic_2003}.
 Both parametric and cell genetic algorithms will be explored for the generative 
 reactor design problem. 
 
-\begin{figure}[]
+\begin{figure}[!htbp]
 	\begin{center}
 		\includegraphics[scale=0.25]{./figures/cell.png}
         \end{center}	
@@ -238,7 +240,7 @@ their mission towards using generative design to design a nuclear reactor.
 Table \ref{tab:examples} lists algorithm and software types that could be used 
 in the framework. 
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
         \centering
         \begin{tikzpicture}[node distance=2cm]
                 \tikzstyle{every node}=[font=\small]
@@ -287,25 +289,25 @@ in the framework.
         \label{fig:workflow}
 \end{figure}
 
-\begin{table}[h]
+\begin{table}[!htbp]
         \caption{Example algorithm and software types to populate generative reactor 
         design framework (Fig \ref{fig:workflow}).}
         \label{tab:examples}
         \centering
         \doublespacing
         \small
-        \begin{tabular}{ll}
+        \begin{tabular}{lp{10cm}}
         \hline
         \textbf{Framework Component} & \textbf{Examples}\\ \hline
         Genetic algorithm & parametric, cell \cite{renner_genetic_2003} \\
-        Computer-aided design software & Trelis \cite{noauthor_trelis_2018}, FreeCAD \cite{falck_freecad_2012}, SolidWorks \cite{lombard_solidworks_2008}, grasshopper3d \cite{rutten_grasshopper3d_2015} \\
+        Computer-aided design software & Trelis \cite{noauthor_trelis_2018}, FreeCAD \cite{falck_freecad_2012}, SolidWorks \cite{lombard_solidworks_2008}, grasshopper3d \cite{rutten_grasshopper3d_2015}, GenerativeComponents \cite{aish_bentleys_2003} \\
         Neutron transport code & Serpent \cite{leppanen_serpent_2014}, MCNP \cite{werner_mcnp6._2018}, SCALE \cite{bucholz_scale:_1982}, OpenMC \cite{romano_openmc_2013} \\ 
         Thermal hydraulics code & RELAP5-3D \cite{strydom_comparison_2016}, RELAP7 \cite{andrs_relap-7_2012}, TRACE \cite{xu_multi-physics_2006}\\
         User-defined metrics/criteria & keff, heat transfer rate, fuel enrichment, mass of fuel \\ \hline
 \end{tabular}
 \end{table}
 
-
+\pagebreak
 \bibliographystyle{plain}
 \bibliography{2020-generative-reactor-design-lit-review}
 \end{document}
