@@ -273,7 +273,7 @@ in the framework.
                 \draw [-,thick] (8) -- ([shift={(0cm,0cm)}]8.south) |- ([shift={(0cm,0.3cm)}]15.north)--(15);
                 \draw [-,thick] (9) -- ([shift={(0cm,0cm)}]9.south) |- ([shift={(0cm,0.3cm)}]15.north)--(15);
                 \draw [arrow] (15) -- ([shift={(0cm,0cm)}]15.north) |- ([shift={(0cm,0.1cm)}]11.north)--(11);
-                \draw [arrow] (11) -- ([shift={(0cm,0cm)}]11.south) |- ([shift={(0cm,0.1cm)}]16.north)--(16);
+                \draw [arrow] (11) -- ([shift={(0cm,0cm)}]11.south) |- node[anchor=west, yshift=0.3cm] {yes} ([shift={(0cm,0.1cm)}]16.north)--(16);
                 \matrix [draw,below left,yshift=-0.5cm, xshift=-7cm] at (current bounding box.south east) {
                 \node [bbblock,label=right:\textbf{GA: Genetic algorithm}] {}; \\
                 \node [bpblock,label=right:\textbf{CAD: Computer-aided design software}] {}; \\
