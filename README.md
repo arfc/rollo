@@ -1,2 +1,2 @@
-# generative-reactor-designs
-Repository to hold the framework and code to produce generative reactor designs. 
+# REALM (Reactor optimization with EvolutionAry aLgorithMs)
+Repository to hold the framework and code to produce generative reactor designs.
