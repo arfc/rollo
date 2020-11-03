@@ -16,11 +16,11 @@ class Evaluation():
         ### If a user adds a new code to couple with, they should add 
         ### it here too. 
 
-    def eval_function_generator(): 
+    def eval_fn_generator(): 
         """ This function returns a function that accepts a DEAP individual 
         and returns a tuple of output values listed in outputs 
         """
         def eval_function():
-
+            
             return 
         return eval_function

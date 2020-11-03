@@ -11,6 +11,7 @@ class GenerateReactor(object):
     def __init__(self, deap_toolbox, constraint_obj): 
         self.toolbox = deap_toolbox # deap toolbox object 
         self.results = BackEnd() 
+        self.constraint_obj = constraint_obj
         self.check() 
 
     def check():
@@ -49,9 +50,8 @@ class GenerateReactor(object):
             self.results.add_ind(ind)
         # start working on each generation 
         for g in range(ngen):
-            # apply constaint (deal with ind.output) 
-            ### returns pop 
-
+            # apply constaint
+            pop = self.constraint_obj.apply_constraints(pop)
             # apply selection operator 
             pop = self.toolbox.select(pop, k=pop_size)
             pop = [toolbox.clone(ind) for ind in pop]

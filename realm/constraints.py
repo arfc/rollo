@@ -5,7 +5,6 @@ import warnings
 class Constraints(object):
     """ This class defines constraints in model 
     # number, operator, value 
-
     """ 
 
     def __init__(self):
