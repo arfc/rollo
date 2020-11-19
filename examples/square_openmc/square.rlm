@@ -12,9 +12,10 @@
 
 [Evaluators]
     [[openmc]]
-    input_script = 'openmc.py'
+    input_script = 'openmc_inp.py'
     inputs = 'packing_fraction', 'polynomial'
     outputs = 'packing_fraction', 'keff'
+    output_script = 'openmc_oup.py' # expert mode 
     [[moltres]]
     input_script = 'moltres_inp.i'
     inputs = 'packing_fraction', 'polynomial'
@@ -45,3 +46,5 @@ generations = 10
     [[mate]] # expert mode 
     type = 
     indpb = 
+
+[Parallel]
