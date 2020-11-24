@@ -1,0 +1,57 @@
+""" 
+REALM input file 
+Square reactor with varying packing fraction and polynomial governing 
+packing fraction distribution
+"""
+
+{
+    input_variables : {
+        packing_fraction : {
+            min : 0.005, 
+            max : 0.1
+        }
+        polynomial : {
+            order : 3, 
+            min : -1, 
+            max : 1, 
+            above_x_axis : True 
+        }
+    }
+    evaluators : {
+        openmc : {
+            input_script : openmc_inp.py, 
+            inputs : [packing_fraction, polynomial], 
+            outputs : [packing_fraction, keff], 
+            output_script : openmc_oup.py
+        }
+    }
+    constraints : {
+        keff : {
+            operator : >, 
+            constrained_val : 1 
+        }
+        max_temp : {
+            operator : <. 
+            constrained_val : 700 
+        }
+    }
+    algorithm : {
+        objective : min, 
+        optimized_variable : packing_fraction, 
+        pop_size : 100, 
+        generations : 10, 
+        selection_operator : {
+            type : SelBest, 
+            k : 5 
+        }
+        mutation_operator : {
+            type : mutGaussian, 
+            indpb : 0.5, 
+            mu : 0.5,
+            sigma : 0.5 
+        }
+        mating_operator : {
+            type : cxOnePoint
+        }
+    }
+}
