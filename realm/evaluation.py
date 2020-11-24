@@ -1,7 +1,7 @@
 import os, sys 
 from jinja2 import nativetypes
 sys.path.insert(1, './plugin/')
-from openmc_evaluation import OpenMCEvaluation
+#from openmc_evaluation import OpenMCEvaluation
 
 class Evaluation(): 
     """ This class calls various external solvers 
@@ -56,6 +56,7 @@ class Evaluation():
                 for oup in outputs: 
                     if oup in inputs: 
                         ## return input val
+                        print('hi')
                     else: 
                         output_dict[oup] = getattr(eval_dict[solver], 
                         'evaluate_' + oup)

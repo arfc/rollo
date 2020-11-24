@@ -23,9 +23,7 @@ class Algorithm(object):
         # initialize the algorithm's parameters 
         pop_size = self.toolbox.pop_size
         pop = self.toolbox.population(n=pop_size) 
-        ngen, cxpb, mutpb = self.toolbox.ngen
-                            self.toolbox.cxpb
-                            self.toolbox.mutpb
+        ngen, cxpb, mutpb = self.toolbox.ngen, self.toolbox.cxpb, self.toolbox.mutpb
         # initialize first pop's gen, ind num 
         ind_count = 0
         for ind in pop: 
