@@ -1,7 +1,7 @@
 from realm.evaluation import Evaluation
 from deap import base, creator, tools, algorithms
 
-class Run(object): 
+class Executor(object): 
     """ A generalized framework to generate reactor designs
     using genetic algorithms. 
     """
@@ -9,5 +9,5 @@ class Run(object):
     def __init__(self): 
         self.hi = 'hi'
     
-    def run(self):
-        print('run realm')
+    def execute(self):
+        print('execute realm')
