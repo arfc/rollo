@@ -7,16 +7,6 @@ class InputValidation():
 
     def __init__(self, input_dict):
         self.input = input_dict
-        self.validation_details()
-    
-    def validation_details(self): 
-        """ This function defines the acceptable inputs for some input layers. 
-        """
-        # special input variables with a non-conforming input style defined in 
-        # input*** (add file that has this)
-        # add to this list if a developer adds a special input variable 
-        self.special_input_variables = ['polynomial']
-        return 
     
     def validate(self): 
         """ This function validates the input dictionary and throws errors if 
@@ -48,6 +38,11 @@ class InputValidation():
         """ This function validates the 'input variables' segment of the JSON
         input file. 
         """
+        # special input variables with a non-conforming input style defined in 
+        # input*** (add file name that has this)
+        # add to this list if a developer adds a special input variable 
+        special_inp_vars = ['polynomial']
+        
         # validate regular input variables 
         schema_inp_vars = {
             "type": "object", 
@@ -55,21 +50,22 @@ class InputValidation():
         }
         variables = []
         for var in input_inp_vars:
-            if var not in self.special_input_variables: 
+            if var not in special_inp_vars: 
                 schema_inp_vars["properties"][var] = {"type": "object", 
                                                             "properties": {
                                                                 "max": {"type": "number"}, 
                                                                 "min": {"type": "number"}
                                                             }}
                 variables.append(var)
-        validate(instance=input_dict_input_variables, schema=schema_inp_vars)
+        validate(instance=input_inp_vars, schema=schema_inp_vars)
         for var in variables: 
             try: 
-                input_dict_input_variables_var_max = input_dict_input_variables[var]['max']
-                input_dict_input_variables_var_min = input_dict_input_variables[var]['min']
+                input_inp_vars_var_max = input_inp_vars[var]['max']
+                input_inp_vars_var_min = input_inp_vars[var]['min']
             except KeyError as error: 
                 print("<Input Validation Error> min and max values must be defined for the input variable: '"
                         + var + "'.")
+                
         # validate special input variables 
         # add validation here if developer adds new special input variable 
         # polynomial 
@@ -83,6 +79,7 @@ class InputValidation():
                     "min": {"type": "number"}, 
                     "max": {"type": "number"}, 
                     "above_x_axis": {"type": "boolean"}
+                    
                 }
             }"""
-        #validate(instance=input_dict_input_variables['polynomial'], schema=schema_inp_vars_polynomial)
+        #validate(instance=input_inp_vars['polynomial'], schema=schema_inp_vars_polynomial)
