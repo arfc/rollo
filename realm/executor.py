@@ -1,4 +1,4 @@
-from realm.evaluation import Evaluation
+from realm.input_validation import InputValidation
 from deap import base, creator, tools, algorithms
 import json, re
 
@@ -14,6 +14,8 @@ class Executor(object):
         print('execute realm')
         input_dict = self.read_input_file()
         print(input_dict)
+        InputValidation(input_dict).validate()
+
     
     def read_input_file(self): 
         """This function reads a json input file and returns a dictionary"""
