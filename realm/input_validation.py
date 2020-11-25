@@ -65,18 +65,9 @@ class InputValidation():
                 variables.append(var)
         validate(instance=input_ctrl_vars, schema=schema_ctrl_vars)
         for var in variables:
-            try:
-                input_ctrl_vars_var_max = input_ctrl_vars[var]['max']
-                input_ctrl_vars_var_min = input_ctrl_vars[var]['min']
-                for i in input_ctrl_vars[var]:
-                    assert ( i in ['max', 'min']), "<Input Validation Error> Only 'max' and 'min' inputs are accepted for control variable: " + str(var)
-            except KeyError as error:
-                print(
-                    "<Input Validation Error> min and max values must be defined for the control variable: '" + var + "'.")
-                raise
-            except AssertionError as error:
-                print(error)
-                raise
+            self.validate_sub_level(input_ctrl_vars[var], 
+            ['min', 'max'], 
+            'control variable: ' + var)
         # validate special input variables
         # add validation here if developer adds new special input variable
         # polynomial
@@ -95,20 +86,9 @@ class InputValidation():
                 }
             }
             validate(instance=input_ctrl_vars_poly, schema=schema_ctrl_vars_poly)
-            try:
-                a = input_ctrl_vars_poly['order']
-                a = input_ctrl_vars_poly['min'] 
-                a = input_ctrl_vars_poly['max']
-                a = input_ctrl_vars_poly['above_x_axis']
-                for i in input_ctrl_vars_poly: 
-                    assert (i in ['order', 'min', 'max', 'above_x_axis']), "<Input Validation Error> Only 'order', 'min', 'max', 'above_x_axis' are accepted for control variable: 'polynomial'."
-            except KeyError as error:
-                print(
-                    "<Input Validation Error> order, min, max, above_x_axis, values must be defined for the control variable: 'polynomial'.")
-                raise
-            except AssertionError as error: 
-                    print(error)
-                    raise
+            self.validate_sub_level(input_ctrl_vars_poly, 
+            ['order', 'min', 'max', 'above_x_axis'], 
+            'control variable: polynomial')
         return 
     
     def validate_sub_level(self, dict_to_validate, key_names, variable_type): 
