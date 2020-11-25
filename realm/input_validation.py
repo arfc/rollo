@@ -110,3 +110,19 @@ class InputValidation():
                     print(error)
                     raise
         return 
+    
+    def validate_sub_level(self, dict_to_validate, key_names, variable_type): 
+        """This function runs a try except routine for to check if all key names 
+        are in the dict_to_validate and ensure no unwanted keys are defined. """
+        try: 
+            for key in key_names: 
+                a = dict_to_validate[key]
+            for key in dict_to_validate: 
+                assert(key in key_names), "<Input Validation Error> Only " + str(key_names) + " are accepted for the " + variable_type
+        except KeyError as error:
+            print("<Input Validation Error> " + str(key_names) + " values must be defined for the " + variable_type)
+            raise 
+        except AssertionError as error: 
+            print(error)
+            raise 
+        return 
