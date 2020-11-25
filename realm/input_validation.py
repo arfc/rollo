@@ -30,8 +30,7 @@ class InputValidation():
         try:
             input_ctrl_vars = self.input["control_variables"]
         except KeyError as error:
-            print("<Input Validation Error> At least 1 input variable must be \
-defined.")
+            print("<Input Validation Error> At least 1 input variable must be defined.")
         else:
             self.validate_ctrl_vars(input_ctrl_vars)
 
@@ -70,12 +69,10 @@ defined.")
                 input_ctrl_vars_var_max = input_ctrl_vars[var]['max']
                 input_ctrl_vars_var_min = input_ctrl_vars[var]['min']
                 for i in input_ctrl_vars[var]:
-                    assert ( i in ['max', 'min']), "<Input Validation Error> \
-Only 'max' and 'min' inputs are accepted for control variable: " + str(var)
+                    assert ( i in ['max', 'min']), "<Input Validation Error> Only 'max' and 'min' inputs are accepted for control variable: " + str(var)
             except KeyError as error:
                 print(
-                    "<Input Validation Error> min and max values must be \
-defined for the control variable: '" + var + "'.")
+                    "<Input Validation Error> min and max values must be defined for the control variable: '" + var + "'.")
                 raise
             except AssertionError as error:
                 print(error)
@@ -107,8 +104,7 @@ defined for the control variable: '" + var + "'.")
                     assert (i in ['order', 'min', 'max', 'above_x_axis']), "<Input Validation Error> Only 'order', 'min', 'max', 'above_x_axis' are accepted for control variable: 'polynomial'."
             except KeyError as error:
                 print(
-                    "<Input Validation Error> order, min, max, above_x_axis, \
-values must be defined for the control variable: 'polynomial'.")
+                    "<Input Validation Error> order, min, max, above_x_axis, values must be defined for the control variable: 'polynomial'.")
                 raise
             except AssertionError as error: 
                     print(error)
