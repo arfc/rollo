@@ -63,36 +63,32 @@ class InputValidation:
             self.validate_constraints(input_constraints, input_evaluators)
 
         # validate algorithm
-        try: 
+        try:
             input_algorithm = self.input["algorithm"]
         except KeyError:
-            print(
-                "<Input Validation Error> The algorithm must be defined."
-            )
+            print("<Input Validation Error> The algorithm must be defined.")
         else:
             self.validate_algorithm(input_algorithm)
         return
 
-
-    def validate_algorithm(self, input_algorithm): 
-        """ This function validates the 'algorithm segment of the JSON input
-        file. 
+    def validate_algorithm(self, input_algorithm):
+        """This function validates the 'algorithm segment of the JSON input
+        file.
         """
         schema_algorithm = {
-                "type": "object",
-                "properties": {
-                    "objective": {"type": "string"},
-                    "optimized_variable": {"type": "string"},
-                    "pop_size": {"type": "number"},
-                    "generations": {"type": "number"},
-                    "selection_operator": {"type": "object"}, 
-                    "mutation_operator": {"type": "object"}, 
-                    "mating_operator": {"type": "object"}
-                },
-            }
+            "type": "object",
+            "properties": {
+                "objective": {"type": "string"},
+                "optimized_variable": {"type": "string"},
+                "pop_size": {"type": "number"},
+                "generations": {"type": "number"},
+                "selection_operator": {"type": "object"},
+                "mutation_operator": {"type": "object"},
+                "mating_operator": {"type": "object"},
+            },
+        }
         validate(instance=input_algorithm, schema=schema_algorithm)
-        return 
-
+        return
 
     def validate_constraints(self, input_constraints, input_evaluators):
         """This function validates the 'constraints' segment of the JSON input
@@ -109,15 +105,17 @@ class InputValidation:
                 + " is not an output variable of any evaluator."
             )
             schema_constraints["properties"][constraint] = {
-                "type": "object", 
+                "type": "object",
                 "properties": {
-                    "operator": {"type": "string"}, 
-                    "constrained_val": {"type": "number"}
-                }
+                    "operator": {"type": "string"},
+                    "constrained_val": {"type": "number"},
+                },
             }
             self.validate_sub_level(
-                input_constraints[constraint], ["operator", "constrained_val"],
-                [], "constraint: " + constraint
+                input_constraints[constraint],
+                ["operator", "constrained_val"],
+                [],
+                "constraint: " + constraint,
             )
         validate(instance=input_constraints, schema=schema_constraints)
         return
