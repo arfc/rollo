@@ -1,8 +1,8 @@
 from jsonschema import validate
 
 
-class InputValidation():
-    """ This class does the initial validation of the *.rlm input file and
+class InputValidation:
+    """This class does the initial validation of the *.rlm input file and
     and solver's templated input scripts
     """
 
@@ -10,7 +10,7 @@ class InputValidation():
         self.input = input_dict
 
     def validate(self):
-        """ This function validates the input dictionary and throws errors if
+        """This function validates the input dictionary and throws errors if
         the input file does not meet realm input file rules.
         """
 
@@ -21,8 +21,8 @@ class InputValidation():
                 "control_variables": {"type": "object"},
                 "evaluators": {"type": "object"},
                 "constraints": {"type": "object"},
-                "algorithm": {"type": "object"}
-            }
+                "algorithm": {"type": "object"},
+            },
         }
         validate(instance=self.input, schema=schema_top_layer)
 
@@ -30,8 +30,10 @@ class InputValidation():
         try:
             input_ctrl_vars = self.input["control_variables"]
         except KeyError as error:
-            print("<Input Validation Error> At least 1 control variable must \
-            be defined.")
+            print(
+                "<Input Validation Error> At least 1 control variable must \
+            be defined."
+            )
         else:
             self.validate_ctrl_vars(input_ctrl_vars)
 
@@ -42,71 +44,81 @@ class InputValidation():
         # self.validate_algorithms()
 
     def validate_ctrl_vars(self, input_ctrl_vars):
-        """ This function validates the 'input variables' segment of the JSON
+        """This function validates the 'input variables' segment of the JSON
         input file.
         """
         # special input variables with a non-conforming input style defined in
         # input*** (add file name that has this)
         # add to this list if a developer adds a special input variable
-        special_ctrl_vars = ['polynomial']
+        special_ctrl_vars = ["polynomial"]
 
         # validate regular input variables
-        schema_ctrl_vars = {
-            "type": "object",
-            "properties": {}
-        }
+        schema_ctrl_vars = {"type": "object", "properties": {}}
         variables = []
         for var in input_ctrl_vars:
             if var not in special_ctrl_vars:
                 schema_ctrl_vars["properties"][var] = {
-                    "type": "object", "properties": {
-                        "max": {
-                            "type": "number"}, "min": {
-                            "type": "number"}}}
+                    "type": "object",
+                    "properties": {
+                        "max": {"type": "number"},
+                        "min": {"type": "number"},
+                    },
+                }
                 variables.append(var)
         validate(instance=input_ctrl_vars, schema=schema_ctrl_vars)
         for var in variables:
-            self.validate_sub_level(input_ctrl_vars[var],
-            ['min', 'max'], 
-            'control variable: ' + var)
-            
+            self.validate_sub_level(
+                input_ctrl_vars[var], ["min", "max"], "control variable: " + var
+            )
+
         # validate special input variables
         # add validation here if developer adds new special input variable
         # polynomial
-        try: 
-            input_ctrl_vars_poly = input_ctrl_vars['polynomial']
-        except: 
-            pass 
+        try:
+            input_ctrl_vars_poly = input_ctrl_vars["polynomial"]
+        except:
+            pass
         else:
             schema_ctrl_vars_poly = {
-                "type": "object", 
+                "type": "object",
                 "properties": {
-                    "order": {"type": "number"}, 
-                    "min": {"type": "number"}, 
-                    "max": {"type": "number"}, 
-                    "above_x_axis": {"type": "boolean"}
-                }
+                    "order": {"type": "number"},
+                    "min": {"type": "number"},
+                    "max": {"type": "number"},
+                    "above_x_axis": {"type": "boolean"},
+                },
             }
-            validate(instance=input_ctrl_vars_poly,
-                     schema=schema_ctrl_vars_poly)
-            self.validate_sub_level(input_ctrl_vars_poly, 
-            ['order', 'min', 'max', 'above_x_axis'], 
-            'control variable: polynomial')
-        return 
-    
-    def validate_sub_level(self, dict_to_validate, key_names, variable_type): 
-        """This function runs a try except routine for to check if all key 
-        names are in the dict_to_validate and ensure no unwanted keys are 
-        defined. """
-        try: 
-            for key in key_names: 
+            validate(instance=input_ctrl_vars_poly, schema=schema_ctrl_vars_poly)
+            self.validate_sub_level(
+                input_ctrl_vars_poly,
+                ["order", "min", "max", "above_x_axis"],
+                "control variable: polynomial",
+            )
+        return
+
+    def validate_sub_level(self, dict_to_validate, key_names, variable_type):
+        """This function runs a try except routine for to check if all key
+        names are in the dict_to_validate and ensure no unwanted keys are
+        defined."""
+        try:
+            for key in key_names:
                 a = dict_to_validate[key]
-            for key in dict_to_validate: 
-                assert(key in key_names), "<Input Validation Error> Only " + str(key_names) + " are accepted for the " + variable_type
+            for key in dict_to_validate:
+                assert key in key_names, (
+                    "<Input Validation Error> Only "
+                    + str(key_names)
+                    + " are accepted for the "
+                    + variable_type
+                )
         except KeyError as error:
-            print("<Input Validation Error> " + str(key_names) + " values must be defined for the " + variable_type)
-            raise 
-        except AssertionError as error: 
+            print(
+                "<Input Validation Error> "
+                + str(key_names)
+                + " values must be defined for the "
+                + variable_type
+            )
+            raise
+        except AssertionError as error:
             print(error)
-            raise 
-        return 
+            raise
+        return
