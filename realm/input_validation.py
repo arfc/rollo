@@ -118,12 +118,70 @@ class InputValidation:
         # evaluators available
         # add to this list if a developer adds a new evaluator
         available_evaluators = ["openmc"]
+        # add to this dict if a developers adds a new predefined output
+        # for an evaluator
+        pre_defined_outputs = {"openmc": ["keff"]}
 
         # validate evaluators
         self.validate_sub_level(
             input_evaluators, available_evaluators, [], "evaluators"
         )
+        schema_evaluators = {"type": "object", "properties": {}}
+
+        # validate each evaluator
+        for evaluator in input_evaluators:
+            schema_evaluators["properties"][evaluator] = {
+                "type": "object",
+                "properties": {
+                    "input_script": {"type": "string"},
+                    "inputs": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "outputs": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "output_script": {"type": "string"},
+                },
+            }
+            self.validate_sub_level(
+                input_evaluators[evaluator],
+                ["input_script", "inputs", "outputs"],
+                ["output_script"],
+                "evaluator: " + evaluator,
+            )
+
+            not_in_list, which_strings = self.validate_if_not_in_list(
+                input_evaluators[evaluator]["outputs"],
+                pre_defined_outputs[evaluator] + input_evaluators[evaluator]["inputs"],
+            )
+            if not_in_list:
+                try:
+                    a = input_evaluators[evaluator]["output_script"]
+                except KeyError:
+                    print(
+                        "<Input Validation Error> You must define an output_script for evaluator: "
+                        + evaluator
+                        + " since the outputs: "
+                        + str(which_strings)
+                        + " are not inputs or pre-defined outputs."
+                    )
+                    raise
+
         return
+
+    def validate_if_not_in_list(self, input_string, accepted_strings):
+        """This function checks if string is in a defined list of strings and
+        returns a boolean.
+        """
+        not_in_list = False
+        which_strings = []
+        for string in input_string:
+            if string not in accepted_strings:
+                not_in_list = True
+                which_strings.append(string)
+        return not_in_list, which_strings
 
     def validate_sub_level(
         self, dict_to_validate, key_names, optional_key_names, variable_type
