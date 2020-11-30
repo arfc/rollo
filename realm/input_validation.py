@@ -78,7 +78,19 @@ class InputValidation:
         """ This function validates the 'algorithm segment of the JSON input
         file. 
         """
-        schema_algorithm 
+        schema_algorithm = {
+                "type": "object",
+                "properties": {
+                    "objective": {"type": "string"},
+                    "optimized_variable": {"type": "string"},
+                    "pop_size": {"type": "number"},
+                    "generations": {"type": "number"},
+                    "selection_operator": {"type": "object"}, 
+                    "mutation_operator": {"type": "object"}, 
+                    "mating_operator": {"type": "object"}
+                },
+            }
+        validate(instance=input_algorithm, schema=schema_algorithm)
         return 
 
 
@@ -89,16 +101,25 @@ class InputValidation:
         allowed_constraints = []
         for evaluator in input_evaluators:
             allowed_constraints += input_evaluators[evaluator]["outputs"]
+        schema_constraints = {"type": "object", "properties": {}}
         for constraint in input_constraints:
             assert constraint in allowed_constraints, (
                 "<Input Validation Error> constraint: "
                 + constraint
                 + " is not an output variable of any evaluator."
             )
+            schema_constraints["properties"][constraint] = {
+                "type": "object", 
+                "properties": {
+                    "operator": {"type": "string"}, 
+                    "constrained_val": {"type": "number"}
+                }
+            }
             self.validate_sub_level(
                 input_constraints[constraint], ["operator", "constrained_val"],
                 [], "constraint: " + constraint
             )
+        validate(instance=input_constraints, schema=schema_constraints)
         return
 
     def validate_ctrl_vars(self, input_ctrl_vars):
@@ -189,6 +210,8 @@ class InputValidation:
                     "output_script": {"type": "string"},
                 },
             }
+        validate(instance=input_evaluators, schema=schema_evaluators)
+        for evaluator in input_evaluators:
             self.validate_sub_level(
                 input_evaluators[evaluator],
                 ["input_script", "inputs", "outputs"],
