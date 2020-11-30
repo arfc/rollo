@@ -141,6 +141,11 @@ class InputValidation:
                 [],
                 "constraint: " + constraint,
             )
+            self.validate_in_list(
+                input_constraints[constraint]["operator"],
+                [">", ">=", "=", "<", "<="],
+                constraint + "'s operator variable",
+            )
         return
 
     def validate_ctrl_vars(self, input_ctrl_vars):
