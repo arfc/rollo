@@ -68,11 +68,11 @@ class InputValidation:
         except KeyError:
             print("<Input Validation Error> The algorithm must be defined.")
         else:
-            self.validate_algorithm(input_algorithm)
+            self.validate_algorithm(input_algorithm, input_ctrl_vars)
         return
 
-    def validate_algorithm(self, input_algorithm):
-        """This function validates the 'algorithm segment of the JSON input
+    def validate_algorithm(self, input_algorithm, input_ctrl_vars):
+        """This function validates the "algorithm" segment of the JSON input
         file.
         """
         schema_algorithm = {
@@ -88,10 +88,27 @@ class InputValidation:
             },
         }
         validate(instance=input_algorithm, schema=schema_algorithm)
+        # validation for objective and optimized variable
+        self.validate_in_list(input_algorithm["objective"], ["min", "max"], "objective")
+        self.validate_in_list(
+            input_algorithm["optimized_variable"],
+            list(input_ctrl_vars.keys()),
+            "optimized_variable",
+        )
+        return
+
+    def validate_in_list(self, variable, accepted_variables, name):
+        """This function checks if a variable is in a list of accepted variables"""
+        assert variable in accepted_variables, (
+            "<Input Validation Error> variable: "
+            + name
+            + ", only accepts: "
+            + str(accepted_variables)
+        )
         return
 
     def validate_constraints(self, input_constraints, input_evaluators):
-        """This function validates the 'constraints' segment of the JSON input
+        """This function validates the "constraints" segment of the JSON input
         file.
         """
         allowed_constraints = []
@@ -111,17 +128,18 @@ class InputValidation:
                     "constrained_val": {"type": "number"},
                 },
             }
+        validate(instance=input_constraints, schema=schema_constraints)
+        for constraint in input_constraints:
             self.validate_sub_level(
                 input_constraints[constraint],
                 ["operator", "constrained_val"],
                 [],
                 "constraint: " + constraint,
             )
-        validate(instance=input_constraints, schema=schema_constraints)
         return
 
     def validate_ctrl_vars(self, input_ctrl_vars):
-        """This function validates the 'control variables' segment of the JSON
+        """This function validates the "control variables" segment of the JSON
         input file.
         """
         # special control variables with a non-conforming input style defined in
@@ -153,7 +171,7 @@ class InputValidation:
         # polynomial
         try:
             input_ctrl_vars_poly = input_ctrl_vars["polynomial"]
-        except:
+        except KeyError:
             pass
         else:
             schema_ctrl_vars_poly = {
@@ -175,7 +193,7 @@ class InputValidation:
         return
 
     def validate_evaluators(self, input_evaluators):
-        """This function validates the 'evaluators' segment of the JSON
+        """This function validates the "evaluators" segment of the JSON
         input file.
         """
         # evaluators available
