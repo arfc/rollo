@@ -13,7 +13,7 @@ class InputValidation():
         """ This function validates the input dictionary and throws errors if
         the input file does not meet realm input file rules.
         """
-        #print('INPUT', self.input)
+
         # validate top layer of JSON input
         schema_top_layer = {
             "type": "object",
@@ -21,16 +21,17 @@ class InputValidation():
                 "control_variables": {"type": "object"},
                 "evaluators": {"type": "object"},
                 "constraints": {"type": "object"},
-                "algorithms": {"type": "object"}
+                "algorithm": {"type": "object"}
             }
         }
         validate(instance=self.input, schema=schema_top_layer)
 
-        # validate input variables
+        # validate control variables
         try:
             input_ctrl_vars = self.input["control_variables"]
         except KeyError as error:
-            print("<Input Validation Error> At least 1 input variable must be defined.")
+            print("<Input Validation Error> At least 1 control variable must \
+            be defined.")
         else:
             self.validate_ctrl_vars(input_ctrl_vars)
 
@@ -65,9 +66,10 @@ class InputValidation():
                 variables.append(var)
         validate(instance=input_ctrl_vars, schema=schema_ctrl_vars)
         for var in variables:
-            self.validate_sub_level(input_ctrl_vars[var], 
+            self.validate_sub_level(input_ctrl_vars[var],
             ['min', 'max'], 
             'control variable: ' + var)
+            
         # validate special input variables
         # add validation here if developer adds new special input variable
         # polynomial
@@ -85,15 +87,17 @@ class InputValidation():
                     "above_x_axis": {"type": "boolean"}
                 }
             }
-            validate(instance=input_ctrl_vars_poly, schema=schema_ctrl_vars_poly)
+            validate(instance=input_ctrl_vars_poly,
+                     schema=schema_ctrl_vars_poly)
             self.validate_sub_level(input_ctrl_vars_poly, 
             ['order', 'min', 'max', 'above_x_axis'], 
             'control variable: polynomial')
         return 
     
     def validate_sub_level(self, dict_to_validate, key_names, variable_type): 
-        """This function runs a try except routine for to check if all key names 
-        are in the dict_to_validate and ensure no unwanted keys are defined. """
+        """This function runs a try except routine for to check if all key 
+        names are in the dict_to_validate and ensure no unwanted keys are 
+        defined. """
         try: 
             for key in key_names: 
                 a = dict_to_validate[key]
