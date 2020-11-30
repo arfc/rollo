@@ -54,8 +54,52 @@ class InputValidation:
         else:
             self.validate_evaluators(input_evaluators)
 
-        # self.validate_constraints()
-        # self.validate_algorithms()
+        # validate constraints
+        try:
+            input_constraints = self.input["constraints"]
+        except KeyError:
+            pass
+        else:
+            self.validate_constraints(input_constraints, input_evaluators)
+
+        # validate algorithm
+        try: 
+            input_algorithm = self.input["algorithm"]
+        except KeyError:
+            print(
+                "<Input Validation Error> The algorithm must be defined."
+            )
+        else:
+            self.validate_algorithm(input_algorithm)
+        return
+
+
+    def validate_algorithm(self, input_algorithm): 
+        """ This function validates the 'algorithm segment of the JSON input
+        file. 
+        """
+        schema_algorithm 
+        return 
+
+
+    def validate_constraints(self, input_constraints, input_evaluators):
+        """This function validates the 'constraints' segment of the JSON input
+        file.
+        """
+        allowed_constraints = []
+        for evaluator in input_evaluators:
+            allowed_constraints += input_evaluators[evaluator]["outputs"]
+        for constraint in input_constraints:
+            assert constraint in allowed_constraints, (
+                "<Input Validation Error> constraint: "
+                + constraint
+                + " is not an output variable of any evaluator."
+            )
+            self.validate_sub_level(
+                input_constraints[constraint], ["operator", "constrained_val"],
+                [], "constraint: " + constraint
+            )
+        return
 
     def validate_ctrl_vars(self, input_ctrl_vars):
         """This function validates the 'control variables' segment of the JSON
@@ -63,10 +107,10 @@ class InputValidation:
         """
         # special control variables with a non-conforming input style defined in
         # input*** (add file name that has this)
-        # add to this list if a developer adds a special input variable
+        # add to this list if a developer adds a special control variable
         special_ctrl_vars = ["polynomial"]
 
-        # validate regular input variables
+        # validate regular control variables
         schema_ctrl_vars = {"type": "object", "properties": {}}
         variables = []
         for var in input_ctrl_vars:
@@ -85,7 +129,7 @@ class InputValidation:
                 input_ctrl_vars[var], ["min", "max"], [], "control variable: " + var
             )
 
-        # validate special input variables
+        # validate special control variables
         # add validation here if developer adds new special input variable
         # polynomial
         try:
@@ -168,12 +212,11 @@ class InputValidation:
                         + " are not inputs or pre-defined outputs."
                     )
                     raise
-
         return
 
     def validate_if_not_in_list(self, input_string, accepted_strings):
-        """This function checks if string is in a defined list of strings and
-        returns a boolean.
+        """This function checks if string is not in a defined list of strings
+        and returns a boolean.
         """
         not_in_list = False
         which_strings = []
@@ -199,7 +242,7 @@ class InputValidation:
                     + str(combined_key_names)
                     + " are accepted for "
                     + variable_type
-                    + " not variable: "
+                    + ", not variable: "
                     + key
                 )
         except KeyError:
