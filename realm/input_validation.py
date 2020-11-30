@@ -25,6 +25,12 @@ class InputValidation:
             },
         }
         validate(instance=self.input, schema=schema_top_layer)
+        self.validate_sub_level(
+            self.input,
+            ["control_variables", "evaluators", "algorithm"],
+            ["constraints"],
+            " top level",
+        )
 
         # validate control variables
         try:
@@ -38,7 +44,8 @@ class InputValidation:
             self.validate_ctrl_vars(input_ctrl_vars)
 
         # validate evaluators
-
+        # try:
+        #   evaluators = self.input["evaluators"]
         # self.validate_evaluators()
         # self.validate_constraints()
         # self.validate_algorithms()
@@ -68,7 +75,7 @@ class InputValidation:
         validate(instance=input_ctrl_vars, schema=schema_ctrl_vars)
         for var in variables:
             self.validate_sub_level(
-                input_ctrl_vars[var], ["min", "max"], "control variable: " + var
+                input_ctrl_vars[var], ["min", "max"], [""], "control variable: " + var
             )
 
         # validate special input variables
@@ -92,23 +99,29 @@ class InputValidation:
             self.validate_sub_level(
                 input_ctrl_vars_poly,
                 ["order", "min", "max", "above_x_axis"],
+                [""],
                 "control variable: polynomial",
             )
         return
 
-    def validate_sub_level(self, dict_to_validate, key_names, variable_type):
+    def validate_sub_level(
+        self, dict_to_validate, key_names, optional_key_names, variable_type
+    ):
         """This function runs a try except routine for to check if all key
         names are in the dict_to_validate and ensure no unwanted keys are
         defined."""
         try:
+            combined_key_names = key_names + optional_key_names
             for key in key_names:
                 a = dict_to_validate[key]
             for key in dict_to_validate:
-                assert key in key_names, (
+                assert key in combined_key_names, (
                     "<Input Validation Error> Only "
-                    + str(key_names)
+                    + str(combined_key_names)
                     + " are accepted for the "
-                    + variable_type
+                    + variable_type 
+                    + " not variable:"
+                    + key
                 )
         except KeyError as error:
             print(
