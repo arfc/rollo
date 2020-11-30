@@ -35,7 +35,7 @@ class InputValidation:
         # validate control variables
         try:
             input_ctrl_vars = self.input["control_variables"]
-        except KeyError as error:
+        except KeyError:
             print(
                 "<Input Validation Error> At least 1 control variable must \
             be defined."
@@ -44,17 +44,24 @@ class InputValidation:
             self.validate_ctrl_vars(input_ctrl_vars)
 
         # validate evaluators
-        # try:
-        #   evaluators = self.input["evaluators"]
-        # self.validate_evaluators()
+        try:
+           input_evaluators = self.input["evaluators"]
+        except KeyError: 
+            print(
+                "<Input Validation Error> At least 1 evaluator must be \
+            defined."
+            )
+        else:
+            self.validate_evaluators(input_evaluators)
+
         # self.validate_constraints()
         # self.validate_algorithms()
 
     def validate_ctrl_vars(self, input_ctrl_vars):
-        """This function validates the 'input variables' segment of the JSON
+        """This function validates the 'control variables' segment of the JSON
         input file.
         """
-        # special input variables with a non-conforming input style defined in
+        # special control variables with a non-conforming input style defined in
         # input*** (add file name that has this)
         # add to this list if a developer adds a special input variable
         special_ctrl_vars = ["polynomial"]
@@ -103,6 +110,14 @@ class InputValidation:
                 "control variable: polynomial",
             )
         return
+
+
+    def validate_evaluators(self,input_evaluators): 
+        """This function validates the 'evaluators' segment of the JSON
+        input file.
+        """
+        return 
+
 
     def validate_sub_level(
         self, dict_to_validate, key_names, optional_key_names, variable_type
