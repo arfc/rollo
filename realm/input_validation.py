@@ -29,7 +29,7 @@ class InputValidation:
             self.input,
             ["control_variables", "evaluators", "algorithm"],
             ["constraints"],
-            " top level",
+            "top level",
         )
 
         # validate control variables
@@ -45,8 +45,8 @@ class InputValidation:
 
         # validate evaluators
         try:
-           input_evaluators = self.input["evaluators"]
-        except KeyError: 
+            input_evaluators = self.input["evaluators"]
+        except KeyError:
             print(
                 "<Input Validation Error> At least 1 evaluator must be \
             defined."
@@ -82,7 +82,7 @@ class InputValidation:
         validate(instance=input_ctrl_vars, schema=schema_ctrl_vars)
         for var in variables:
             self.validate_sub_level(
-                input_ctrl_vars[var], ["min", "max"], [""], "control variable: " + var
+                input_ctrl_vars[var], ["min", "max"], [], "control variable: " + var
             )
 
         # validate special input variables
@@ -106,18 +106,24 @@ class InputValidation:
             self.validate_sub_level(
                 input_ctrl_vars_poly,
                 ["order", "min", "max", "above_x_axis"],
-                [""],
+                [],
                 "control variable: polynomial",
             )
         return
 
-
-    def validate_evaluators(self,input_evaluators): 
+    def validate_evaluators(self, input_evaluators):
         """This function validates the 'evaluators' segment of the JSON
         input file.
         """
-        return 
+        # evaluators available
+        # add to this list if a developer adds a new evaluator
+        available_evaluators = ["openmc"]
 
+        # validate evaluators
+        self.validate_sub_level(
+            input_evaluators, available_evaluators, [], "evaluators"
+        )
+        return
 
     def validate_sub_level(
         self, dict_to_validate, key_names, optional_key_names, variable_type
@@ -133,16 +139,16 @@ class InputValidation:
                 assert key in combined_key_names, (
                     "<Input Validation Error> Only "
                     + str(combined_key_names)
-                    + " are accepted for the "
-                    + variable_type 
-                    + " not variable:"
+                    + " are accepted for "
+                    + variable_type
+                    + " not variable: "
                     + key
                 )
-        except KeyError as error:
+        except KeyError:
             print(
                 "<Input Validation Error> "
                 + str(key_names)
-                + " values must be defined for the "
+                + " variables must be defined for "
                 + variable_type
             )
             raise
