@@ -86,7 +86,7 @@ class InputValidation:
                 "mutGaussian": ["mu", "sigma", "indpb"],
                 "mutPolynomialBounded": ["eta", "indpb"],
             },
-            "mate": {"cxOnePoint": [], "cxUniform": ["indpb"], "cxBlend": ["alpha"]},
+            "mating": {"cxOnePoint": [], "cxUniform": ["indpb"], "cxBlend": ["alpha"]},
         }
 
         # schema validation
@@ -124,7 +124,12 @@ class InputValidation:
             list(input_ctrl_vars.keys()),
             "optimized_variable",
         )
-
+        try:
+            selection_op = input_algorithm["selection_operator"]["operator"]
+        except KeyError:
+            pass
+        else:
+            
         return
 
     def validate_constraints(self, input_constraints, input_evaluators):
