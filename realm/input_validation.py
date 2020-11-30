@@ -63,19 +63,33 @@ class InputValidation:
             self.validate_constraints(input_constraints, input_evaluators)
 
         # validate algorithm
-        """
         try:
             input_algorithm = self.input["algorithm"]
         except KeyError:
             print("<Input Validation Error> The algorithm must be defined.")
         else:
             self.validate_algorithm(input_algorithm, input_ctrl_vars)
-        return"""
+        return
 
     def validate_algorithm(self, input_algorithm, input_ctrl_vars):
         """This function validates the "algorithm" segment of the JSON input
         file.
         """
+        deap_operators = {
+            "selection": {
+                "selTournament": ["k", "tournsize"],
+                "selNSGA2": ["k"],
+                "selBest": ["k"],
+                "selLexicase": ["k"],
+            },
+            "mutation": {
+                "mutGaussian": ["mu", "sigma", "indpb"],
+                "mutPolynomialBounded": ["eta", "indpb"],
+            },
+            "mate": {"cxOnePoint": [], "cxUniform": ["indpb"], "cxBlend": ["alpha"]},
+        }
+
+        # schema validation
         schema_algorithm = {
             "type": "object",
             "properties": {
@@ -89,18 +103,19 @@ class InputValidation:
             },
         }
         validate(instance=input_algorithm, schema=schema_algorithm)
+        # key validation
         self.validate_correct_keys(
             input_algorithm,
+            ["optimized_variable"],
             [
                 "objective",
-                "optimized_variable",
                 "pop_size",
                 "generations",
                 "selection_operator",
                 "mutation_operator",
                 "mating_operator",
             ],
-            [],
+            "algorithm",
         )
         # validation for objective and optimized variable
         self.validate_in_list(input_algorithm["objective"], ["min", "max"], "objective")
