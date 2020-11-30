@@ -25,7 +25,7 @@ class InputValidation:
             },
         }
         validate(instance=self.input, schema=schema_top_layer)
-        self.validate_sub_level(
+        self.validate_correct_keys(
             self.input,
             ["control_variables", "evaluators", "algorithm"],
             ["constraints"],
@@ -63,13 +63,14 @@ class InputValidation:
             self.validate_constraints(input_constraints, input_evaluators)
 
         # validate algorithm
+        """
         try:
             input_algorithm = self.input["algorithm"]
         except KeyError:
             print("<Input Validation Error> The algorithm must be defined.")
         else:
             self.validate_algorithm(input_algorithm, input_ctrl_vars)
-        return
+        return"""
 
     def validate_algorithm(self, input_algorithm, input_ctrl_vars):
         """This function validates the "algorithm" segment of the JSON input
@@ -88,6 +89,19 @@ class InputValidation:
             },
         }
         validate(instance=input_algorithm, schema=schema_algorithm)
+        self.validate_correct_keys(
+            input_algorithm,
+            [
+                "objective",
+                "optimized_variable",
+                "pop_size",
+                "generations",
+                "selection_operator",
+                "mutation_operator",
+                "mating_operator",
+            ],
+            [],
+        )
         # validation for objective and optimized variable
         self.validate_in_list(input_algorithm["objective"], ["min", "max"], "objective")
         self.validate_in_list(
@@ -95,32 +109,22 @@ class InputValidation:
             list(input_ctrl_vars.keys()),
             "optimized_variable",
         )
-        return
 
-    def validate_in_list(self, variable, accepted_variables, name):
-        """This function checks if a variable is in a list of accepted variables"""
-        assert variable in accepted_variables, (
-            "<Input Validation Error> variable: "
-            + name
-            + ", only accepts: "
-            + str(accepted_variables)
-        )
         return
 
     def validate_constraints(self, input_constraints, input_evaluators):
         """This function validates the "constraints" segment of the JSON input
         file.
         """
+        # check if constraints are in evaluators outputs
         allowed_constraints = []
         for evaluator in input_evaluators:
             allowed_constraints += input_evaluators[evaluator]["outputs"]
+        for constraint in input_constraints:
+            self.validate_in_list(constraint, allowed_constraints, "Constraints")
+        # schema validation
         schema_constraints = {"type": "object", "properties": {}}
         for constraint in input_constraints:
-            assert constraint in allowed_constraints, (
-                "<Input Validation Error> constraint: "
-                + constraint
-                + " is not an output variable of any evaluator."
-            )
             schema_constraints["properties"][constraint] = {
                 "type": "object",
                 "properties": {
@@ -129,8 +133,9 @@ class InputValidation:
                 },
             }
         validate(instance=input_constraints, schema=schema_constraints)
+        # key validation
         for constraint in input_constraints:
-            self.validate_sub_level(
+            self.validate_correct_keys(
                 input_constraints[constraint],
                 ["operator", "constrained_val"],
                 [],
@@ -148,6 +153,7 @@ class InputValidation:
         special_ctrl_vars = ["polynomial"]
 
         # validate regular control variables
+        # schema validation
         schema_ctrl_vars = {"type": "object", "properties": {}}
         variables = []
         for var in input_ctrl_vars:
@@ -161,8 +167,9 @@ class InputValidation:
                 }
                 variables.append(var)
         validate(instance=input_ctrl_vars, schema=schema_ctrl_vars)
+        # key validation
         for var in variables:
-            self.validate_sub_level(
+            self.validate_correct_keys(
                 input_ctrl_vars[var], ["min", "max"], [], "control variable: " + var
             )
 
@@ -174,6 +181,7 @@ class InputValidation:
         except KeyError:
             pass
         else:
+            # schema validation
             schema_ctrl_vars_poly = {
                 "type": "object",
                 "properties": {
@@ -184,7 +192,8 @@ class InputValidation:
                 },
             }
             validate(instance=input_ctrl_vars_poly, schema=schema_ctrl_vars_poly)
-            self.validate_sub_level(
+            # key validation
+            self.validate_correct_keys(
                 input_ctrl_vars_poly,
                 ["order", "min", "max", "above_x_axis"],
                 [],
@@ -198,14 +207,14 @@ class InputValidation:
         """
         # evaluators available
         # add to this list if a developer adds a new evaluator
-        available_evaluators = ["openmc"]
+        available_evaluators = ["openmc", "moltres"]
         # add to this dict if a developers adds a new predefined output
         # for an evaluator
         pre_defined_outputs = {"openmc": ["keff"]}
 
         # validate evaluators
-        self.validate_sub_level(
-            input_evaluators, available_evaluators, [], "evaluators"
+        self.validate_correct_keys(
+            input_evaluators, [], available_evaluators, "evaluators"
         )
         schema_evaluators = {"type": "object", "properties": {}}
 
@@ -228,18 +237,19 @@ class InputValidation:
             }
         validate(instance=input_evaluators, schema=schema_evaluators)
         for evaluator in input_evaluators:
-            self.validate_sub_level(
+            self.validate_correct_keys(
                 input_evaluators[evaluator],
                 ["input_script", "inputs", "outputs"],
                 ["output_script"],
                 "evaluator: " + evaluator,
             )
-
-            not_in_list, which_strings = self.validate_if_not_in_list(
+            # check if outputs are in predefined outputs or inputs, and if not
+            # output_script must be defined
+            in_list, which_strings = self.validate_if_in_list(
                 input_evaluators[evaluator]["outputs"],
                 pre_defined_outputs[evaluator] + input_evaluators[evaluator]["inputs"],
             )
-            if not_in_list:
+            if not in_list:
                 try:
                     a = input_evaluators[evaluator]["output_script"]
                 except KeyError:
@@ -253,19 +263,31 @@ class InputValidation:
                     raise
         return
 
-    def validate_if_not_in_list(self, input_string, accepted_strings):
-        """This function checks if string is not in a defined list of strings
+    def validate_if_in_list(self, input_strings, accepted_strings):
+        """This function checks if strings are in a defined list of strings
         and returns a boolean.
         """
-        not_in_list = False
+        in_list = True
         which_strings = []
-        for string in input_string:
+        for string in input_strings:
             if string not in accepted_strings:
-                not_in_list = True
+                in_list = False
                 which_strings.append(string)
-        return not_in_list, which_strings
+        return in_list, which_strings
 
-    def validate_sub_level(
+    def validate_in_list(self, variable, accepted_variables, name):
+        """This function checks if a variable is in a list of accepted variables"""
+        assert variable in accepted_variables, (
+            "<Input Validation Error> variable: "
+            + name
+            + ", only accepts: "
+            + str(accepted_variables)
+            + " not variable:"
+            + variable
+        )
+        return
+
+    def validate_correct_keys(
         self, dict_to_validate, key_names, optional_key_names, variable_type
     ):
         """This function runs a try except routine for to check if all key
