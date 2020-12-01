@@ -114,6 +114,8 @@ class InputValidation:
 
         # validation for operator sections
         self.validate_algorithm_operators("selection", input_algorithm)
+        self.validate_algorithm_operators("mutation", input_algorithm)
+        self.validate_algorithm_operators("mating", input_algorithm)
         return
 
     def validate_algorithm_operators(self, operator_type, input_algorithm):
@@ -134,31 +136,40 @@ class InputValidation:
         }
 
         try:
-            op = input_algorithm[operator_type + "_operator"]["operator"]
-            self.validate_in_list(
-                op,
-                list(deap_operators[operator_type].keys()),
-                operator_type + "_operator's operator",
-            )
+            op = input_algorithm[operator_type + "_operator"]
         except KeyError:
             pass
-        except AssertionError as error:
-            print(error)
-            raise
         else:
-            schema_op = {"type": "object", "properties": {}}
-            schema_op["operator"] = {"type": "string"}
-            for var in deap_operators[operator_type][op]:
-                schema_op["properties"][var] = {"type": "number"}
-            validate(
-                instance=input_algorithm[operator_type + "_operator"], schema=schema_op
-            )
-            self.validate_correct_keys(
-                input_algorithm[operator_type + "_operator"],
-                deap_operators[operator_type][op] + ["operator"],
-                [],
-                operator_type + " operator: " + op,
-            )
+            # first check for operator
+            try:
+                op_op = op["operator"]
+            except KeyError:
+                print(
+                    "<Input Validation Error> You must define an operator for the "
+                    + operator_type
+                    + "_operator"
+                )
+                raise
+            else:
+                self.validate_in_list(
+                    op_op,
+                    list(deap_operators[operator_type].keys()),
+                    operator_type + "_operator's operator",
+                )
+                schema_op = {"type": "object", "properties": {}}
+                schema_op["operator"] = {"type": "string"}
+                for var in deap_operators[operator_type][op_op]:
+                    schema_op["properties"][var] = {"type": "number"}
+                validate(
+                    instance=input_algorithm[operator_type + "_operator"],
+                    schema=schema_op,
+                )
+                self.validate_correct_keys(
+                    input_algorithm[operator_type + "_operator"],
+                    deap_operators[operator_type][op_op] + ["operator"],
+                    [],
+                    operator_type + " operator: " + op_op,
+                )
         return
 
     def validate_constraints(self, input_constraints, input_evaluators):
