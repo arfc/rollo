@@ -113,34 +113,10 @@ class InputValidation:
         )
 
         # validation for operator sections
-        try:
-            selection_op = input_algorithm["selection_operator"]["operator"]
-            self.validate_in_list(
-                selection_op,
-                list(deap_operators["selection"].keys()),
-                "selection_operator's operator",
-            )
-        except KeyError:
-            pass
-        except AssertionError as error:
-            print(error)
-            raise
-        else:
-            schema_op = {"type": "object", "properties": {}}
-            schema_op["operator"] = {"type": "string"}
-            for var in deap_operators["selection"][selection_op]:
-                schema_op[var] = {"type": "number"}
-            validate(instance=input_algorithm["selection_operator"], schema=schema_op)
-            self.validate_correct_keys(
-                input_algorithm["selection_operator"],
-                deap_operators["selection"][selection_op] + ["operator"],
-                [],
-                "selection operator: " + selection_op,
-            )
+        self.validate_algorithm_operators("selection", input_algorithm)
         return
 
-
-    def validate_algorithm_operators(self, operator_type, input_algorithm): 
+    def validate_algorithm_operators(self, operator_type, input_algorithm):
         """This function validates the DEAP operators. """
 
         deap_operators = {
@@ -158,7 +134,7 @@ class InputValidation:
         }
 
         try:
-            op = input_algorithm[operator_type+"_operator"]["operator"]
+            op = input_algorithm[operator_type + "_operator"]["operator"]
             self.validate_in_list(
                 op,
                 list(deap_operators[operator_type].keys()),
@@ -173,15 +149,17 @@ class InputValidation:
             schema_op = {"type": "object", "properties": {}}
             schema_op["operator"] = {"type": "string"}
             for var in deap_operators[operator_type][op]:
-                schema_op[var] = {"type": "number"}
-            validate(instance=input_algorithm[operator_type+"_operator"], schema=schema_op)
-            self.validate_correct_keys(
-                input_algorithm[operator_type+"_operator"],
-                deap_operators[operator_type][selection_op] + ["operator"],
-                [],
-                operator_type+" operator: " + op,
+                schema_op["properties"][var] = {"type": "number"}
+            validate(
+                instance=input_algorithm[operator_type + "_operator"], schema=schema_op
             )
-        return 
+            self.validate_correct_keys(
+                input_algorithm[operator_type + "_operator"],
+                deap_operators[operator_type][op] + ["operator"],
+                [],
+                operator_type + " operator: " + op,
+            )
+        return
 
     def validate_constraints(self, input_constraints, input_evaluators):
         """This function validates the "constraints" segment of the JSON input
