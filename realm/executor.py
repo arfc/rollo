@@ -21,3 +21,6 @@ class Executor(object):
         with open(self.input_file) as json_file:
             data = json.load(json_file)
         return data
+
+    def load_model(self): 
+        return model
