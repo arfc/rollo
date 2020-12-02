@@ -63,6 +63,8 @@ class Executor(object):
         evaluator_fn = self.load_evaluator()
         # DEAP toolbox set up
         toolbox = self.load_toolbox()
+        # load constraints if they exist
+
         return model
 
     def load_evaluator(self):
@@ -81,3 +83,10 @@ class Executor(object):
         """This function creates a DEAP toolbox object based on user-defined
         parameters
         """
+        input_algorithm = self.input_dict["algorithm"]
+        if input_algorithm["objective"] == "min":
+            weight = -1.0
+        elif input_algorithm["objective"] == "max":
+            weight = +1.0
+        creator.create(obj, base.fitness, weights=(weight,))
+        creator.create("Ind", list, fitness=creator.obj)
