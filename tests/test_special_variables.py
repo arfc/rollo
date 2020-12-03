@@ -1,5 +1,4 @@
 import pytest
-from realm.algorithm import Algorithm
 from realm.special_variables import SpecialVariables
 
 
