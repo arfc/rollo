@@ -18,8 +18,8 @@ class Executor(object):
         print("execute realm")
         input_dict = self.read_input_file()
         InputValidation(input_dict).validate()
-        self.input_dict = self.add_defaults(input_dict)
-        model = self.load_model()
+        complete_input_dict = self.add_defaults(input_dict)
+        model = self.load_model(complete_input_dict)
 
     def read_input_file(self):
         """This function reads a json input file and returns a dictionary"""
@@ -60,10 +60,10 @@ class Executor(object):
             input_dict[variable] = default_val
         return input_dict
 
-    def load_model(self):
+    def load_model(self, input_dict):
         """This function loads the user-defined model"""
         # organize control variables and output dict
-        control_dict, output_dict = self.organize_input_output()
+        control_dict, output_dict = self.organize_input_output(input_dict)
         # generate evaluator function
         evaluator_fn = self.load_evaluator()
         # DEAP toolbox set up
@@ -72,45 +72,45 @@ class Executor(object):
         # constraints = self.load_constraints()
         return model
 
-    def organize_input_output(self):
+    def organize_input_output(self, input_dict):
         """This function numbers the control variables and output variables
         to keep consistency between evaluation, constraints, and algorithm
         classes
         """
-        input_ctrl_vars = self.input_dict["control_variables"]
-        input_evaluators = self.input_dict["evaluators"]
-        input_algorithm = self.input_dict["algorithm"]
+        input_ctrl_vars = input_dict["control_variables"]
+        input_evaluators = input_dict["evaluators"]
+        input_algorithm = input_dict["algorithm"]
 
         # define control variables dict
-        control_variables = OrderedDict()
+        control_vars = OrderedDict()
         sv = SpecialVariables()
-        special_control_variables = sv.special_variables
+        special_control_vars = sv.special_variables
         for solver in input_evaluators:
             for var in input_evaluators[solver]["inputs"]:
-                if var in special_control_variables:
+                if var in special_control_vars:
                     method = getattr(sv, var + "_naming")
                     var_list = method(input_ctrl_vars[var])
                     for v in var_list:
-                        control_variables[v] = solver
+                        control_vars[v] = solver
                 else:
-                    control_variables[var] = solver
+                    control_vars[var] = solver
 
         # define output variables dict
-        output_variables = OrderedDict()
+        output_vars = OrderedDict()
         optimized_variable = input_algorithm["optimized_variable"]
         # find optimized variable
         output_list = []
         for solver in input_evaluators:
             for var in input_evaluators[solver]["outputs"]:
                 if var == optimized_variable:
-                    output_variables[var] = solver
+                    output_vars[var] = solver
         # put in the rest of the output variables
         for solver in input_evaluators:
             for var in input_evaluators[solver]["outputs"]:
                 if var != optimized_variable:
-                    output_variables[var] = solver
+                    output_vars[var] = solver
 
-        return control_variables, output_variables
+        return control_vars, output_vars
 
     def load_evaluator(self):
         """This function creates an Evaluation function object"""
