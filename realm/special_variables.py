@@ -8,9 +8,9 @@ class SpecialVariables:
     def polynomial_naming(self, polynomial_dict):
         """This function returns a list of strings of the variable names"""
         order = polynomial_dict["order"]
-        name = order = polynomial_dict["name"]
+        name = polynomial_dict["name"]
         var_names = []
-        for i in range(len(order) + 1):
+        for i in range(order + 1):
             var_names.append("poly_" + name + "_" + str(i))
         return var_names
 
