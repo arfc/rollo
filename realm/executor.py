@@ -1,6 +1,9 @@
+import realm
 from realm.input_validation import InputValidation
+from realm.special_variables import SpecialVariables
 from deap import base, creator, tools, algorithms
 import json, re
+from collections import OrderedDict
 
 
 class Executor(object):
@@ -17,6 +20,12 @@ class Executor(object):
         InputValidation(input_dict).validate()
         self.input_dict = self.add_defaults(input_dict)
         model = self.load_model()
+
+    def read_input_file(self):
+        """This function reads a json input file and returns a dictionary"""
+        with open(self.input_file) as json_file:
+            data = json.load(json_file)
+        return data
 
     def add_defaults(self, input_dict):
         """This function adds default inputs if they are missing from
@@ -51,21 +60,57 @@ class Executor(object):
             input_dict[variable] = default_val
         return input_dict
 
-    def read_input_file(self):
-        """This function reads a json input file and returns a dictionary"""
-        with open(self.input_file) as json_file:
-            data = json.load(json_file)
-        return data
-
     def load_model(self):
         """This function loads the user-defined model"""
+        # organize control variables and output dict
+        control_dict, output_dict = self.organize_input_output()
         # generate evaluator function
         evaluator_fn = self.load_evaluator()
         # DEAP toolbox set up
-        toolbox = self.load_toolbox(evaluator_fn)
+        # toolbox = self.load_toolbox(evaluator_fn)
         # load constraints if they exist
-
+        # constraints = self.load_constraints()
         return model
+
+    def organize_input_output(self):
+        """This function numbers the control variables and output variables
+        to keep consistency between evaluation, constraints, and algorithm
+        classes
+        """
+        input_ctrl_vars = self.input_dict["control_variables"]
+        input_evaluators = self.input_dict["evaluators"]
+        input_algorithm = self.input_dict["algorithm"]
+
+        # define control variables dict
+        control_variables = OrderedDict()
+        sv = SpecialVariables()
+        special_control_variables = sv.special_variables
+        for solver in input_evaluators:
+            for var in input_evaluators[solver]["inputs"]:
+                if var in special_control_variables:
+                    method = getattr(sv, var + "_naming")
+                    var_list = method(input_ctrl_vars[var])
+                    for v in var_list:
+                        control_variables[v] = solver
+                else:
+                    control_variables[var] = solver
+
+        # define output variables dict
+        output_variables = OrderedDict()
+        optimized_variable = input_algorithm["optimized_variable"]
+        # find optimized variable
+        output_list = []
+        for solver in input_evaluators:
+            for var in input_evaluators[solver]["outputs"]:
+                if var == optimized_variable:
+                    output_variables[var] = solver
+        # put in the rest of the output variables
+        for solver in input_evaluators:
+            for var in input_evaluators[solver]["outputs"]:
+                if var != optimized_variable:
+                    output_variables[var] = solver
+
+        return control_variables, output_variables
 
     def load_evaluator(self):
         """This function creates an Evaluation function object"""
@@ -77,6 +122,7 @@ class Executor(object):
                 solver_name=solver,
                 input_script=solver_dict["input_script"],
             )
+        evaluator_fn = evaluator.eval_fn_generator()
         return evaluator_fn
 
     def load_toolbox(self, evaluator_fn):
@@ -99,3 +145,7 @@ class Executor(object):
         toolbox.register(
             "mate",
         )
+        return toolbox
+
+    def load_constraints(self):
+        return
