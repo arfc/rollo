@@ -52,9 +52,11 @@ class Evaluation:
             if output_dict[var] == solver:
                 if var in control_vars[solver]:
                     output_vals[i] = control_vars[solver][var]
-                #elif var in self.eval_dict[solver].pre_defined_outputs:
-
-
+                elif var in self.eval_dict[solver].pre_defined_outputs:
+                    method = getattr(self.eval_dict[solver], "evaluate_"+var)
+                    output_vals[i] = method()
+                # else:
+                    # need last else for output script 
         return output_vals
 
     def name_ind(self, ind, control_dict, input_evaluators):
@@ -81,7 +83,6 @@ class Evaluation:
         for inp in control_vars_solver:
             render_str += "**{'" + inp + "':" + str(control_vars_solver[inp]) + "},"
         render_str += ")"
-        print(render_str)
         rendered_template = eval(render_str)
         return rendered_template
 
