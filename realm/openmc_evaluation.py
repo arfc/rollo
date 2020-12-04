@@ -11,7 +11,7 @@ class OpenMCEvaluation:
     def __init__(self):
         self.pre_defined_outputs = ["keff"]
 
-    def evaluate_keff():
+    def evaluate_keff(self):
         """This function analyzes the openmc output file"""
         for file in glob.glob("*.h5"):
             h5file = file

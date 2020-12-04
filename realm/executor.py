@@ -65,7 +65,7 @@ class Executor(object):
         # organize control variables and output dict
         control_dict, output_dict = self.organize_input_output(input_dict)
         # generate evaluator function
-        evaluator_fn = self.load_evaluator()
+        evaluator_fn = self.load_evaluator(control_dict, output_dict, input_dict)
         # DEAP toolbox set up
         # toolbox = self.load_toolbox(evaluator_fn)
         # load constraints if they exist
@@ -112,7 +112,7 @@ class Executor(object):
 
         return control_vars, output_vars
 
-    def load_evaluator(self):
+    def load_evaluator(self, control_dict, output_dict, input_dict):
         """This function creates an Evaluation function object"""
         input_evaluators = self.input_dict["evaluators"]
         evaluator = realm.Evaluation()
@@ -122,7 +122,7 @@ class Executor(object):
                 solver_name=solver,
                 input_script=solver_dict["input_script"],
             )
-        evaluator_fn = evaluator.eval_fn_generator()
+        evaluator_fn = evaluator.eval_fn_generator(control_dict, output_dict, input_dict)
         return evaluator_fn
 
     def load_toolbox(self, evaluator_fn):

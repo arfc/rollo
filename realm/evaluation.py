@@ -30,6 +30,7 @@ class Evaluation():
         self.scripts[solver_name] = input_script
         self.all_input_map[solver_name] = input_index 
         self.all_fitness_map[solver_name] = fitness_index
+        return
 
     def eval_fn_generator(): 
         """ This function returns a function that accepts a DEAP individual 
