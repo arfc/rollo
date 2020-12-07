@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, subprocess, ast
 from jinja2 import nativetypes
 
 from realm.openmc_evaluation import OpenMCEvaluation
@@ -7,15 +7,20 @@ from realm.openmc_evaluation import OpenMCEvaluation
 class Evaluation:
     def __init__(self):
         self.supported_solvers = ["openmc", "moltres"]
-        self.scripts = {}
+        self.input_scripts = {}
+        self.output_scripts = {}
         # developer should add to here when adding a new solver
         self.eval_dict = {"openmc": OpenMCEvaluation()}
 
-    def add_evaluator(self, solver_name, input_script):
+    def add_evaluator(self, solver_name, input_script, output_script):
         """This function adds information an evaluator to this class for later
         use in eval_fn_generator.
         """
-        self.scripts[solver_name] = input_script
+        self.input_scripts[solver_name] = input_script
+        try:
+            self.output_scripts[solver_name] = output_script
+        except:
+            pass
         return
 
     def eval_fn_generator(self, control_dict, output_dict, input_dict):
@@ -30,13 +35,14 @@ class Evaluation:
             and returns a tuple of output values listed in outputs
             """
             control_vars = self.name_ind(ind, control_dict)
+            output_vals = [0] * len(output_dict)
 
             for solver in input_evaluators:
                 path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
                 os.mkdir(path)
                 os.chdir(path)
                 method(self, solver + "run")
-                method(self.scripts["solver"], control_vars[solver])
+                method(self.input_scripts["solver"], control_vars[solver])
                 output_vals = self.get_output_vals(
                     output_vals, solver, output_dict, control_dict
                 )
@@ -48,15 +54,28 @@ class Evaluation:
         """This function returns a populated list with output values for each
         solver
         """
+        # try output script
+        try:
+            oup_script = self.output_scripts[solver]
+        except:
+            print("didn't exist")
+            pass
+        else:
+            def system_call(command):
+                p = subprocess.Popen([command], stdout=subprocess.PIPE, shell=True)
+                return p.stdout.read()
+            oup_bytes = system_call("python " + self.output_scripts[solver])
+            oup_script_results = ast.literal_eval(oup_bytes.decode("utf-8"))
+
         for i, var in enumerate(output_dict):
             if output_dict[var] == solver:
                 if var in control_vars[solver]:
                     output_vals[i] = control_vars[solver][var]
                 elif var in self.eval_dict[solver].pre_defined_outputs:
-                    method = getattr(self.eval_dict[solver], "evaluate_"+var)
+                    method = getattr(self.eval_dict[solver], "evaluate_" + var)
                     output_vals[i] = method()
-                # else:
-                    # need last else for output script 
+                else:
+                    output_vals[i] = oup_script_results[var]
         return output_vals
 
     def name_ind(self, ind, control_dict, input_evaluators):
