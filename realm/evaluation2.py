@@ -41,6 +41,8 @@ class Evaluation:
                 path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
                 os.mkdir(path)
                 os.chdir(path)
+                exec(solver+"_run(self.input_scripts[solver])+control_vars[solver]")
+                method = getattr(self.eval_dict[solver], "evaluate_" + var)
                 method(self, solver + "run")
                 method(self.input_scripts["solver"], control_vars[solver])
                 output_vals = self.get_output_vals(
