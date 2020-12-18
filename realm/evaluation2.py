@@ -41,18 +41,19 @@ class Evaluation:
             for solver in input_evaluators:
                 # path name for solver's run
                 path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
+                # render jinja-ed input script
                 rendered_script = self.render_jinja_template_python(
                     script=self.input_scripts[solver],
                     control_vars_solver=control_vars[solver],
                 )
+                # enter directory for this particular solver's run
                 os.mkdir(path)
                 os.chdir(path)
+                # run solver's function where run is executed
                 exec("self." + solver + "_run(rendered_script)")
+                # go back to normal directory with all files
                 os.chdir("../")
-                # method = getattr(self.eval_dict[solver], "evaluate_" + var)
-                # method(self, "self." + solver + "run")
-                # method(self.input_scripts[solver], control_vars[solver])
-                print(output_vals, solver, output_dict, control_vars)
+                # get output values
                 output_vals = self.get_output_vals(
                     output_vals, solver, output_dict, control_vars, path
                 )
@@ -70,21 +71,31 @@ class Evaluation:
         except:
             pass
         else:
-            shutil.copyfile(self.output_scripts[solver], path + "/" + solver + "_output.py")
+            # copy rendered output script into a new file in the particular solver's run
+            shutil.copyfile(
+                self.output_scripts[solver], path + "/" + solver + "_output.py"
+            )
+            # enter directory for this particular solver's run
             os.chdir(path)
-            oup_bytes = self.system_call("python "+solver+ "_output.py")
+            # run the output script
+            oup_bytes = self.system_call("python " + solver + "_output.py")
+            # return the output script's printed dictionary into a variable
             oup_script_results = ast.literal_eval(oup_bytes.decode("utf-8"))
+            # go back to normal directory with all files
             os.chdir("../")
 
         for i, var in enumerate(output_dict):
             if output_dict[var] == solver:
+                # if variable is a control variable
                 if var in control_vars[solver]:
                     output_vals[i] = control_vars[solver][var]
+                # if variable's analysis script is pre-defined
                 elif var in self.eval_dict[solver].pre_defined_outputs:
                     os.chdir(path)
                     method = getattr(self.eval_dict[solver], "evaluate_" + var)
                     output_vals[i] = method()
                     os.chdir("../")
+                # if variable's defined in output script
                 else:
                     output_vals[i] = oup_script_results[var]
         return output_vals
@@ -132,7 +143,6 @@ class Evaluation:
         f.write(rendered_openmc_script)
         f.close()
         self.system_call("python openmc_input.py")
-        #exec(rendered_openmc_script)
         return
 
     def moltres_run(self, rendered_moltres_script):
