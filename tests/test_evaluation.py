@@ -87,6 +87,7 @@ def test_get_output_vals():
         path = "./test_evaluation/"
     )
     expected_output_vals = [0.03, 1.6331797843041689, None, 3]
+    os.remove("./test_evaluation/openmc_output.py")
     os.chdir("../")
     assert output_vals == expected_output_vals
 
