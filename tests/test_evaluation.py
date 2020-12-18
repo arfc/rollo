@@ -62,7 +62,7 @@ def test_get_output_vals():
     ev.add_evaluator(
         solver_name="openmc",
         input_script="placeholder.py",
-        output_script="input_test_evaluation_get_output_vals.py"
+        output_script="input_test_evaluation_get_output_vals.py",
     )
     output_vals = ev.get_output_vals(
         output_vals=[None] * 4,
@@ -84,7 +84,7 @@ def test_get_output_vals():
                 "poly_triso_3": 1,
             },
         },
-        path = "./test_evaluation/"
+        path="./test_evaluation/",
     )
     expected_output_vals = [0.03, 1.6331797843041689, None, 3]
     os.remove("./test_evaluation/openmc_output.py")
@@ -129,7 +129,7 @@ def test_render_jinja_template_python():
             "poly_triso_0": 1,
             "poly_triso_1": 1,
             "poly_triso_2": 1,
-            "poly_triso_3": 1
+            "poly_triso_3": 1,
         },
     )
 
