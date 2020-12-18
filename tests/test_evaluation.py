@@ -50,6 +50,8 @@ def test_eval_fn_generator():
     ind.num = 0
     output_vals = eval_function(ind)
     expected_output_vals = tuple([0.03, output_vals[1], 1000, 10])
+    shutil.rmtree("./openmc_0_0")
+    shutil.rmtree("./moltres_0_0")
     os.chdir("../")
     assert output_vals == expected_output_vals
 
