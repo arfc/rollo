@@ -1,6 +1,6 @@
 import pytest
 import os, shutil
-from realm.evaluation2 import Evaluation
+from realm.evaluation import Evaluation
 from collections import OrderedDict
 from deap import base, creator, tools, algorithms
 
