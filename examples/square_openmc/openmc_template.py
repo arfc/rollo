@@ -3,9 +3,8 @@ import numpy as np
 from numpy import sin, cos, tan, pi
 
 # Templating 
-input_vals = {{input}}
-total_pf = input_vals[0]
-poly_coeff = input_vals[1:]
+total_pf = {{pf}}
+poly_coeff = {{poly}}
 
 # Constants
 T_r1 = 2135e-5
@@ -105,9 +104,7 @@ for i in range(dz):
         centers = openmc.model.pack_spheres(radius=T_r5, region=prism_region, pf=pf_z[i])
     except ZeroDivisionError: 
         centers = []
-        #print('here')
     trisos = [openmc.model.TRISO(T_r5, triso_univ, c) for c in centers]
-    #print(pf_z[i],len(trisos)*4/3*pi*T_r5**3/(z_thick*0.2*0.2))
     prism_cell = openmc.Cell(region=prism_region)
     lower_left, upper_right = prism_cell.region.bounding_box
     shape = (1,1,1)
@@ -123,7 +120,7 @@ for i in range(dz):
     all_prism_regions |= prism_region_new 
 prism_areas = openmc.Cell(fill=all_prism_univ, region=all_prism_regions)
 outer.region &= ~all_prism_regions
-#print('out')
+print('out')
 # geometry
 univ = openmc.Universe(cells=[outer,prism_areas])
 geom = openmc.Geometry(univ)

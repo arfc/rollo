@@ -1,10 +1,11 @@
 {
-	"input_variables": {
+	"control_variables": {
 		"packing_fraction": {
 			"min": 0.005,
 			"max": 0.1
 		},
 		"polynomial": {
+			"name": "triso",
 			"order": 3,
 			"min": -1,
 			"max": 1,
@@ -15,18 +16,13 @@
 		"openmc": {
 			"input_script": "openmc_inp.py",
 			"inputs": ["packing_fraction", "polynomial"],
-			"outputs": ["packing_fraction", "keff"],
-			"output_script": "openmc_oup.py"
+			"outputs": ["packing_fraction", "keff"]
 		}
 	},
 	"constraints": {
 		"keff": {
 			"operator": ">",
 			"constrained_val": 1
-		},
-		"max_temp": {
-			"operator": "<",
-			"constrained_val": 700
 		}
 	},
 	"algorithm": {
@@ -35,17 +31,17 @@
 		"pop_size": 100,
 		"generations": 10,
 		"selection_operator": {
-			"type": "SelBest",
-			"k": 5
+			"operator": "selBest",
+			"k": 1
 		},
 		"mutation_operator": {
-			"type": "mutGaussian",
+			"operator": "mutGaussian",
 			"indpb": 0.5,
 			"mu": 0.5,
 			"sigma": 0.5
 		},
 		"mating_operator": {
-			"type": "cxOnePoint"
+			"operator": "cxOnePoint"
 		}
 	}
 }
