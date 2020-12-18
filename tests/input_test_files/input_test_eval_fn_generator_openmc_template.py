@@ -148,7 +148,7 @@ settings = openmc.Settings()
 settings.source = src
 settings.batches = 10
 settings.inactive = 2
-settings.particles = 100
+settings.particles = 10
 settings.temperature = {"multipole": True, "method": "interpolation"}
 settings.export_to_xml()
 

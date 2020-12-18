@@ -14,8 +14,8 @@ def test_eval_fn_generator():
     ev = Evaluation()
     ev.add_evaluator(
         solver_name="openmc",
-        input_script="./input_test_render_jinja_template_python.py",
-        output_script="input_test_evaluation_get_output_vals.py",
+        input_script="input_test_eval_fn_generator_openmc_template.py",
+        output_script="input_test_eval_fn_generator_openmc_output.py",
     )
     ev.add_evaluator(
         solver_name="moltres",
@@ -37,7 +37,7 @@ def test_eval_fn_generator():
                 "packing_fraction": "openmc",
                 "keff": "openmc",
                 "max_temp": "moltres",
-                "random": "openmc",
+                "num_batches": "openmc",
             }
         ),
         input_evaluators={"openmc": {}, "moltres": {}},
@@ -49,18 +49,18 @@ def test_eval_fn_generator():
     ind.gen = 0
     ind.num = 0
     output_vals = eval_function(ind)
-    expected_output_vals = tuple([0.03, 1.6331797843041689, 1000, 3])
+    expected_output_vals = tuple([0.03, output_vals[1], 1000, 10])
     os.chdir("../")
     assert output_vals == expected_output_vals
 
-"""
+
 def test_get_output_vals():
     os.chdir("./input_test_files")
     ev = Evaluation()
     ev.add_evaluator(
         solver_name="openmc",
         input_script="placeholder.py",
-        output_script="input_test_evaluation_get_output_vals.py",
+        output_script="input_test_evaluation_get_output_vals.py"
     )
     output_vals = ev.get_output_vals(
         output_vals=[None] * 4,
@@ -82,6 +82,7 @@ def test_get_output_vals():
                 "poly_triso_3": 1,
             },
         },
+        path = "./test_get_output_vals/"
     )
     expected_output_vals = [0.03, 1.6331797843041689, None, 3]
     os.chdir("../")
@@ -132,4 +133,3 @@ def test_render_jinja_template_python():
     expected_rendered_template = "total_pf = 0.01\npoly_coeff = [1, 1, 1, 1]"
     os.chdir("../")
     assert rendered_template == expected_rendered_template
-"""

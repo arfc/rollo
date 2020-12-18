@@ -1,4 +1,4 @@
-import os, sys, subprocess, ast
+import os, sys, subprocess, ast, shutil
 from jinja2 import nativetypes
 import openmc
 
@@ -54,13 +54,13 @@ class Evaluation:
                 # method(self.input_scripts[solver], control_vars[solver])
                 print(output_vals, solver, output_dict, control_vars)
                 output_vals = self.get_output_vals(
-                    output_vals, solver, output_dict, control_vars
+                    output_vals, solver, output_dict, control_vars, path
                 )
             return tuple(output_vals)
 
         return eval_function
 
-    def get_output_vals(self, output_vals, solver, output_dict, control_vars):
+    def get_output_vals(self, output_vals, solver, output_dict, control_vars, path):
         """This function returns a populated list with output values for each
         solver
         """
@@ -70,24 +70,28 @@ class Evaluation:
         except:
             pass
         else:
-
-            def system_call(command):
-                p = subprocess.Popen([command], stdout=subprocess.PIPE, shell=True)
-                return p.stdout.read()
-
-            oup_bytes = system_call("python " + self.output_scripts[solver])
+            shutil.copyfile(self.output_scripts[solver], path + "/" + solver + "_output.py")
+            os.chdir(path)
+            oup_bytes = self.system_call("python "+solver+ "_output.py")
             oup_script_results = ast.literal_eval(oup_bytes.decode("utf-8"))
+            os.chdir("../")
 
         for i, var in enumerate(output_dict):
             if output_dict[var] == solver:
                 if var in control_vars[solver]:
                     output_vals[i] = control_vars[solver][var]
                 elif var in self.eval_dict[solver].pre_defined_outputs:
+                    os.chdir(path)
                     method = getattr(self.eval_dict[solver], "evaluate_" + var)
                     output_vals[i] = method()
+                    os.chdir("../")
                 else:
                     output_vals[i] = oup_script_results[var]
         return output_vals
+
+    def system_call(self, command):
+        p = subprocess.Popen([command], stdout=subprocess.PIPE, shell=True)
+        return p.stdout.read()
 
     def name_ind(self, ind, control_dict, input_evaluators):
         """This function returns a dictionary that maps the control_dict's variable
@@ -127,8 +131,8 @@ class Evaluation:
         f = open("openmc_input.py", "w+")
         f.write(rendered_openmc_script)
         f.close()
-        #system_call("python openmc_input.py")
-        exec(rendered_openmc_script)
+        self.system_call("python openmc_input.py")
+        #exec(rendered_openmc_script)
         return
 
     def moltres_run(self, rendered_moltres_script):
