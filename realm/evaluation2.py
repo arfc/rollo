@@ -1,7 +1,9 @@
 import os, sys, subprocess, ast
 from jinja2 import nativetypes
+import openmc
 
 from realm.openmc_evaluation import OpenMCEvaluation
+from realm.moltres_evaluation import MoltresEvaluation
 
 
 class Evaluation:
@@ -10,7 +12,7 @@ class Evaluation:
         self.input_scripts = {}
         self.output_scripts = {}
         # developer should add to here when adding a new solver
-        self.eval_dict = {"openmc": OpenMCEvaluation()}
+        self.eval_dict = {"openmc": OpenMCEvaluation(), "moltres": MoltresEvaluation()}
 
     def add_evaluator(self, solver_name, input_script, output_script):
         """This function adds information an evaluator to this class for later
@@ -23,30 +25,36 @@ class Evaluation:
             pass
         return
 
-    def eval_fn_generator(self, control_dict, output_dict, input_dict):
+    def eval_fn_generator(self, control_dict, output_dict, input_evaluators):
         """This function returns a function that accepts a DEAP individual
         and returns a tuple of output values listed in outputs
         """
-        input_evaluators = input_dict["evaluators"]
         output_list = [0] * len(output_dict)
 
         def eval_function(ind):
             """This function accepts a DEAP individual
             and returns a tuple of output values listed in outputs
             """
-            control_vars = self.name_ind(ind, control_dict)
-            output_vals = [0] * len(output_dict)
+            control_vars = self.name_ind(ind, control_dict, input_evaluators)
+            output_vals = [None] * len(output_dict)
 
             for solver in input_evaluators:
+                # path name for solver's run
                 path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
+                rendered_script = self.render_jinja_template_python(
+                    script=self.input_scripts[solver],
+                    control_vars_solver=control_vars[solver],
+                )
                 os.mkdir(path)
                 os.chdir(path)
-                exec(solver+"_run(self.input_scripts[solver])+control_vars[solver]")
-                method = getattr(self.eval_dict[solver], "evaluate_" + var)
-                method(self, solver + "run")
-                method(self.input_scripts["solver"], control_vars[solver])
+                exec("self." + solver + "_run(rendered_script)")
+                os.chdir("../")
+                # method = getattr(self.eval_dict[solver], "evaluate_" + var)
+                # method(self, "self." + solver + "run")
+                # method(self.input_scripts[solver], control_vars[solver])
+                print(output_vals, solver, output_dict, control_vars)
                 output_vals = self.get_output_vals(
-                    output_vals, solver, output_dict, control_dict
+                    output_vals, solver, output_dict, control_vars
                 )
             return tuple(output_vals)
 
@@ -60,12 +68,13 @@ class Evaluation:
         try:
             oup_script = self.output_scripts[solver]
         except:
-            print("didn't exist")
             pass
         else:
+
             def system_call(command):
                 p = subprocess.Popen([command], stdout=subprocess.PIPE, shell=True)
                 return p.stdout.read()
+
             oup_bytes = system_call("python " + self.output_scripts[solver])
             oup_script_results = ast.literal_eval(oup_bytes.decode("utf-8"))
 
@@ -113,14 +122,15 @@ class Evaluation:
         """
         return
 
-    def openmc_run(self, openmc_script, control_vars_solver):
+    def openmc_run(self, rendered_openmc_script):
         """This function runs the rendered openmc script"""
-        rendered_openmc_script = self.render_jinja_template_python(
-            openmc_script, control_vars_solver
-        )
+        f = open("openmc_input.py", "w+")
+        f.write(rendered_openmc_script)
+        f.close()
+        #system_call("python openmc_input.py")
         exec(rendered_openmc_script)
         return
 
-    def moltres_run():
+    def moltres_run(self, rendered_moltres_script):
         """This function runs the rendered moltres input file"""
         return

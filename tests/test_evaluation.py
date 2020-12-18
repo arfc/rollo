@@ -1,9 +1,59 @@
 import pytest
-import os
+import os, shutil
 from realm.evaluation2 import Evaluation
 from collections import OrderedDict
+from deap import base, creator, tools, algorithms
 
 
+def test_eval_fn_generator():
+    os.chdir("./input_test_files")
+    if os.path.exists("./openmc_0_0"):
+        shutil.rmtree("./openmc_0_0")
+    if os.path.exists("./moltres_0_0"):
+        shutil.rmtree("./moltres_0_0")
+    ev = Evaluation()
+    ev.add_evaluator(
+        solver_name="openmc",
+        input_script="./input_test_render_jinja_template_python.py",
+        output_script="input_test_evaluation_get_output_vals.py",
+    )
+    ev.add_evaluator(
+        solver_name="moltres",
+        input_script="./input_test_render_jinja_template_python.py",
+        output_script="input_test_evaluation_get_output_vals_moltres.py",
+    )
+    eval_function = ev.eval_fn_generator(
+        control_dict=OrderedDict(
+            {
+                "packing_fraction": "openmc",
+                "poly_triso_0": "openmc",
+                "poly_triso_1": "openmc",
+                "poly_triso_2": "openmc",
+                "poly_triso_3": "openmc",
+            }
+        ),
+        output_dict=OrderedDict(
+            {
+                "packing_fraction": "openmc",
+                "keff": "openmc",
+                "max_temp": "moltres",
+                "random": "openmc",
+            }
+        ),
+        input_evaluators={"openmc": {}, "moltres": {}},
+    )
+
+    creator.create("obj", base.Fitness, weights=(-1.0,))
+    creator.create("Ind", list, fitness=creator.obj)
+    ind = creator.Ind([0.03, 1, 1, 1, 1])
+    ind.gen = 0
+    ind.num = 0
+    output_vals = eval_function(ind)
+    expected_output_vals = tuple([0.03, 1.6331797843041689, 1000, 3])
+    os.chdir("../")
+    assert output_vals == expected_output_vals
+
+"""
 def test_get_output_vals():
     os.chdir("./input_test_files")
     ev = Evaluation()
@@ -12,7 +62,6 @@ def test_get_output_vals():
         input_script="placeholder.py",
         output_script="input_test_evaluation_get_output_vals.py",
     )
-    print(ev.output_scripts)
     output_vals = ev.get_output_vals(
         output_vals=[None] * 4,
         solver="openmc",
@@ -70,10 +119,17 @@ def test_render_jinja_template_python():
     os.chdir("./input_test_files")
     ev = Evaluation()
     rendered_template = ev.render_jinja_template_python(
-        "./input_test_render_jinja_template_python.py",
-        {"packing_fraction": 0.01, "polynomial": [1, 1, 1, 1]},
+        script="./input_test_render_jinja_template_python.py",
+        control_vars_solver={
+            "packing_fraction": 0.01,
+            "poly_triso_0": 1,
+            "poly_triso_1": 1,
+            "poly_triso_2": 1,
+            "poly_triso_3": 1
+        },
     )
 
     expected_rendered_template = "total_pf = 0.01\npoly_coeff = [1, 1, 1, 1]"
     os.chdir("../")
     assert rendered_template == expected_rendered_template
+"""
