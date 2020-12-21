@@ -19,7 +19,7 @@ def test_eval_fn_generator():
     )
     ev.add_evaluator(
         solver_name="moltres",
-        input_script="./input_test_render_jinja_template_python.py",
+        input_script="input_test_render_jinja_template_python.py",
         output_script="input_test_evaluation_get_output_vals_moltres.py",
     )
     eval_function = ev.eval_fn_generator(
