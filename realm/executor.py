@@ -114,15 +114,23 @@ class Executor(object):
 
     def load_evaluator(self, control_dict, output_dict, input_dict):
         """This function creates an Evaluation function object"""
-        input_evaluators = self.input_dict["evaluators"]
+        input_evaluators = input_dict["evaluators"]
         evaluator = realm.Evaluation()
         for solver in input_evaluators:
             solver_dict = input_evaluators[solver]
+            try:
+                output_script = solver_dict["output_script"]
+            except:
+                output_script = None
+            print(solver, solver_dict["input_script"], output_script)
             evaluator.add_evaluator(
                 solver_name=solver,
                 input_script=solver_dict["input_script"],
+                output_script=output_script,
             )
-        evaluator_fn = evaluator.eval_fn_generator(control_dict, output_dict, input_dict)
+        evaluator_fn = evaluator.eval_fn_generator(
+            control_dict, output_dict, input_dict["evaluators"]
+        )
         return evaluator_fn
 
     def load_toolbox(self, evaluator_fn):
