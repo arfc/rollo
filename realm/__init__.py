@@ -1,6 +1,7 @@
 from realm.algorithm import *
 from realm.backend import *
 from realm.constraints import *
+from realm.deap_operators import *
 from realm.evaluation import *
 from realm.executor import *
 from realm.input_validation import *

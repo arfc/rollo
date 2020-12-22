@@ -215,7 +215,8 @@ class InputValidation:
         # special control variables with a non-conforming input style defined in
         # input*** (add file name that has this)
         # add to this list if a developer adds a special control variable
-        special_ctrl_vars = ["polynomial"]
+        sv = SpecialVariables()
+        special_ctrl_vars = sv.special_variables
 
         # validate regular control variables
         # schema validation

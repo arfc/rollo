@@ -1,6 +1,7 @@
 import realm
 from realm.input_validation import InputValidation
 from realm.special_variables import SpecialVariables
+from realm.deap_operators import DeapOperators
 from deap import base, creator, tools, algorithms
 import json, re
 from collections import OrderedDict
@@ -67,7 +68,13 @@ class Executor(object):
         # generate evaluator function
         evaluator_fn = self.load_evaluator(control_dict, output_dict, input_dict)
         # DEAP toolbox set up
-        # toolbox = self.load_toolbox(evaluator_fn)
+        toolbox = self.load_toolbox(
+            evaluator_fn,
+            input_dict["algorithm"],
+            input_dict["control_variables"],
+            control_dict,
+            output_dict,
+        )
         # load constraints if they exist
         # constraints = self.load_constraints()
         return model
@@ -122,7 +129,6 @@ class Executor(object):
                 output_script = solver_dict["output_script"]
             except:
                 output_script = None
-            print(solver, solver_dict["input_script"], output_script)
             evaluator.add_evaluator(
                 solver_name=solver,
                 input_script=solver_dict["input_script"],
@@ -133,12 +139,12 @@ class Executor(object):
         )
         return evaluator_fn
 
-    def load_toolbox(self, evaluator_fn):
+    def load_toolbox(
+        self, evaluator_fn, input_algorithm, input_ctrl_vars, control_dict, output_dict
+    ):
         """This function creates a DEAP toolbox object based on user-defined
         parameters
         """
-        input_algorithm = self.input_dict["algorithm"]
-        input_ctrl_vars = self.input_dict["control_variables"]
         if input_algorithm["objective"] == "min":
             weight = -1.0
         elif input_algorithm["objective"] == "max":
@@ -147,11 +153,27 @@ class Executor(object):
         creator.create("Ind", list, fitness=creator.obj)  # output??
         toolbox = base.Toolbox()
         # register control variables + individual
-
+        sv = SpecialVariables()
+        special_control_vars = sv.special_variables
+        for var in input_ctrl_vars:
+            if var not in special_control_vars:
+                var_dict = input_ctrl_vars[var]
+                toolbox.register(var, random.uniform, var_dict["min"], var_dict["max"])
+            else:
+                method = getattr(sv, var + "_toolbox")
+                toolbox = method(input_ctrl_vars[var], toolbox)
+        ctrl_vars_ordered = []
+        for var in control_dict:
+            ctrl_vars_ordered.append(getattr(var))
+        toolbox.register("individual", tools.initCycle, creator.Ind, ctrl_vars_ordered)
         toolbox.register("population", tools.initRepeat, list, toolbox.individual)
         toolbox.register("evaluate", evaluator_fn)
-        toolbox.register(
-            "mate",
+        do = DeapOperators()
+        toolbox = do.add_toolbox_operators(
+            toolbox,
+            selection_dict=input_algorithm["selection_operator"],
+            mutation_dict=input_algorithm["mutation_operator"],
+            mating_dict=input_algorithm["mating_operator"],
         )
         return toolbox
 
