@@ -164,8 +164,10 @@ class Executor(object):
                 toolbox = method(input_ctrl_vars[var], toolbox)
         ctrl_vars_ordered = []
         for var in control_dict:
-            ctrl_vars_ordered.append(getattr(var))
-        toolbox.register("individual", tools.initCycle, creator.Ind, ctrl_vars_ordered)
+
+            ctrl_vars_ordered.append(getattr(toolbox, var))
+        ctrl_vars_ordered = self.individual_values()
+        toolbox.register("individual", ctrl_vars_ordered)
         toolbox.register("population", tools.initRepeat, list, toolbox.individual)
         toolbox.register("evaluate", evaluator_fn)
         do = DeapOperators()
@@ -176,6 +178,22 @@ class Executor(object):
             mating_dict=input_algorithm["mating_operator"],
         )
         return toolbox
+
+    def individual_values(self, input_ctrl_vars, control_dict, toolbox):
+        """ This function returns an individual with ordered control variable 
+        values 
+        """
+        input_vals = []
+        sv = SpecialVariables()
+        special_control_vars = sv.special_variables
+        for var in control_dict:
+            if var in special_control_vars:
+                
+            else:
+                input_vals.append(getattr(toolbox, var))
+
+        return creator.Ind(input_vals)
+
 
     def load_constraints(self):
         return

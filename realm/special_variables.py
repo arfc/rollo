@@ -26,3 +26,14 @@ class SpecialVariables:
                 poly_dict["max"],
             )
         return toolbox
+
+    def polynomial_values(self, toolbox):
+        """ This function returns polynomial values 
+        """
+        dz = 100
+        poly_vals = np.array([-1]*dz)
+        dz_vals = np.linspace(0, 100, 10000)
+        
+
+         
+        return input_vals
