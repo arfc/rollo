@@ -96,3 +96,7 @@ def test_load_evaluator():
     shutil.rmtree("./moltres_0_0")
     os.chdir("../")
     assert output_vals == expected_output_vals
+
+
+def test_load_toolbox():
+    
