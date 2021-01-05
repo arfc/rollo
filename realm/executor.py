@@ -150,7 +150,7 @@ class Executor(object):
         elif input_algorithm["objective"] == "max":
             weight = +1.0
         creator.create(obj, base.fitness, weights=(weight,))
-        creator.create("Ind", list, fitness=creator.obj)  # output??
+        creator.create("Ind", list, fitness=creator.obj) 
         toolbox = base.Toolbox()
         # register control variables + individual
         sv = SpecialVariables()
@@ -164,8 +164,10 @@ class Executor(object):
                 toolbox = method(input_ctrl_vars[var], toolbox)
         ctrl_vars_ordered = []
         for var in control_dict:
+            if var not in special_control_vars:
+                ctrl_vars_ordered.append(getattr(toolbox, var))
+            #else:
 
-            ctrl_vars_ordered.append(getattr(toolbox, var))
         ctrl_vars_ordered = self.individual_values()
         toolbox.register("individual", ctrl_vars_ordered)
         toolbox.register("population", tools.initRepeat, list, toolbox.individual)
@@ -186,11 +188,11 @@ class Executor(object):
         input_vals = []
         sv = SpecialVariables()
         special_control_vars = sv.special_variables
-        for var in control_dict:
-            if var in special_control_vars:
+        #for var in control_dict:
+            #if var in special_control_vars:
                 
-            else:
-                input_vals.append(getattr(toolbox, var))
+            #else:
+            #    input_vals.append(getattr(toolbox, var))
 
         return creator.Ind(input_vals)
 
