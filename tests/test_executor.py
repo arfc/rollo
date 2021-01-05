@@ -75,8 +75,6 @@ def test_load_evaluator():
         shutil.rmtree("./moltres_0_0")
     e = Executor("input_file_placeholder")
     test_control_dict, test_output_dict = e.organize_input_output(test_input_dict)
-    print("ctrl", test_control_dict)
-    print("oup", test_output_dict)
     eval_function = e.load_evaluator(
         control_dict=test_control_dict,
         output_dict=test_output_dict,
