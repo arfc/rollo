@@ -15,10 +15,9 @@ poly_dict = {
 }
 
 
-def test_polynomial_naming():
+def test_polynomial_triso_num():
     sv = SpecialVariables()
-    var_names = sv.polynomial_naming(poly_dict)
-    assert var_names == ["poly_triso_0", "poly_triso_1", "poly_triso_2", "poly_triso_3"]
+    assert sv.polynomial_triso_num(poly_dict) == 4
 
 
 def test_polynomial_triso_toolbox():
@@ -34,7 +33,7 @@ def test_polynomial_triso_toolbox():
     assert method() == expected_method()
 
 
-def test_polynomial_values():
+def test_polynomial_triso_values():
     poly_dict = {
         "name": "triso",
         "order": 3,
@@ -48,13 +47,13 @@ def test_polynomial_values():
 
     var_dict = {"packing_fraction": 0.1}
     toolbox = base.Toolbox()
-    toolbox.register("poly_triso", random.uniform, -1, 1)
+    toolbox.register("polynomial_triso", random.uniform, -1, 1)
     sv = SpecialVariables()
     dz_vals = np.linspace(0, poly_dict["height"], poly_dict["slices"])
     vol_triso = 4 / 3 * np.pi * poly_dict["radius"] ** 3
     no_trisos = var_dict["packing_fraction"] * poly_dict["volume"] / vol_triso
     for i in range(1):
-        poly = sv.polynomial_values(poly_dict, toolbox, var_dict)
+        poly = sv.polynomial_triso_values(poly_dict, toolbox, var_dict)
         poly_val = (
             poly[0] * dz_vals ** 3
             + poly[1] * dz_vals ** 2

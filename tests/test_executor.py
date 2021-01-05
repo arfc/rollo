@@ -1,23 +1,26 @@
-import pytest, os, shutil
+import pytest, os, shutil, random
 from realm.executor import Executor
 from collections import OrderedDict
 from deap import base, creator, tools, algorithms
+from realm.special_variables import SpecialVariables
 
 test_input_dict = {
     "control_variables": {
         "packing_fraction": {"min": 0.005, "max": 0.1},
-        "polynomial": {
-            "name": "triso",
+        "polynomial_triso": {
             "order": 3,
-            "min": -1,
+            "min": 1,
             "max": 1,
-            "above_x_axis": True,
+            "radius": 4235e-5,
+            "volume": 10,
+            "slices": 10,
+            "height": 10,
         },
     },
     "evaluators": {
         "openmc": {
             "input_script": "input_test_eval_fn_generator_openmc_template.py",
-            "inputs": ["packing_fraction", "polynomial"],
+            "inputs": ["packing_fraction", "polynomial_triso"],
             "outputs": ["packing_fraction", "keff", "num_batches"],
             "output_script": "input_test_eval_fn_generator_openmc_output.py",
         },
@@ -50,13 +53,7 @@ def test_organize_input_output():
     e = Executor("input_file_placeholder")
     ctrl_dict, output_dict = e.organize_input_output(test_input_dict)
     expected_ctrl_dict = OrderedDict(
-        {
-            "packing_fraction": "openmc",
-            "poly_triso_0": "openmc",
-            "poly_triso_1": "openmc",
-            "poly_triso_2": "openmc",
-            "poly_triso_3": "openmc",
-        }
+        {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
     )
     expected_output_dict = OrderedDict(
         {
@@ -78,8 +75,8 @@ def test_load_evaluator():
         shutil.rmtree("./moltres_0_0")
     e = Executor("input_file_placeholder")
     test_control_dict, test_output_dict = e.organize_input_output(test_input_dict)
-    print("test control", test_control_dict)
-    print("test output", test_output_dict)
+    print("ctrl", test_control_dict)
+    print("oup", test_output_dict)
     eval_function = e.load_evaluator(
         control_dict=test_control_dict,
         output_dict=test_output_dict,
@@ -98,5 +95,26 @@ def test_load_evaluator():
     assert output_vals == expected_output_vals
 
 
-def test_load_toolbox():
-    
+# def test_load_toolbox():
+
+
+def test_individual_values():
+    e = Executor("input_file_placeholder")
+    ctrl_dict = OrderedDict(
+        {"packing_fraction": "openmc", "polynomial_triso": "openmc"}
+    )
+    poly_dict = test_input_dict["control_variables"]["polynomial_triso"]
+    toolbox = base.Toolbox()
+    creator.create("obj", base.Fitness, weights=(-1.0,))
+    creator.create("Ind", list, fitness=creator.obj)
+    toolbox.register("packing_fraction", random.uniform, 0.005, 0.1)
+    sv = SpecialVariables()
+    toolbox = sv.polynomial_triso_toolbox(poly_dict, toolbox)
+    ind_values = e.individual_values(
+        test_input_dict["control_variables"], ctrl_dict, toolbox
+    )
+    assert ind_values[0] >= 0.005
+    assert ind_values[0] <= 0.1
+    for i in range(1, 4):
+        ind_values[i] >= -1
+        ind_values[i] <= 1

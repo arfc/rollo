@@ -6,17 +6,11 @@ class SpecialVariables:
     def __init__(self):
         # developer's should add to this list when defining a new special
         # variable
-        self.special_variables = ["polynomial"]
+        self.special_variables = ["polynomial_triso"]
         return
 
-    def polynomial_naming(self, polynomial_dict):
-        """This function returns a list of strings of the variable names"""
-        order = polynomial_dict["order"]
-        name = polynomial_dict["name"]
-        var_names = []
-        for i in range(order + 1):
-            var_names.append("poly_" + name + "_" + str(i))
-        return var_names
+    def polynomial_triso_num(self, poly_dict):
+        return poly_dict["order"] + 1
 
     def polynomial_triso_toolbox(self, poly_dict, toolbox):
         """This function registers all the polynomial variables in deap toolbox"""
@@ -28,7 +22,7 @@ class SpecialVariables:
         )
         return toolbox
 
-    def polynomial_values(self, poly_dict, toolbox, var_dict):
+    def polynomial_triso_values(self, poly_dict, toolbox, var_dict):
         """This function returns polynomial values"""
         total_pf = var_dict["packing_fraction"]
         dz = poly_dict["slices"]

@@ -95,12 +95,11 @@ class Executor(object):
         for solver in input_evaluators:
             for var in input_evaluators[solver]["inputs"]:
                 if var in special_control_vars:
-                    method = getattr(sv, var + "_naming")
-                    var_list = method(input_ctrl_vars[var])
-                    for v in var_list:
-                        control_vars[v] = solver
+                    method = getattr(sv, var + "_num")
+                    num = method(input_ctrl_vars[var])
+                    control_vars[var] = [solver, num]
                 else:
-                    control_vars[var] = solver
+                    control_vars[var] = [solver, 1]
 
         # define output variables dict
         output_vars = OrderedDict()
@@ -150,11 +149,9 @@ class Executor(object):
         elif input_algorithm["objective"] == "max":
             weight = +1.0
         creator.create(obj, base.fitness, weights=(weight,))
-        creator.create("Ind", list, fitness=creator.obj) 
+        creator.create("Ind", list, fitness=creator.obj)
         toolbox = base.Toolbox()
         # register control variables + individual
-        sv = SpecialVariables()
-        special_control_vars = sv.special_variables
         for var in input_ctrl_vars:
             if var not in special_control_vars:
                 var_dict = input_ctrl_vars[var]
@@ -162,13 +159,9 @@ class Executor(object):
             else:
                 method = getattr(sv, var + "_toolbox")
                 toolbox = method(input_ctrl_vars[var], toolbox)
-        ctrl_vars_ordered = []
-        for var in control_dict:
-            if var not in special_control_vars:
-                ctrl_vars_ordered.append(getattr(toolbox, var))
-            #else:
-
-        ctrl_vars_ordered = self.individual_values()
+        ctrl_vars_ordered = self.individual_values(
+            input_ctrl_vars, control_dict, toolbox
+        )
         toolbox.register("individual", ctrl_vars_ordered)
         toolbox.register("population", tools.initRepeat, list, toolbox.individual)
         toolbox.register("evaluate", evaluator_fn)
@@ -182,20 +175,26 @@ class Executor(object):
         return toolbox
 
     def individual_values(self, input_ctrl_vars, control_dict, toolbox):
-        """ This function returns an individual with ordered control variable 
-        values 
+        """This function returns an individual with ordered control variable
+        values
         """
+        var_dict = {}
         input_vals = []
         sv = SpecialVariables()
         special_control_vars = sv.special_variables
-        #for var in control_dict:
-            #if var in special_control_vars:
-                
-            #else:
-            #    input_vals.append(getattr(toolbox, var))
-
+        for var in control_dict:
+            print(var)
+            if var in special_control_vars:
+                method = getattr(sv, var + "_values")
+                result = method(input_ctrl_vars[var], toolbox, var_dict)
+                input_vals += result
+                var_dict[var] = result
+            else:
+                result = getattr(toolbox, var)()
+                input_vals += [result]
+                var_dict[var] = result
+            print(var_dict)
         return creator.Ind(input_vals)
-
 
     def load_constraints(self):
         return
