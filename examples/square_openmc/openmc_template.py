@@ -3,8 +3,8 @@ import numpy as np
 from numpy import sin, cos, tan, pi
 
 # Templating 
-total_pf = {{pf}}
-poly_coeff = {{poly}}
+total_pf = {{packing_fraction}}
+poly_coeff = {{triso}}
 
 # Constants
 T_r1 = 2135e-5
