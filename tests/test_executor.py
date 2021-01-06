@@ -111,6 +111,7 @@ def test_individual_values():
     ind_values = e.individual_values(
         test_input_dict["control_variables"], ctrl_dict, toolbox
     )
+    assert type(ind_values) is creator.Ind
     assert ind_values[0] >= 0.005
     assert ind_values[0] <= 0.1
     for i in range(1, 4):
