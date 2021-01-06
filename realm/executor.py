@@ -148,7 +148,7 @@ class Executor(object):
             weight = -1.0
         elif input_algorithm["objective"] == "max":
             weight = +1.0
-        creator.create(obj, base.fitness, weights=(weight,))
+        creator.create("obj", base.Fitness, weights=(weight,))
         creator.create("Ind", list, fitness=creator.obj)
         toolbox = base.Toolbox()
         # register control variables + individual
@@ -159,10 +159,9 @@ class Executor(object):
             else:
                 method = getattr(sv, var + "_toolbox")
                 toolbox = method(input_ctrl_vars[var], toolbox)
-        ctrl_vars_ordered = self.individual_values(
-            input_ctrl_vars, control_dict, toolbox
+        toolbox.register(
+            "individual", self.individual_values, input_ctrl_vars, control_dict, toolbox
         )
-        toolbox.register("individual", ctrl_vars_ordered)
         toolbox.register("population", tools.initRepeat, list, toolbox.individual)
         toolbox.register("evaluate", evaluator_fn)
         do = DeapOperators()
@@ -185,6 +184,7 @@ class Executor(object):
         for var in control_dict:
             print(var)
             if var in special_control_vars:
+                # this func must return a list
                 method = getattr(sv, var + "_values")
                 result = method(input_ctrl_vars[var], toolbox, var_dict)
                 input_vals += result
@@ -193,7 +193,6 @@ class Executor(object):
                 result = getattr(toolbox, var)()
                 input_vals += [result]
                 var_dict[var] = result
-            print(var_dict)
         return creator.Ind(input_vals)
 
     def load_constraints(self):

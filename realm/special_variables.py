@@ -23,6 +23,8 @@ class SpecialVariables:
         return toolbox
 
     def polynomial_triso_values(self, poly_dict, toolbox, var_dict):
+        """ Returns a list of polynomial coefficients 
+        """
         """This function returns polynomial values"""
         total_pf = var_dict["packing_fraction"]
         dz = poly_dict["slices"]
