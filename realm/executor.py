@@ -3,7 +3,7 @@ from realm.input_validation import InputValidation
 from realm.special_variables import SpecialVariables
 from realm.deap_operators import DeapOperators
 from deap import base, creator, tools, algorithms
-import json, re
+import json, re, random
 from collections import OrderedDict
 
 
@@ -193,7 +193,6 @@ class Executor(object):
         sv = SpecialVariables()
         special_control_vars = sv.special_variables
         for var in control_dict:
-            print(var)
             if var in special_control_vars:
                 # this func must return a list
                 method = getattr(sv, var + "_values")

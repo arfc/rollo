@@ -48,7 +48,7 @@ test_input_dict = {
     },
 }
 
-
+"""
 def test_organize_input_output():
     e = Executor("input_file_placeholder")
     ctrl_dict, output_dict = e.organize_input_output(test_input_dict)
@@ -91,11 +91,45 @@ def test_load_evaluator():
     shutil.rmtree("./moltres_0_0")
     os.chdir("../")
     assert output_vals == expected_output_vals
+"""
 
 
-# def test_load_toolbox():
+def test_load_toolbox():
+    e = Executor("input_file_placeholder")
+    ctrl_dict = OrderedDict(
+        {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
+    )
+    output_dict = OrderedDict(
+        {
+            "packing_fraction": "openmc",
+            "keff": "openmc",
+            "num_batches": "openmc",
+            "max_temp": "moltres",
+        }
+    )
+
+    def test_evaluator_fn():
+        return tuple([1, 1])
+
+    toolbox = e.load_toolbox(
+        evaluator_fn=test_evaluator_fn,
+        input_algorithm=test_input_dict["algorithm"],
+        input_ctrl_vars=test_input_dict["control_variables"],
+        control_dict=ctrl_dict,
+        output_dict=output_dict,
+    )
+
+    test_toolbox_ind = toolbox.individual()
+    assert type(test_toolbox_ind) == creator.Ind
+    test_toolbox_pop = toolbox.population(n=10)
+    assert type(test_toolbox_pop) == list
+    test_toolbox_eval = toolbox.evaluate()
+    assert test_toolbox_eval == tuple([1, 1])
 
 
+test_load_toolbox()
+
+"""
 def test_min_max_list():
     e = Executor("input_file_placeholder")
     ctrl_dict = OrderedDict(
@@ -127,3 +161,4 @@ def test_individual_values():
     for i in range(1, 4):
         ind_values[i] >= -1
         ind_values[i] <= 1
+"""
