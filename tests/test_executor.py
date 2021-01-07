@@ -48,7 +48,7 @@ test_input_dict = {
     },
 }
 
-"""
+
 def test_organize_input_output():
     e = Executor("input_file_placeholder")
     ctrl_dict, output_dict = e.organize_input_output(test_input_dict)
@@ -91,7 +91,6 @@ def test_load_evaluator():
     shutil.rmtree("./moltres_0_0")
     os.chdir("../")
     assert output_vals == expected_output_vals
-"""
 
 
 def test_load_toolbox():
@@ -127,9 +126,6 @@ def test_load_toolbox():
     assert test_toolbox_eval == tuple([1, 1])
 
 
-test_load_toolbox()
-
-"""
 def test_min_max_list():
     e = Executor("input_file_placeholder")
     ctrl_dict = OrderedDict(
@@ -150,8 +146,7 @@ def test_individual_values():
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
     toolbox.register("packing_fraction", random.uniform, 0.005, 0.1)
-    sv = SpecialVariables()
-    toolbox = sv.polynomial_triso_toolbox(poly_dict, toolbox)
+    toolbox.register("polynomial_triso", random.uniform, 1, 1)
     ind_values = e.individual_values(
         test_input_dict["control_variables"], ctrl_dict, toolbox
     )
@@ -161,4 +156,3 @@ def test_individual_values():
     for i in range(1, 4):
         ind_values[i] >= -1
         ind_values[i] <= 1
-"""
