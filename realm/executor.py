@@ -2,6 +2,7 @@ import realm
 from realm.input_validation import InputValidation
 from realm.special_variables import SpecialVariables
 from realm.deap_operators import DeapOperators
+from realm.algorithm import Algorithm
 from deap import base, creator, tools, algorithms
 import json, re, random
 from collections import OrderedDict
@@ -20,7 +21,22 @@ class Executor(object):
         input_dict = self.read_input_file()
         InputValidation(input_dict).validate()
         complete_input_dict = self.add_defaults(input_dict)
-        model = self.load_model(complete_input_dict)
+        # organize control variables and output dict
+        control_dict, output_dict = self.organize_input_output(input_dict)
+        # generate evaluator function
+        evaluator_fn = self.load_evaluator(control_dict, output_dict, input_dict)
+        # DEAP toolbox set up
+        toolbox = self.load_toolbox(
+            evaluator_fn,
+            input_dict["algorithm"],
+            input_dict["control_variables"],
+            control_dict,
+            output_dict,
+        )
+        # load constraints if they exist
+        constraints = self.load_constraints()
+        alg = Algorithm(deap_toolbox=toolbox, constraint_obj=constraints)
+        alg.generate()
 
     def read_input_file(self):
         """This function reads a json input file and returns a dictionary"""
@@ -60,24 +76,6 @@ class Executor(object):
         except KeyError:
             input_dict[variable] = default_val
         return input_dict
-
-    def load_model(self, input_dict):
-        """This function loads the user-defined model"""
-        # organize control variables and output dict
-        control_dict, output_dict = self.organize_input_output(input_dict)
-        # generate evaluator function
-        evaluator_fn = self.load_evaluator(control_dict, output_dict, input_dict)
-        # DEAP toolbox set up
-        toolbox = self.load_toolbox(
-            evaluator_fn,
-            input_dict["algorithm"],
-            input_dict["control_variables"],
-            control_dict,
-            output_dict,
-        )
-        # load constraints if they exist
-        # constraints = self.load_constraints()
-        return model
 
     def organize_input_output(self, input_dict):
         """This function numbers the control variables and output variables
