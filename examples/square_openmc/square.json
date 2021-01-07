@@ -42,6 +42,8 @@
 		"optimized_variable": "packing_fraction",
 		"pop_size": 100,
 		"generations": 10,
+		"mutation_probability": 0.5, 
+		"mating_probability": 0.5, 
 		"selection_operator": {
 			"operator": "selBest",
 			"k": 1
