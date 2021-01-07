@@ -12,16 +12,6 @@ class SpecialVariables:
     def polynomial_triso_num(self, poly_dict):
         return poly_dict["order"] + 1
 
-    def polynomial_triso_toolbox(self, poly_dict, toolbox):
-        """This function registers all the polynomial variables in deap toolbox"""
-        toolbox.register(
-            "polynomial_triso",
-            random.uniform,
-            poly_dict["min"],
-            poly_dict["max"],
-        )
-        return toolbox
-
     def polynomial_triso_values(self, poly_dict, toolbox, var_dict):
         """ Returns a list of polynomial coefficients 
         """

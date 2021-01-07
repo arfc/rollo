@@ -153,12 +153,8 @@ class Executor(object):
         toolbox = base.Toolbox()
         # register control variables + individual
         for var in input_ctrl_vars:
-            if var not in special_control_vars:
-                var_dict = input_ctrl_vars[var]
-                toolbox.register(var, random.uniform, var_dict["min"], var_dict["max"])
-            else:
-                method = getattr(sv, var + "_toolbox")
-                toolbox = method(input_ctrl_vars[var], toolbox)
+            var_dict = input_ctrl_vars[var]
+            toolbox.register(var, random.uniform, var_dict["min"], var_dict["max"])
         toolbox.register(
             "individual", self.individual_values, input_ctrl_vars, control_dict, toolbox
         )

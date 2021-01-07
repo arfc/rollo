@@ -20,19 +20,6 @@ def test_polynomial_triso_num():
     assert sv.polynomial_triso_num(poly_dict) == 4
 
 
-def test_polynomial_triso_toolbox():
-    expected_toolbox = base.Toolbox()
-    expected_toolbox.register("polynomial_triso", random.uniform, 1, 1)
-
-    toolbox = base.Toolbox()
-    sv = SpecialVariables()
-    toolbox = sv.polynomial_triso_toolbox(poly_dict, toolbox)
-
-    method = getattr(toolbox, "polynomial_triso")
-    expected_method = getattr(expected_toolbox, "polynomial_triso")
-    assert method() == expected_method()
-
-
 def test_polynomial_triso_values():
     poly_dict = {
         "name": "triso",
