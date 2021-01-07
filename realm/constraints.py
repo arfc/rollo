@@ -8,7 +8,8 @@ class Constraints(object):
     # number, operator, value
     """
 
-    def __init__(self):
+    def __init__(self, output_dict):
+        self.output_dict = output_dict
         self.constraints = defaultdict(list)
 
     def add_constraint(self, fitness_index, operator_type, value):
@@ -17,7 +18,7 @@ class Constraints(object):
         """
         if fitness_index in self.constraints:
             warnings.warn(
-                "Warning... This fitness number index's constraint \
+                "Warning... This variable's constraint \
             was previously defined"
             )
         self.constraints[fitness_index].append(operator_type)
@@ -44,3 +45,8 @@ class Constraints(object):
             if not_constrained:
                 new_pop.append(ind)
         return new_pop
+
+
+
+    def apply_constraints(self, pop):
+        for ind in pop: 
