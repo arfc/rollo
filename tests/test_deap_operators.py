@@ -2,7 +2,7 @@ from realm.deap_operators import DeapOperators
 from deap import base, creator, tools, algorithms
 import random
 
-"""
+
 def test_add_selection_operators():
     do = DeapOperators()
     toolbox = base.Toolbox()
@@ -39,8 +39,6 @@ def test_add_selection_operators():
             assert len(new_pop) == len(expected_inds)
 
 
-"""
-"""
 def test_add_mutation_operators():
     do = DeapOperators()
     toolbox = base.Toolbox()
@@ -51,16 +49,16 @@ def test_add_mutation_operators():
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
     ind = creator.Ind([1])
+    min_list = [0.005, 1, 1, 1, 1]
+    max_list = [0.1, 1, 1, 1, 1]
 
     for mutation_dict in mutation_dict_list:
         print(mutation_dict["operator"])
-        toolbox = do.add_mutation_operators(toolbox, mutation_dict)
+        toolbox = do.add_mutation_operators(toolbox, mutation_dict, min_list, max_list)
         mutated = toolbox.mutate(ind)
         assert "mutate" in dir(toolbox)
         assert mutated != ind
 
-test_add_mutation_operators()
-"""
 
-def test_add_mating_operators():
+#def test_add_mating_operators():
     

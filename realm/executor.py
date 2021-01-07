@@ -164,14 +164,29 @@ class Executor(object):
         )
         toolbox.register("population", tools.initRepeat, list, toolbox.individual)
         toolbox.register("evaluate", evaluator_fn)
+        min_list, max_list = self.min_max_list(control_dict, input_ctrl_vars)
         do = DeapOperators()
         toolbox = do.add_toolbox_operators(
             toolbox,
             selection_dict=input_algorithm["selection_operator"],
             mutation_dict=input_algorithm["mutation_operator"],
             mating_dict=input_algorithm["mating_operator"],
+            min_list=min_list,
+            max_list=max_list,
         )
         return toolbox
+
+    def min_max_list(self, control_dict, input_ctrl_vars):
+        """Returns an ordered list of min values and max values for the
+        individual
+        """
+        min_list = []
+        max_list = []
+        for var in control_dict:
+            for i in range(control_dict[var][1]):
+                min_list.append(input_ctrl_vars[var]["min"])
+                max_list.append(input_ctrl_vars[var]["max"])
+        return min_list, max_list
 
     def individual_values(self, input_ctrl_vars, control_dict, toolbox):
         """This function returns an individual with ordered control variable

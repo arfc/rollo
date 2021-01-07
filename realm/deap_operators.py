@@ -7,13 +7,15 @@ class DeapOperators(object):
     """
 
     def add_toolbox_operators(
-        self, toolbox, selection_dict, mutation_dict, mating_dict
+        self, toolbox, selection_dict, mutation_dict, mating_dict, min_list, max_list
     ):
         """This function adds selection, mutation, and mating operators to
         the deap toolbox
         """
         toolbox = self.add_selection_operators(toolbox, selection_dict)
-        toolbox = self.add_mutation_operators(toolbox, mutation_dict)
+        toolbox = self.add_mutation_operators(
+            toolbox, mutation_dict, min_list, max_list
+        )
         toolbox = self.add_mating_operators(toolbox, mating_dict)
         return toolbox
 
@@ -34,7 +36,7 @@ class DeapOperators(object):
             toolbox.register("select", tools.selLexicase, k=selection_dict["k"])
         return toolbox
 
-    def add_mutation_operators(self, toolbox, mutation_dict):
+    def add_mutation_operators(self, toolbox, mutation_dict, min_list, max_list):
         operator = mutation_dict["operator"]
         if operator == "mutGaussian":
             toolbox.register(
@@ -50,7 +52,8 @@ class DeapOperators(object):
                 tools.mutPolynomialBounded,
                 eta=mutation_dict["eta"],
                 indpb=mutation_dict["indpb"],
-                
+                low=min_list,
+                up=max_list,
             )
         return toolbox
 

@@ -96,10 +96,20 @@ def test_load_evaluator():
 # def test_load_toolbox():
 
 
+def test_min_max_list():
+    e = Executor("input_file_placeholder")
+    ctrl_dict = OrderedDict(
+        {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
+    )
+    min_list, max_list = e.min_max_list(ctrl_dict, test_input_dict["control_variables"])
+    expected_min_list = [0.005, 1, 1, 1, 1]
+    expected_max_list = [0.1, 1, 1, 1, 1]
+
+
 def test_individual_values():
     e = Executor("input_file_placeholder")
     ctrl_dict = OrderedDict(
-        {"packing_fraction": "openmc", "polynomial_triso": "openmc"}
+        {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
     )
     poly_dict = test_input_dict["control_variables"]["polynomial_triso"]
     toolbox = base.Toolbox()
