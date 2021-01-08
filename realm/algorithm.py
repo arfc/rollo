@@ -25,11 +25,9 @@ class Algorithm(object):
         pop = self.toolbox.population(n=pop_size)
         ngen, cxpb, mutpb = self.toolbox.ngen, self.toolbox.cxpb, self.toolbox.mutpb
         # initialize first pop's gen, ind num
-        ind_count = 0
-        for ind in pop:
+        for i, ind in enumerate(pop):
             ind.gen = 0
-            ind.num = ind_count
-            ind_count += 1
+            ind.num = i
         # evaluate fitness values of initial pop
         fitnesses = self.toolbox.map(toolbox.evaluate, pop)
         # assign fitness values to individuals
