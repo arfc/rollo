@@ -203,6 +203,6 @@ class Executor(object):
                 var_dict[var] = result
         return creator.Ind(input_vals)
 
-    def load_constraints(self, output_dict):
-        constraint_obj = Constraints(output_dict)
+    def load_constraints(self, output_dict, input_constraints):
+        constraint_obj = Constraints(output_dict, input_constraints)
         return constraints_obj
