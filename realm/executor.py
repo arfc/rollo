@@ -168,6 +168,8 @@ class Executor(object):
             min_list=min_list,
             max_list=max_list,
         )
+        toolbox.mutpb = input_algorithm["mutation_probability"]
+        toolbox.cxpb = input_algorithm["mating_probability"]
         return toolbox
 
     def min_max_list(self, control_dict, input_ctrl_vars):
