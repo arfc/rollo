@@ -37,8 +37,8 @@ test_input_dict = {
         "optimized_variable": "packing_fraction",
         "pop_size": 100,
         "generations": 10,
-		"mutation_probability": 0.5, 
-		"mating_probability": 0.5, 
+        "mutation_probability": 0.5,
+        "mating_probability": 0.5,
         "selection_operator": {"operator": "selBest", "k": 1},
         "mutation_operator": {
             "operator": "mutGaussian",
@@ -128,7 +128,7 @@ def test_load_toolbox():
     assert test_toolbox_eval == tuple([1, 1])
     assert toolbox.pop_size == 100
     assert toolbox.ngen == 10
-    assert toolbox.mutpb == 0.5 
+    assert toolbox.mutpb == 0.5
     assert toolbox.cxpb == 0.5
 
 
