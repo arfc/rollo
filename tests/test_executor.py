@@ -126,6 +126,8 @@ def test_load_toolbox():
     assert type(test_toolbox_pop) == list
     test_toolbox_eval = toolbox.evaluate()
     assert test_toolbox_eval == tuple([1, 1])
+    assert toolbox.pop_size == 100
+    assert toolbox.ngen == 10
     assert toolbox.mutpb == 0.5 
     assert toolbox.cxpb == 0.5
 

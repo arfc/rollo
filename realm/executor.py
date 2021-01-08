@@ -168,6 +168,8 @@ class Executor(object):
             min_list=min_list,
             max_list=max_list,
         )
+        toolbox.pop_size = input_algorithm["pop_size"]
+        toolbox.ngen = input_algorithm["generations"]
         toolbox.mutpb = input_algorithm["mutation_probability"]
         toolbox.cxpb = input_algorithm["mating_probability"]
         return toolbox
