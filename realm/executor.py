@@ -34,7 +34,7 @@ class Executor(object):
             output_dict,
         )
         # load constraints if they exist
-        constraints = self.load_constraints(output_dict)
+        constraints = self.load_constraints(output_dict, input_dict["constraints"])
         alg = Algorithm(deap_toolbox=toolbox, constraint_obj=constraints)
         alg.generate()
 
