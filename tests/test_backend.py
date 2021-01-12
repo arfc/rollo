@@ -14,7 +14,7 @@ test_output_dict = OrderedDict(
 )
 
 
-def test_extend_control_dict():
+def test_extend_control_oup_dicts():
     b = BackEnd(control_dict=test_control_dict, output_dict=test_output_dict)
     ctrl_list, output_list = b.extend_control_oup_dicts(
         test_control_dict, test_output_dict
