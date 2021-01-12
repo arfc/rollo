@@ -23,7 +23,8 @@ class Algorithm(object):
         # initialize the algorithm's parameters
         pop_size = self.toolbox.pop_size
         pop = self.toolbox.population(n=pop_size)
-        ngen, cxpb, mutpb = self.toolbox.ngen, self.toolbox.cxpb, self.toolbox.mutpb
+        ngen = self.toolbox.ngen
+        cxpb, mutpb = self.toolbox.cxpb, self.toolbox.mutpb
         # initialize first pop's gen, ind num
         for i, ind in enumerate(pop):
             ind.gen = 0
@@ -40,8 +41,11 @@ class Algorithm(object):
             # apply constaint
             pop = self.constraint_obj.apply_constraints(pop)
             # apply selection operator
-            pop = self.toolbox.select(pop, k=pop_size)
-            pop = [toolbox.clone(ind) for ind in pop]
+            pre_pop = self.toolbox.select(pop)
+            pop = [toolbox.clone(ind) for ind in pre_pop]
+            # extend pop length to pop_size
+            while len(pop) != pop_size:
+                pop.append(toolbox.clone(random.choice(pre_pop)))
             # apply mate operator
             for child1, child2 in zip(pop[::2], pop[1::2]):
                 if random.random() < cxpb:
@@ -53,11 +57,9 @@ class Algorithm(object):
                     toolbox.mutate(mutant)
                     del mutant.fitness.values
             # define pop's gen, ind num
-            ind_count = 0
-            for ind in pop:
+            for i, ind in enumerate(pop):
                 ind.gen = g + 1
-                ind.num = ind_count
-                ind_count += 1
+                ind.num = i
             # evaluate fitness of newly created population
             fitnesses = toolbox.map(toolbox.evaluate, pop)
             # assign fitness values to individuals
