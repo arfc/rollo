@@ -7,10 +7,9 @@ class BackEnd(object):
 
     def __init__(self, control_dict, output_dict):
         self.results = defaultdict(list)
-        self.control_list = self.extend_control_dict(control_dict)
-        self.output_dict = output_dict
+        self.control_list = self.extend_control_oup_dicts(control_dict, output_dict)
 
-    def extend_control_dict(self, control_dict):
+    def extend_control_oup_dicts(self, control_dict, output_dict):
         control_list = []
         for var in control_dict:
             if control_dict[var][1] > 1:
@@ -18,7 +17,10 @@ class BackEnd(object):
                     control_list.append(var + "_" + str(i))
             else:
                 control_list.append(var)
-        return control_list
+        output_list = []
+        for var in output_dict:
+            output_list.append(var)
+        return control_list, output_list
 
     def add_ind(self, ind):
         """This function adds an individual's information to the results
@@ -27,9 +29,9 @@ class BackEnd(object):
         self.results["gen"].append(ind.gen)
         self.results["ind"].append(ind.num)
         for i, inp in enumerate(ind):
-            self.results["inp_" + str(i)] = inp
+            self.results["inp_" + control_list[i]] = inp
         for i, oup in enumerate(ind.output):
-            self.results["oup_" + str(i)] = oup
+            self.results["oup_" + self.output_list[i]] = oup
         self.export_to_csv()
 
     def export_to_csv(self):
