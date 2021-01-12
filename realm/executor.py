@@ -35,7 +35,12 @@ class Executor(object):
         )
         # load constraints if they exist
         constraints = self.load_constraints(output_dict, input_dict["constraints"])
-        alg = Algorithm(deap_toolbox=toolbox, constraint_obj=constraints)
+        alg = Algorithm(
+            deap_toolbox=toolbox,
+            constraint_obj=constraints,
+            control_dict=control_dict,
+            output_dict=output_dict,
+        )
         alg.generate()
 
     def read_input_file(self):

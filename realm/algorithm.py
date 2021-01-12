@@ -7,9 +7,9 @@ from num2words import num2words
 class Algorithm(object):
     """Holds genetic algorithms."""
 
-    def __init__(self, deap_toolbox, constraint_obj):
+    def __init__(self, deap_toolbox, constraint_obj, control_dict, output_dict):
         self.toolbox = deap_toolbox  # deap toolbox object
-        self.results = BackEnd()
+        self.results = BackEnd(control_dict, output_dict)
         self.constraint_obj = constraint_obj
 
     def generate(self):
@@ -20,11 +20,16 @@ class Algorithm(object):
         MOOP
 
         """
+        # initialize the logbook
+        logbook = tools.Logbook()
+        logbook.header = ["gen", "nevals"] + (stats.fields if stats else [])
         # initialize the algorithm's parameters
         pop_size = self.toolbox.pop_size
         pop = self.toolbox.population(n=pop_size)
         ngen = self.toolbox.ngen
         cxpb, mutpb = self.toolbox.cxpb, self.toolbox.mutpb
+        record = stats.compile(pop) if stats else {}
+        logbook.record(gen=0, nevals=len(invalid_ind), **record)
         # initialize first pop's gen, ind num
         for i, ind in enumerate(pop):
             ind.gen = 0
