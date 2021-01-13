@@ -9,8 +9,9 @@ toolbox = base.Toolbox()
 toolbox.register("pf", random.uniform, 0, 1)
 toolbox.register("poly", random.uniform, 1, 2)
 toolbox.pop_size = 10
-toolbox.min_list = [0.,1.,1.]
-toolbox.max_list = [1.,2.,3.]
+toolbox.min_list = [0.0, 1.0, 1.0]
+toolbox.max_list = [1.0, 2.0, 3.0]
+
 
 def ind_vals():
     pf = toolbox.pf()
@@ -25,10 +26,11 @@ toolbox.register("select", tools.selBest, k=k)
 toolbox.register("mate", tools.cxUniform, indpb=1.0)
 toolbox.register(
     "mutate",
-    tools.mutGaussian,
-    mu=[0.5, 1.5, 2],
-    sigma=[0.5 / 3, 0.5 / 3, 1 / 3],
+    tools.mutPolynomialBounded,
+    eta=0.5,
     indpb=1.0,
+    low=[0.0, 1.0, 1.0],
+    up=[1.0, 2.0, 3.0],
 )
 toolbox.cxpb = 1.0
 toolbox.mutpb = 1.0
@@ -87,24 +89,9 @@ def test_apply_mutation_operator():
     pop = toolbox.population(n=1)
     mutated_pop = [toolbox.clone(ind) for ind in pop]
     mutated_pop = a.apply_mutation_operator(mutated_pop, toolbox)
-    print("p", round_pop(pop))
-    print("m", round_pop(mutated_pop))
+    for mutant in mutated_pop:
+        for i, val in enumerate(mutant):
+            assert val > toolbox.min_list[i]
+            assert val < toolbox.max_list[i]
 
 
-def round_pop(pop):
-    printpop = []
-    for p in pop:
-        a = []
-        for i in p:
-            a.append(round(i, 2))
-        printpop.append(a)
-    return printpop
-
-
-test_apply_mutation_operator()
-
-# def test_apply_algorithm_ngen():
-
-
-# def test_generate():
-#    a = Algorithm(deap_toolbox=test_toolbox, constraint_obj=test_constraints)
