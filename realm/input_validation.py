@@ -126,7 +126,6 @@ class InputValidation:
                 "selTournament": ["k", "tournsize"],
                 "selNSGA2": ["k"],
                 "selBest": ["k"],
-                "selLexicase": ["k"],
             },
             "mutation": {
                 "mutPolynomialBounded": ["eta", "indpb"],

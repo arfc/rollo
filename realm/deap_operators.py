@@ -32,8 +32,6 @@ class DeapOperators(object):
             toolbox.register("select", tools.selNSGA2, k=selection_dict["k"])
         elif operator == "selBest":
             toolbox.register("select", tools.selBest, k=selection_dict["k"])
-        elif operator == "selLexicase":
-            toolbox.register("select", tools.selLexicase, k=selection_dict["k"])
         return toolbox
 
     def add_mutation_operators(self, toolbox, mutation_dict, min_list, max_list):

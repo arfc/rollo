@@ -9,6 +9,7 @@ toolbox = base.Toolbox()
 toolbox.register("pf", random.uniform, 0, 1)
 toolbox.register("poly", random.uniform, 1, 2)
 toolbox.pop_size = 10
+toolbox.ngen = 10
 toolbox.min_list = [0.0, 1.0, 1.0]
 toolbox.max_list = [1.0, 2.0, 3.0]
 
@@ -107,3 +108,13 @@ def test_apply_algorithm_ngen():
             assert val < toolbox.max_list[i]
     assert len(new_pop) == toolbox.pop_size
 
+
+def test_generate():
+    a = Algorithm(deap_toolbox=toolbox, constraint_obj=test_constraints)
+    final_pop = a.generate()
+    assert len(final_pop) == toolbox.pop_size
+    for ind in final_pop:
+        for i, val in enumerate(ind):
+            assert val > toolbox.min_list[i]
+            assert val < toolbox.max_list[i]
+test_generate()
