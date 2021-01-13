@@ -8,7 +8,7 @@ creator.create("Ind", list, fitness=creator.obj)
 toolbox = base.Toolbox()
 toolbox.register("pf", random.uniform, 0, 1)
 toolbox.register("poly", random.uniform, 1, 2)
-toolbox.pop_size = 10
+toolbox.pop_size = 300
 toolbox.min_list = [0.0, 1.0, 1.0]
 toolbox.max_list = [1.0, 2.0, 3.0]
 
@@ -21,7 +21,7 @@ def ind_vals():
 
 toolbox.register("individual", ind_vals)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
-k = 5
+k = 100
 toolbox.register("select", tools.selBest, k=k)
 toolbox.register("mate", tools.cxUniform, indpb=1.0)
 toolbox.register(
@@ -93,5 +93,3 @@ def test_apply_mutation_operator():
         for i, val in enumerate(mutant):
             assert val > toolbox.min_list[i]
             assert val < toolbox.max_list[i]
-
-
