@@ -73,21 +73,9 @@ class Algorithm(object):
                 del child1.fitness.values, child2.fitness.values
         return pop
 
-    def apply_mutation_operator(self, pop, toolbox):
-        new_pop = []
+    def apply_mutation_operator(self, pop):
         for mutant in pop:
             if random.random() < self.toolbox.mutpb:
-                out_of_bounds = True
-                while out_of_bounds:
-                    cloned_mutant = toolbox.clone(mutant)
-                    toolbox.mutate(cloned_mutant)
-                    count = 0
-                    for i in range(len(cloned_mutant)):
-                        if (cloned_mutant[i] > toolbox.min_list[i]) and (cloned_mutant[i] < toolbox.max_list[i]):
-                            count += 1 
-                    if count == len(cloned_mutant):
-                        out_of_bounds = False
-                new_pop.append(cloned_mutant)
-            else:
-                new_pop.append(mutant)
-        return new_pop
+                toolbox.mutate(mutant)
+                del mutant.fitness.values
+        return pop

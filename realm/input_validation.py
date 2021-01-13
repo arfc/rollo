@@ -129,7 +129,6 @@ class InputValidation:
                 "selLexicase": ["k"],
             },
             "mutation": {
-                "mutGaussian": ["mu", "sigma", "indpb"],
                 "mutPolynomialBounded": ["eta", "indpb"],
             },
             "mating": {"cxOnePoint": [], "cxUniform": ["indpb"], "cxBlend": ["alpha"]},

@@ -38,15 +38,7 @@ class DeapOperators(object):
 
     def add_mutation_operators(self, toolbox, mutation_dict, min_list, max_list):
         operator = mutation_dict["operator"]
-        if operator == "mutGaussian":
-            toolbox.register(
-                "mutate",
-                tools.mutGaussian,
-                mu=mutation_dict["mu"],
-                sigma=mutation_dict["sigma"],
-                indpb=mutation_dict["indpb"],
-            )
-        elif operator == "mutPolynomialBounded":
+        if operator == "mutPolynomialBounded":
             toolbox.register(
                 "mutate",
                 tools.mutPolynomialBounded,
