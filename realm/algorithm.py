@@ -1,6 +1,6 @@
 from .backend import BackEnd
 from num2words import num2words
-
+import random
 ## GIVE CREDIT TO DEAP NOTEBOOK
 
 
@@ -43,9 +43,9 @@ class Algorithm(object):
 
     def apply_algorithm_ngen(self, pop, gen):
         pop = self.constraint_obj.apply_constraints(pop)
-        pop = self.apply_selection_operator(pop)
-        pop = self.apply_mating_operator(pop)
-        pop = self.apply_mutation_operator(pop)
+        pop = self.apply_selection_operator(pop, toolbox)
+        pop = self.apply_mating_operator(pop, toolbox)
+        pop = self.apply_mutation_operator(pop, toolbox)
         # define pop's gen, ind num
         for i, ind in enumerate(pop):
             ind.gen = gen + 1
@@ -58,7 +58,7 @@ class Algorithm(object):
             ind.output = fitness
         return pop
 
-    def apply_selection_operator(self, pop): 
+    def apply_selection_operator(self, pop, toolbox): 
         pre_pop = self.toolbox.select(pop)
         pop = [toolbox.clone(ind) for ind in pre_pop]
         # extend pop length to pop_size
@@ -66,16 +66,28 @@ class Algorithm(object):
             pop.append(toolbox.clone(random.choice(pre_pop)))
         return pop
 
-    def apply_mating_operator(self, pop):
+    def apply_mating_operator(self, pop, toolbox):
         for child1, child2 in zip(pop[::2], pop[1::2]):
             if random.random() < self.toolbox.cxpb:
                 toolbox.mate(child1, child2)
                 del child1.fitness.values, child2.fitness.values
         return pop
 
-    def apply_mutation_operator(self, pop):
+    def apply_mutation_operator(self, pop, toolbox):
+        new_pop = []
         for mutant in pop:
             if random.random() < self.toolbox.mutpb:
-                toolbox.mutate(mutant)
-                del mutant.fitness.values
-        return pop
+                out_of_bounds = True
+                while out_of_bounds:
+                    cloned_mutant = toolbox.clone(mutant)
+                    toolbox.mutate(cloned_mutant)
+                    count = 0
+                    for i in range(len(cloned_mutant)):
+                        if (cloned_mutant[i] > toolbox.min_list[i]) and (cloned_mutant[i] < toolbox.max_list[i]):
+                            count += 1 
+                    if count == len(cloned_mutant):
+                        out_of_bounds = False
+                new_pop.append(cloned_mutant)
+            else:
+                new_pop.append(mutant)
+        return new_pop

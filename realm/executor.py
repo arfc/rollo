@@ -164,6 +164,7 @@ class Executor(object):
         toolbox.register("population", tools.initRepeat, list, toolbox.individual)
         toolbox.register("evaluate", evaluator_fn)
         min_list, max_list = self.min_max_list(control_dict, input_ctrl_vars)
+        toolbox.min_list, toolbox.max_list = min_list, max_list
         do = DeapOperators()
         toolbox = do.add_toolbox_operators(
             toolbox,
