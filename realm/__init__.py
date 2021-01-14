@@ -8,5 +8,4 @@ from realm.input_validation import *
 from realm.moltres_evaluation import *
 from realm.openmc_evaluation import *
 from realm.special_variables import *
-from realm.restart import *
 __version__ = '0.0.1-dev'
