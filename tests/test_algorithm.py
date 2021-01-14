@@ -48,14 +48,16 @@ test_constraints = Constraints(
     input_constraints={
         "total": {"operator": [">", "<"], "constrained_val": [1.5, 2.5]}
     },
+    toolbox=toolbox,
 )
 
 
 def test_initialize_pop():
     a = Algorithm(deap_toolbox=toolbox, constraint_obj=test_constraints)
     pop = toolbox.population(n=5)
-    pop = a.initialize_pop(pop)
-    for i, ind in enumerate(pop):
+    new_pop = a.initialize_pop(pop)
+    assert len(new_pop) == len(pop)
+    for i, ind in enumerate(new_pop):
         assert ind.fitness.values[0] < 3
         assert ind.fitness.values[0] > 1
         assert ind.output[1] == 5
@@ -68,9 +70,7 @@ def test_initialize_pop():
         assert ind.fitness.values[0] > 1.5
         assert ind.fitness.values[0] < 2.5
 
-test_initialize_pop()
 
-"""
 def test_apply_selection_operator():
     a = Algorithm(deap_toolbox=toolbox, constraint_obj=test_constraints)
     pop = toolbox.population(n=toolbox.pop_size)
@@ -99,10 +99,11 @@ def test_apply_mutation_operator():
     pop = toolbox.population(n=toolbox.pop_size)
     mutated_pop = [toolbox.clone(ind) for ind in pop]
     mutated_pop = a.apply_mutation_operator(mutated_pop)
-    for mutant in mutated_pop:
+    for j, mutant in enumerate(mutated_pop):
         for i, val in enumerate(mutant):
             assert val > toolbox.min_list[i]
             assert val < toolbox.max_list[i]
+        assert mutant != pop[j]
 
 
 def test_apply_algorithm_ngen():
@@ -116,24 +117,11 @@ def test_apply_algorithm_ngen():
         for i, val in enumerate(ind):
             assert val > toolbox.min_list[i]
             assert val < toolbox.max_list[i]
-        print([round(i,2) for i in ind])
-        print(ind.fitness.values)
-        print(ind.output)
         assert ind.fitness.values[0] > 1.5
         assert ind.fitness.values[0] < 2.5
     assert len(new_pop) == toolbox.pop_size
+    assert new_pop != pop
 
-def round_pop(pop):
-    printpop = []
-    for p in pop:
-        a = []
-        for i in p:
-            a.append(round(i, 2))
-        printpop.append(a)
-    return printpop
-
-
-test_apply_algorithm_ngen()
 
 def test_generate():
     a = Algorithm(deap_toolbox=toolbox, constraint_obj=test_constraints)
@@ -145,7 +133,4 @@ def test_generate():
             assert val < toolbox.max_list[i]
         assert ind.fitness.values[0] > 1.5
         assert ind.fitness.values[0] < 2.5
-
-
-#test_generate()
-"""
+    assert len(final_pop) == toolbox.pop_size

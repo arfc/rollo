@@ -1,6 +1,7 @@
 from .backend import BackEnd
 from num2words import num2words
 import random
+
 ## GIVE CREDIT TO DEAP NOTEBOOK
 
 
@@ -9,7 +10,7 @@ class Algorithm(object):
 
     def __init__(self, deap_toolbox, constraint_obj):
         self.toolbox = deap_toolbox  # deap toolbox object
-        #self.results = BackEnd(control_dict, output_dict)
+        # self.results = BackEnd(control_dict, output_dict)
         self.constraint_obj = constraint_obj
 
     def generate(self):
@@ -21,26 +22,14 @@ class Algorithm(object):
 
         """
         pop = self.toolbox.population(n=self.toolbox.pop_size)
-        print(self.round_pop(pop))
         pop = self.initialize_pop(pop)
         for gen in range(self.toolbox.ngen):
             pop = self.apply_algorithm_ngen(pop, gen)
         print("Completed!")
-        print(self.round_pop(pop))
         return pop
 
-    def round_pop(self,pop):
-        printpop = []
-        for p in pop:
-            a = []
-            for i in p:
-                a.append(round(i, 2))
-            printpop.append(a)
-        return printpop
-
     def initialize_pop(self, pop):
-        """ Initialize population for genetic algorithm 
-        """
+        """Initialize population for genetic algorithm"""
         for i, ind in enumerate(pop):
             ind.gen = 0
             ind.num = i
@@ -70,13 +59,13 @@ class Algorithm(object):
         pop = self.constraint_obj.apply_constraints(pop)
         return pop
 
-    def apply_selection_operator(self, pop): 
+    def apply_selection_operator(self, pop):
         pre_pop = self.toolbox.select(pop)
         select_pop = [self.toolbox.clone(ind) for ind in pre_pop]
         # extend pop length to pop_size
         while len(select_pop) != self.toolbox.pop_size:
             select_pop.append(self.toolbox.clone(random.choice(pre_pop)))
-        return pop
+        return select_pop
 
     def apply_mating_operator(self, pop):
         for child1, child2 in zip(pop[::2], pop[1::2]):
