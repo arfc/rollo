@@ -9,11 +9,20 @@ if __name__ == "__main__":
         opts, args = getopt.getopt(argv, "hi:o:", ["ifile="])
     except getopt.GetoptError:
         print("python realm -i <inputfile>")
+    opts_dict = {}
     for opt, arg in opts:
-        print(opt, arg)
-        if opt == "-h":
-            print("python realm -i <inputfile>")
-        elif opt in ("-i", "--ifile"):
-            inputfile = arg
-            new_run = executor.Executor(input_file=inputfile)
-            new_run.execute()
+        opts_dict[opt] = arg
+    if "-h" in opts_dict:
+        print("python realm -i <inputfile>")
+    elif "-i" in opts_dict:
+        print("hi")
+        if "-c" in opts_dict:
+            new_run = executor.Executor(
+                input_file=opts_dict["-i"], checkpoint_file=opts_dict["-c"]
+            )
+        else:
+            new_run = executor.Executor(input_file=opts_dict["-i"])
+
+    if "-i" in opts_dict:
+        print("hi")
+        new_run.execute()
