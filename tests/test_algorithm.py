@@ -2,6 +2,7 @@ from realm.algorithm import Algorithm
 from realm.constraints import Constraints
 from deap import base, creator, tools, algorithms
 import random
+from collections import OrderedDict
 
 creator.create("obj", base.Fitness, weights=(1.0,))
 creator.create("Ind", list, fitness=creator.obj)
@@ -42,7 +43,12 @@ def evaluator_fn(ind):
 
 
 toolbox.register("evaluate", evaluator_fn)
-test_constraints = Constraints(output_dict={}, input_constraints={})
+test_constraints = Constraints(
+    output_dict=OrderedDict({"total": "openmc", "random": "openmc"}),
+    input_constraints={
+        "total": {"operator": [">", "<"], "constrained_val": [1.5, 2.5]}
+    },
+)
 
 
 def test_initialize_pop():
@@ -58,10 +64,13 @@ def test_initialize_pop():
         assert ind[0] > 0
         assert ind[1] > 1
         assert ind[1] < 2
-        assert ind.num == i
         assert ind.gen == 0
+        assert ind.fitness.values[0] > 1.5
+        assert ind.fitness.values[0] < 2.5
 
+test_initialize_pop()
 
+"""
 def test_apply_selection_operator():
     a = Algorithm(deap_toolbox=toolbox, constraint_obj=test_constraints)
     pop = toolbox.population(n=toolbox.pop_size)
@@ -100,14 +109,31 @@ def test_apply_algorithm_ngen():
     a = Algorithm(deap_toolbox=toolbox, constraint_obj=test_constraints)
     pop = toolbox.population(n=10)
     new_pop = [toolbox.clone(ind) for ind in pop]
+    new_pop = a.initialize_pop(new_pop)
     new_pop = a.apply_algorithm_ngen(new_pop, 0)
 
     for ind in new_pop:
         for i, val in enumerate(ind):
             assert val > toolbox.min_list[i]
             assert val < toolbox.max_list[i]
+        print([round(i,2) for i in ind])
+        print(ind.fitness.values)
+        print(ind.output)
+        assert ind.fitness.values[0] > 1.5
+        assert ind.fitness.values[0] < 2.5
     assert len(new_pop) == toolbox.pop_size
 
+def round_pop(pop):
+    printpop = []
+    for p in pop:
+        a = []
+        for i in p:
+            a.append(round(i, 2))
+        printpop.append(a)
+    return printpop
+
+
+test_apply_algorithm_ngen()
 
 def test_generate():
     a = Algorithm(deap_toolbox=toolbox, constraint_obj=test_constraints)
@@ -117,4 +143,9 @@ def test_generate():
         for i, val in enumerate(ind):
             assert val > toolbox.min_list[i]
             assert val < toolbox.max_list[i]
-test_generate()
+        assert ind.fitness.values[0] > 1.5
+        assert ind.fitness.values[0] < 2.5
+
+
+#test_generate()
+"""

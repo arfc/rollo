@@ -50,10 +50,10 @@ class Algorithm(object):
         for ind, fitness in zip(pop, fitnesses):
             ind.fitness.values = (fitness[0],)
             ind.output = fitness
+        pop = self.constraint_obj.apply_constraints(pop)
         return pop
 
     def apply_algorithm_ngen(self, pop, gen):
-        pop = self.constraint_obj.apply_constraints(pop)
         pop = self.apply_selection_operator(pop)
         pop = self.apply_mating_operator(pop)
         pop = self.apply_mutation_operator(pop)
@@ -67,6 +67,7 @@ class Algorithm(object):
         for ind, fitness in zip(pop, fitnesses):
             ind.fitness.values = (fitness[0],)
             ind.output = fitness
+        pop = self.constraint_obj.apply_constraints(pop)
         return pop
 
     def apply_selection_operator(self, pop): 
