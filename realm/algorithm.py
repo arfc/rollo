@@ -72,10 +72,10 @@ class Algorithm(object):
 
     def apply_selection_operator(self, pop): 
         pre_pop = self.toolbox.select(pop)
-        pop = [self.toolbox.clone(ind) for ind in pre_pop]
+        select_pop = [self.toolbox.clone(ind) for ind in pre_pop]
         # extend pop length to pop_size
-        while len(pop) != self.toolbox.pop_size:
-            pop.append(self.toolbox.clone(random.choice(pre_pop)))
+        while len(select_pop) != self.toolbox.pop_size:
+            select_pop.append(self.toolbox.clone(random.choice(pre_pop)))
         return pop
 
     def apply_mating_operator(self, pop):

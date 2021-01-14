@@ -16,10 +16,11 @@ test_input_constraints = {
     "keff": {"operator": [">=", "<="], "constrained_val": [1, 1.2]},
     "max_temp": {"operator": "<", "constrained_val": 500},
 }
+toolbox = base.Toolbox()
 
 
 def test_output_dict_numbered():
-    c = Constraints(test_output_dict, test_input_constraints)
+    c = Constraints(test_output_dict, test_input_constraints, toolbox)
     numbered_oup_dict = c.output_dict_numbered(test_output_dict)
     expected_num_oup_dict = {
         "packing_fraction": 0,
@@ -31,15 +32,13 @@ def test_output_dict_numbered():
 
 
 def test_constraints_list():
-    c = Constraints(test_output_dict, test_input_constraints)
+    c = Constraints(test_output_dict, test_input_constraints, toolbox)
     constraints_list = c.constraints_list(test_input_constraints)
     expected_constraints_list = [
         ["keff", {"op": ">=", "val": 1}],
         ["keff", {"op": "<=", "val": 1.2}],
         ["max_temp", {"op": "<", "val": 500}],
     ]
-    print(constraints_list)
-    print(expected_constraints_list)
     assert constraints_list == expected_constraints_list
 
 
@@ -57,7 +56,9 @@ def test_apply_constraints():
     ind4.output = tuple([0.1, 0.9, 1, 400])
     ind5.output = tuple([0.1, 1.15, 2, 450])
     pop = [ind1, ind2, ind3, ind4, ind5]
-    c = Constraints(test_output_dict, test_input_constraints)
+    c = Constraints(test_output_dict, test_input_constraints, toolbox)
     new_pop = c.apply_constraints(pop)
     expected_pop = [ind1, ind5]
-    assert new_pop == expected_pop
+    for ind in new_pop:
+        assert ind in expected_pop
+    assert len(new_pop) == len(pop)

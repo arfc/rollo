@@ -1,10 +1,11 @@
 from collections import defaultdict
 import operator
 import warnings
+import random
 
 
 class Constraints(object):
-    def __init__(self, output_dict, input_constraints):
+    def __init__(self, output_dict, input_constraints, toolbox):
         self.constraints = self.constraints_list(input_constraints)
         self.numbered_oup_dict = self.output_dict_numbered(output_dict)
         self.ops = {
@@ -15,6 +16,7 @@ class Constraints(object):
             ">=": operator.ge,
             ">": operator.gt,
         }
+        self.toolbox = toolbox
 
     def output_dict_numbered(self, output_dict):
         """Returns dictionary of output variables and their corresponding index"""
@@ -61,4 +63,7 @@ class Constraints(object):
                     not_constrained = False
             if not_constrained:
                 new_pop.append(ind)
-        return new_pop
+        final_pop = [self.toolbox.clone(ind) for ind in new_pop]
+        while len(final_pop) < len(pop):
+            final_pop.append(self.toolbox.clone(random.choice(new_pop)))
+        return final_pop
