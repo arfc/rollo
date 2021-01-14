@@ -50,7 +50,8 @@ class Algorithm(object):
         for i, ind in enumerate(pop):
             ind.gen = gen + 1
             ind.num = i
-        # evaluate fitness of newly created population
+        # evaluate fitness of newly created pop for inds with invalid fitness
+        invalids = [ind for ind in pop if not ind.fitness.valid]
         fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
         # assign fitness values to individuals
         for ind, fitness in zip(pop, fitnesses):
