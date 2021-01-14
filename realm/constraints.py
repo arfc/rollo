@@ -67,8 +67,9 @@ class Constraints(object):
         while len(final_pop) < len(pop):
             final_pop.append(self.toolbox.clone(random.choice(new_pop)))
         warnings.warn(
-            "{}% of pop was constrained".format(
-                (len(pop) - len(new_pop)) / len(final_pop) * 100
-            )
+            str(len(pop) - len(new_pop))
+            + " out of "
+            + str(len(pop))
+            + " inds were constrained"
         )
         return final_pop
