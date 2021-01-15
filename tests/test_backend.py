@@ -31,9 +31,9 @@ toolbox.register("evaluate", evaluator_fn)
 def test_initialize_new_backend():
     b = BackEnd("square_checkpoint.pkl", creator)
     b.initialize_new_backend()
-    assert b.backend["start_gen"] == 0
-    assert type(b.backend["halloffame"]) == tools.HallOfFame
-    assert type(b.backend["logbook"]) == tools.Logbook
+    assert b.results["start_gen"] == 0
+    assert type(b.results["halloffame"]) == tools.HallOfFame
+    assert type(b.results["logbook"]) == tools.Logbook
 
 
 def test_initialize_checkpoint_backend():
@@ -42,7 +42,7 @@ def test_initialize_checkpoint_backend():
     os.chdir("../")
     b = BackEnd("input_test_files/test_checkpoint.pkl", creator)
     b.initialize_checkpoint_backend()
-    pop = b.backend["population"]
+    pop = b.results["population"]
     assert len(pop) == 10
     for ind in pop:
         assert ind[0] > 0
@@ -51,10 +51,10 @@ def test_initialize_checkpoint_backend():
         assert ind[1] < 2
         assert ind.fitness.values[0] > 1
         assert ind.fitness.values[0] < 3
-    assert b.backend["start_gen"] == 0
-    assert b.backend["halloffame"].items[0] == max(pop, key=lambda x: x[2])
-    assert type(b.backend["logbook"]) == tools.Logbook
-    assert len(b.backend["logbook"]) == 1
+    assert b.results["start_gen"] == 0
+    assert b.results["halloffame"].items[0] == max(pop, key=lambda x: x[2])
+    assert type(b.results["logbook"]) == tools.Logbook
+    assert len(b.results["logbook"]) == 1
     os.remove("./input_test_files/test_checkpoint.pkl")
 
 
@@ -72,10 +72,10 @@ def test_update_backend():
     invalids = [ind for ind in new_pop if not ind.fitness.valid]
     rndstate = random.getstate()
     b.update_backend(new_pop, gen, invalids, rndstate)
-    pop = b.backend["population"]
-    assert b.backend["halloffame"].items[0] == max(pop + new_pop, key=lambda x: x[2])
-    assert len(b.backend["logbook"]) == 2
+    pop = b.results["population"]
+    assert b.results["halloffame"].items[0] == max(pop + new_pop, key=lambda x: x[2])
+    assert len(b.results["logbook"]) == 2
     bb = BackEnd("input_test_files/test_checkpoint.pkl", creator)
     bb.initialize_checkpoint_backend()
-    assert len(bb.backend["logbook"]) == 2
+    assert len(bb.results["logbook"]) == 2
     os.remove("./input_test_files/test_checkpoint.pkl")
