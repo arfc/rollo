@@ -8,10 +8,11 @@ import random
 class Algorithm(object):
     """Holds genetic algorithms."""
 
-    def __init__(self, deap_toolbox, constraint_obj):
+    def __init__(self, deap_toolbox, constraint_obj, checkpoint_file):
         self.toolbox = deap_toolbox  # deap toolbox object
-        # self.results = BackEnd(control_dict, output_dict)
         self.constraint_obj = constraint_obj
+        self.cp_file = checkpoint_file
+        self.backend = Backend(checkpoint_file)
 
     def generate(self):
         """Executes the genetic algorithm and outputs the summarized
@@ -22,8 +23,14 @@ class Algorithm(object):
 
         """
         pop = self.toolbox.population(n=self.toolbox.pop_size)
-        pop = self.initialize_pop(pop)
-        for gen in range(self.toolbox.ngen):
+        if self.cp_file:
+            self.backend.initialize_checkpoint_backend()
+            pop = self.backend["population"]
+            random.setstate(self.backend["rndstate"])
+        else:
+            self.backend.initialize_new_backend()
+            pop = self.initialize_pop(pop)
+        for gen in range(self.backend["start_gen"] + 1, self.toolbox.ngen):
             pop = self.apply_algorithm_ngen(pop, gen)
         print("Completed!")
         return pop
@@ -48,16 +55,17 @@ class Algorithm(object):
         pop = self.apply_mutation_operator(pop)
         # define pop's gen, ind num
         for i, ind in enumerate(pop):
-            ind.gen = gen + 1
+            ind.gen = gen
             ind.num = i
         # evaluate fitness of newly created pop for inds with invalid fitness
         invalids = [ind for ind in pop if not ind.fitness.valid]
-        fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
+        fitnesses = self.toolbox.map(self.toolbox.evaluate, invalids)
         # assign fitness values to individuals
-        for ind, fitness in zip(pop, fitnesses):
+        for ind, fitness in zip(invalids, fitnesses):
             ind.fitness.values = (fitness[0],)
             ind.output = fitness
         pop = self.constraint_obj.apply_constraints(pop)
+        self.backend.update_backend(pop, gen, invalid_ind, random.getstate())
         return pop
 
     def apply_selection_operator(self, pop):
