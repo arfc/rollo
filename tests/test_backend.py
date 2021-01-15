@@ -1,5 +1,6 @@
 from realm.backend import BackEnd
 from deap import base, creator, tools, algorithms
+import os
 
 creator.create("obj", base.Fitness, weights=(1.0,))
 creator.create("Ind", list, fitness=creator.obj)
@@ -14,6 +15,9 @@ def test_initialize_new_backend():
 
 
 def test_initialize_checkpoint_backend():
+    os.chdir("./input_test_files")
+    os.system("python generate_backend_pickle.py")
+    os.chdir("../")
     b = BackEnd("input_test_files/test_checkpoint.pkl", creator)
     b.initialize_checkpoint_backend()
     pop = b.backend["population"]
@@ -28,3 +32,4 @@ def test_initialize_checkpoint_backend():
     assert b.backend["start_gen"] == 0
     assert b.backend["halloffame"].items[0] == max(pop, key=lambda x: x[2])
     assert type(b.backend["logbook"]) == tools.Logbook
+    os.remove("./input_test_files/test_checkpoint.pkl")
