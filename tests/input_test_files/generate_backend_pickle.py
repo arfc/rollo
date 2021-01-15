@@ -51,6 +51,6 @@ cp = dict(
     logbook=logbook,
     rndstate=random.getstate(),
 )
-checkpoint_file = "square_checkpoint.pkl"
+checkpoint_file = "test_checkpoint.pkl"
 with open(checkpoint_file, "wb") as cp_file:
     pickle.dump(cp, cp_file)
