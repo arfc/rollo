@@ -1,7 +1,7 @@
 from realm.algorithm import Algorithm
 from realm.constraints import Constraints
 from deap import base, creator, tools, algorithms
-import random
+import random, os
 from collections import OrderedDict
 
 creator.create("obj", base.Fitness, weights=(1.0,))
@@ -53,7 +53,8 @@ test_constraints = Constraints(
 
 
 def test_generate():
-    a = Algorithm(deap_toolbox=toolbox, constraint_obj=test_constraints)
+    a = Algorithm(deap_toolbox=toolbox, constraint_obj=test_constraints, 
+    checkpoint_file=None, deap_creator=creator)
     final_pop = a.generate()
     assert len(final_pop) == toolbox.pop_size
     for ind in final_pop:
@@ -63,10 +64,18 @@ def test_generate():
         assert ind.fitness.values[0] > 1.5
         assert ind.fitness.values[0] < 2.5
     assert len(final_pop) == toolbox.pop_size
+    assert len(a.backend.results["logbook"]) == toolbox.pop_size
+    os.remove("checkpoint.pkl")
 
 
 def test_initialize_pop():
-    a = Algorithm(deap_toolbox=toolbox, constraint_obj=test_constraints)
+    a = Algorithm(
+        deap_toolbox=toolbox,
+        constraint_obj=test_constraints,
+        checkpoint_file=None,
+        deap_creator=creator,
+    )
+    a.backend.initialize_new_backend()
     pop = toolbox.population(n=5)
     new_pop = a.initialize_pop(pop)
     assert len(new_pop) == len(pop)
@@ -82,11 +91,18 @@ def test_initialize_pop():
         assert ind.gen == 0
         assert ind.fitness.values[0] > 1.5
         assert ind.fitness.values[0] < 2.5
+    os.remove("checkpoint.pkl")
 
 
 def test_apply_algorithm_ngen():
-    a = Algorithm(deap_toolbox=toolbox, constraint_obj=test_constraints)
+    a = Algorithm(
+        deap_toolbox=toolbox,
+        constraint_obj=test_constraints,
+        checkpoint_file=None,
+        deap_creator=creator,
+    )
     pop = toolbox.population(n=10)
+    a.backend.initialize_new_backend()
     new_pop = [toolbox.clone(ind) for ind in pop]
     new_pop = a.initialize_pop(new_pop)
     new_pop = a.apply_algorithm_ngen(new_pop, 0)
@@ -99,10 +115,17 @@ def test_apply_algorithm_ngen():
         assert ind.fitness.values[0] < 2.5
     assert len(new_pop) == toolbox.pop_size
     assert new_pop != pop
+    os.remove("checkpoint.pkl")
 
 
 def test_apply_selection_operator():
-    a = Algorithm(deap_toolbox=toolbox, constraint_obj=test_constraints)
+    a = Algorithm(
+        deap_toolbox=toolbox,
+        constraint_obj=test_constraints,
+        checkpoint_file=None,
+        deap_creator=creator,
+    )
+    a.backend.initialize_new_backend()
     pop = toolbox.population(n=toolbox.pop_size)
     pop = a.initialize_pop(pop)
     cloned_pop = [toolbox.clone(ind) for ind in pop]
@@ -112,10 +135,16 @@ def test_apply_selection_operator():
     expected_inds = expected_inds[k:]
     for s in selected_pop:
         assert s in expected_inds
+    os.remove("checkpoint.pkl")
 
 
 def test_apply_mating_operator():
-    a = Algorithm(deap_toolbox=toolbox, constraint_obj=test_constraints)
+    a = Algorithm(
+        deap_toolbox=toolbox,
+        constraint_obj=test_constraints,
+        checkpoint_file=None,
+        deap_creator=creator,
+    )
     pop = toolbox.population(n=toolbox.pop_size)
     mated_pop = [toolbox.clone(ind) for ind in pop]
     mated_pop = a.apply_mating_operator(mated_pop)
@@ -125,7 +154,12 @@ def test_apply_mating_operator():
 
 
 def test_apply_mutation_operator():
-    a = Algorithm(deap_toolbox=toolbox, constraint_obj=test_constraints)
+    a = Algorithm(
+        deap_toolbox=toolbox,
+        constraint_obj=test_constraints,
+        checkpoint_file=None,
+        deap_creator=creator,
+    )
     pop = toolbox.population(n=toolbox.pop_size)
     mutated_pop = [toolbox.clone(ind) for ind in pop]
     mutated_pop = a.apply_mutation_operator(mutated_pop)

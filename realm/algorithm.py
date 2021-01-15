@@ -25,12 +25,13 @@ class Algorithm(object):
         pop = self.toolbox.population(n=self.toolbox.pop_size)
         if self.cp_file:
             self.backend.initialize_checkpoint_backend()
-            pop = self.backend["population"]
-            random.setstate(self.backend["rndstate"])
+            pop = self.backend.results["population"]
+            random.setstate(self.backend.results["rndstate"])
         else:
             self.backend.initialize_new_backend()
             pop = self.initialize_pop(pop)
-        for gen in range(self.backend["start_gen"] + 1, self.toolbox.ngen):
+            self.cp_file = "checkpoint.pkl"
+        for gen in range(self.backend.results["start_gen"] + 1, self.toolbox.ngen):
             pop = self.apply_algorithm_ngen(pop, gen)
         print("Completed!")
         return pop
@@ -46,7 +47,9 @@ class Algorithm(object):
         for ind, fitness in zip(pop, fitnesses):
             ind.fitness.values = (fitness[0],)
             ind.output = fitness
+        invalids = [ind for ind in pop if not ind.fitness.valid]
         pop = self.constraint_obj.apply_constraints(pop)
+        self.backend.update_backend(pop, 0, invalids, random.getstate())
         return pop
 
     def apply_algorithm_ngen(self, pop, gen):
@@ -65,7 +68,8 @@ class Algorithm(object):
             ind.fitness.values = (fitness[0],)
             ind.output = fitness
         pop = self.constraint_obj.apply_constraints(pop)
-        self.backend.update_backend(pop, gen, invalid_ind, random.getstate())
+        invalids = [ind for ind in pop if not ind.fitness.valid]
+        self.backend.update_backend(pop, gen, invalids, random.getstate())
         return pop
 
     def apply_selection_operator(self, pop):

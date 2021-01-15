@@ -18,6 +18,7 @@ class BackEnd(object):
         self.results["start_gen"] = 0
         self.results["halloffame"] = tools.HallOfFame(maxsize=1)
         self.results["logbook"] = tools.Logbook()
+        self.checkpoint_file = "checkpoint.pkl"
         return
 
     def initialize_checkpoint_backend(self):
