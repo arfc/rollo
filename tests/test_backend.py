@@ -1,6 +1,6 @@
 from realm.backend import BackEnd
 from deap import base, creator, tools, algorithms
-import os
+import os, random
 
 creator.create("obj", base.Fitness, weights=(1.0,))
 creator.create("Ind", list, fitness=creator.obj)
@@ -26,6 +26,7 @@ def evaluator_fn(ind):
 
 
 toolbox.register("evaluate", evaluator_fn)
+
 
 def test_initialize_new_backend():
     b = BackEnd("square_checkpoint.pkl", creator)
@@ -53,6 +54,7 @@ def test_initialize_checkpoint_backend():
     assert b.backend["start_gen"] == 0
     assert b.backend["halloffame"].items[0] == max(pop, key=lambda x: x[2])
     assert type(b.backend["logbook"]) == tools.Logbook
+    assert len(b.backend["logbook"]) == 1
     os.remove("./input_test_files/test_checkpoint.pkl")
 
 
@@ -62,3 +64,18 @@ def test_update_backend():
     os.chdir("../")
     b = BackEnd("input_test_files/test_checkpoint.pkl", creator)
     b.initialize_checkpoint_backend()
+    new_pop = toolbox.population(n=toolbox.pop_size)
+    gen = 1
+    fitnesses = toolbox.map(toolbox.evaluate, new_pop)
+    for ind, fitness in zip(new_pop, fitnesses):
+        ind.fitness.values = (fitness[0],)
+    invalids = [ind for ind in new_pop if not ind.fitness.valid]
+    rndstate = random.getstate()
+    b.update_backend(new_pop, gen, invalids, rndstate)
+    pop = b.backend["population"]
+    assert b.backend["halloffame"].items[0] == max(pop + new_pop, key=lambda x: x[2])
+    assert len(b.backend["logbook"]) == 2
+    bb = BackEnd("input_test_files/test_checkpoint.pkl", creator)
+    bb.initialize_checkpoint_backend()
+    assert len(bb.backend["logbook"]) == 2
+    os.remove("./input_test_files/test_checkpoint.pkl")
