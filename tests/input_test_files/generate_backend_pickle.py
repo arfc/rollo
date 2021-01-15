@@ -1,3 +1,7 @@
+""" This file creates "test_checkpoint.pkl" that is used in test_backend.py
+for testing purposes
+"""
+
 import pickle
 import random
 from deap import base, creator, tools, algorithms
