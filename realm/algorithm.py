@@ -12,7 +12,7 @@ class Algorithm(object):
         self.toolbox = deap_toolbox  # deap toolbox object
         self.constraint_obj = constraint_obj
         self.cp_file = checkpoint_file
-        self.backend = Backend(checkpoint_file)
+        self.backend = BackEnd(checkpoint_file)
 
     def generate(self):
         """Executes the genetic algorithm and outputs the summarized

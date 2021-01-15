@@ -13,8 +13,8 @@ class BackEnd(object):
 
     def initialize_new_backend(self):
         self.backend["start_gen"] = 0
-        self.backend["halloffame"] = tools.HallofFame(maxsize=1)
-        self.backend["logbook"] = tools.LogBook()
+        self.backend["halloffame"] = tools.HallOfFame(maxsize=1)
+        self.backend["logbook"] = tools.Logbook()
         return
 
     def initialize_checkpoint_backend(self):

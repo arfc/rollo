@@ -38,8 +38,8 @@ class Executor(object):
         constraints = self.load_constraints(output_dict, input_dict["constraints"], toolbox)
         alg = Algorithm(
             deap_toolbox=toolbox,
-            constraint_obj=constraints
-            checkpoint_file=checkpoint_file
+            constraint_obj=constraints,
+            checkpoint_file=self.checkpoint_file
         )
         alg.generate()
 
