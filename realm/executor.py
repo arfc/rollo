@@ -27,7 +27,7 @@ class Executor(object):
         # generate evaluator function
         evaluator_fn = self.load_evaluator(control_dict, output_dict, input_dict)
         # DEAP toolbox set up
-        toolbox = self.load_toolbox(
+        toolbox, creator = self.load_toolbox(
             evaluator_fn,
             input_dict["algorithm"],
             input_dict["control_variables"],
@@ -39,7 +39,8 @@ class Executor(object):
         alg = Algorithm(
             deap_toolbox=toolbox,
             constraint_obj=constraints,
-            checkpoint_file=self.checkpoint_file
+            checkpoint_file=self.checkpoint_file,
+            deap_creator=creator
         )
         alg.generate()
 
@@ -178,7 +179,7 @@ class Executor(object):
         toolbox.ngen = input_algorithm["generations"]
         toolbox.mutpb = input_algorithm["mutation_probability"]
         toolbox.cxpb = input_algorithm["mating_probability"]
-        return toolbox
+        return toolbox, creator
 
     def min_max_list(self, control_dict, input_ctrl_vars):
         """Returns an ordered list of min values and max values for the

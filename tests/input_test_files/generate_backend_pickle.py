@@ -30,23 +30,23 @@ toolbox.register("evaluate", evaluator_fn)
 
 
 pop = toolbox.population(n=toolbox.pop_size)
-hof = tools.HallOfFame(maxsize=1)
-hof.update(pop)
 fitnesses = toolbox.map(toolbox.evaluate, pop)
 for ind, fitness in zip(pop, fitnesses):
     ind.fitness.values = (fitness[0],)
     ind.output = fitness
 invalids = [ind for ind in pop if not ind.fitness.valid]
+hof = tools.HallOfFame(maxsize=1)
+hof.update(pop)
 logbook = tools.Logbook()
 stats = tools.Statistics(lambda ind: ind.fitness.values)
 stats.register("avg", np.mean)
 stats.register("max", np.max)
 record = stats.compile(pop)
-logbook.record(gen=toolbox.ngen, evals=len(invalids), **record)
-
+gen=0
+logbook.record(gen=gen, evals=len(invalids), **record)
 cp = dict(
     population=pop,
-    generation=0,
+    generation=gen,
     halloffame=hof,
     logbook=logbook,
     rndstate=random.getstate(),

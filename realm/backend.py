@@ -2,14 +2,17 @@ from collections import defaultdict
 import pandas as pd
 from deap import base, creator, tools, algorithms
 import pickle
+import numpy 
 
 
 class BackEnd(object):
     """This class contains and manipulates the output backend"""
 
-    def __init__(self, checkpoint_file):
+    def __init__(self, checkpoint_file, deap_creator):
         self.backend = {}
         self.checkpoint_file = checkpoint_file
+        self.creator = deap_creator
+        self.initialize_stats()
 
     def initialize_new_backend(self):
         self.backend["start_gen"] = 0
@@ -18,7 +21,8 @@ class BackEnd(object):
         return
 
     def initialize_checkpoint_backend(self):
-        with open(self.checkpoint_file, "r") as cp_file:
+        creator = self.creator
+        with open(self.checkpoint_file, "rb") as cp_file:
             cp = pickle.load(cp_file)
         self.backend["population"] = cp["population"]
         self.backend["start_gen"] = cp["generation"]
@@ -27,7 +31,7 @@ class BackEnd(object):
         self.backend["rndstate"] = cp["rndstate"]
         return
 
-    def initialize_stats():
+    def initialize_stats(self):
         self.stats = tools.Statistics(lambda ind: ind.fitness.values)
         self.stats.register("avg", numpy.mean)
         self.stats.register("max", numpy.max)
