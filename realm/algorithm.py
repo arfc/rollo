@@ -71,6 +71,7 @@ class Algorithm(object):
             ind.fitness.values = (fitness[0],)
             ind.output = fitness
         pop = self.constraint_obj.apply_constraints(pop)
+        invalids = [ind for ind in pop if not ind.fitness.valid]
         self.backend.update_backend(pop, gen, invalids, random.getstate())
         return pop
 
