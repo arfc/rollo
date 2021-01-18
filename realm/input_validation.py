@@ -252,7 +252,7 @@ class InputValidation:
         # add validation here if developer adds new special input variable
         # polynomial
         try:
-            input_ctrl_vars_poly = input_ctrl_vars["polynomial"]
+            input_ctrl_vars_poly = input_ctrl_vars["polynomial_triso"]
         except KeyError:
             pass
         else:
@@ -262,17 +262,20 @@ class InputValidation:
                 "properties": {
                     "order": {"type": "number"},
                     "min": {"type": "number"},
-                    "max": {"type": "number"},
-                    "above_x_axis": {"type": "boolean"},
+                    "max": {"type": "number"}, 
+                    "radius": {"type": "number"}, 
+                    "volume": {"type": "number"}, 
+                    "slices": {"type": "number"}, 
+                    "height": {"type": "number"}, 
                 },
             }
             validate(instance=input_ctrl_vars_poly, schema=schema_ctrl_vars_poly)
             # key validation
             self.validate_correct_keys(
                 input_ctrl_vars_poly,
-                ["order", "min", "max", "above_x_axis"],
+                ["order", "min", "max", "radius", "volume", "slices", "height"],
                 [],
-                "control variable: polynomial",
+                "control variable: polynomial_triso",
             )
         return
 

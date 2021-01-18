@@ -32,6 +32,7 @@ class Algorithm(object):
             pop = self.initialize_pop(pop)
             self.cp_file = "checkpoint.pkl"
         for gen in range(self.backend.results["start_gen"] + 1, self.toolbox.ngen):
+            print(self.backend.results["logbook"].stream)
             pop = self.apply_algorithm_ngen(pop, gen)
         print("Completed!")
         return pop
