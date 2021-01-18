@@ -5,25 +5,24 @@ import random, copy
 
 def test_add_selection_operators():
     do = DeapOperators()
-    toolbox = base.Toolbox()
     selection_dict_list = [
         {"operator": "selTournament", "k": 5, "tournsize": 2},
         {"operator": "selNSGA2", "k": 5},
         {"operator": "selBest", "k": 5},
-        {"operator": "selLexicase", "k": 5},
     ]
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
-    toolbox.register("num", random.uniform, -1, 1)
 
     def f_cycle():
         return creator.Ind([toolbox.num()])
 
-    toolbox.register("individual", f_cycle)
-    toolbox.register("population", tools.initRepeat, list, toolbox.individual)
-    pop = toolbox.population(n=10)
     for i in range(100):
         for selection_dict in selection_dict_list:
+            toolbox = base.Toolbox()
+            toolbox.register("num", random.uniform, -1, 1)
+            toolbox.register("individual", f_cycle)
+            toolbox.register("population", tools.initRepeat, list, toolbox.individual)
+            pop = toolbox.population(n=10)
             toolbox = do.add_selection_operators(toolbox, selection_dict)
             expected_inds = []
             for i, ind in enumerate(pop):
@@ -44,7 +43,6 @@ def test_add_mutation_operators():
     do = DeapOperators()
     toolbox = base.Toolbox()
     mutation_dict_list = [
-        {"operator": "mutGaussian", "indpb": 0.5, "mu": 0.5, "sigma": 0.5},
         {"operator": "mutPolynomialBounded", "eta": 0.5, "indpb": 0.5},
     ]
     creator.create("obj", base.Fitness, weights=(-1.0,))
