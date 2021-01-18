@@ -65,12 +65,7 @@ class Evaluation:
         """This function returns a populated list with output values for each
         solver
         """
-        # try output script
-        try:
-            oup_script = self.output_scripts[solver]
-        except:
-            pass
-        else:
+        if self.output_scripts[solver]:
             # copy rendered output script into a new file in the particular solver's run
             shutil.copyfile(
                 self.output_scripts[solver], path + "/" + solver + "_output.py"
