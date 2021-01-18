@@ -3,6 +3,7 @@ from realm.input_validation import InputValidation
 from realm.special_variables import SpecialVariables
 from realm.deap_operators import DeapOperators
 from realm.algorithm import Algorithm
+from realm.constraints import Constraints
 from deap import base, creator, tools, algorithms
 import json, re, random
 from collections import OrderedDict
@@ -216,4 +217,4 @@ class Executor(object):
 
     def load_constraints(self, output_dict, input_constraints, toolbox):
         constraint_obj = Constraints(output_dict, input_constraints, toolbox)
-        return constraints_obj
+        return constraint_obj

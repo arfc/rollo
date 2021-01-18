@@ -1,5 +1,5 @@
 from jsonschema import validate
-
+from realm.special_variables import SpecialVariables
 
 class InputValidation:
     """This class does the initial validation of the *.rlm input file and
@@ -84,6 +84,8 @@ class InputValidation:
                 "optimized_variable": {"type": "string"},
                 "pop_size": {"type": "number"},
                 "generations": {"type": "number"},
+                "mutation_probability": {"type": "number"}, 
+                "mating_probability": {"type": "number"}, 
                 "selection_operator": {"type": "object"},
                 "mutation_operator": {"type": "object"},
                 "mating_operator": {"type": "object"},
@@ -98,6 +100,8 @@ class InputValidation:
                 "objective",
                 "pop_size",
                 "generations",
+                "mutation_probability",
+                "mating_probability",
                 "selection_operator",
                 "mutation_operator",
                 "mating_operator",
@@ -186,8 +190,14 @@ class InputValidation:
             schema_constraints["properties"][constraint] = {
                 "type": "object",
                 "properties": {
-                    "operator": {"type": "string"},
-                    "constrained_val": {"type": "number"},
+                    "operator": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "constrained_val": {
+                        "type": "array",
+                        "items": {"type": "number"},
+                    }
                 },
             }
         validate(instance=input_constraints, schema=schema_constraints)
@@ -199,11 +209,12 @@ class InputValidation:
                 [],
                 "constraint: " + constraint,
             )
-            self.validate_in_list(
-                input_constraints[constraint]["operator"],
-                [">", ">=", "=", "<", "<="],
-                constraint + "'s operator variable",
-            )
+            for op in input_constraints[constraint]["operator"]:
+                self.validate_in_list(
+                    op,
+                    [">", ">=", "=", "<", "<="],
+                    constraint + "'s operator variable",
+                )
         return
 
     def validate_ctrl_vars(self, input_ctrl_vars):

@@ -3,6 +3,7 @@ from realm.executor import Executor
 from collections import OrderedDict
 from deap import base, creator, tools, algorithms
 from realm.special_variables import SpecialVariables
+from realm.constraints import Constraints
 
 test_input_dict = {
     "control_variables": {
@@ -162,3 +163,19 @@ def test_individual_values():
     for i in range(1, 4):
         ind_values[i] >= -1
         ind_values[i] <= 1
+
+
+def test_load_constraints():
+    output_dict = OrderedDict(
+        {
+            "packing_fraction": "openmc",
+            "keff": "openmc",
+            "num_batches": "openmc",
+            "max_temp": "moltres",
+        }
+    )
+    e = Executor("input_file_placeholder")
+    constraint_obj = e.load_constraints(
+        output_dict, test_input_dict["constraints"], base.Toolbox()
+    )
+    assert type(constraint_obj) == Constraints
