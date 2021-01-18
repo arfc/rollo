@@ -23,15 +23,15 @@
 	},
 	"constraints": {
 		"keff": {
-			"operator": [">=", "<="],
-			"constrained_val": [1, 1.2]
+			"operator": [">="],
+			"constrained_val": [1.0]
 		}
 	},
 	"algorithm": {
 		"objective": "min",
 		"optimized_variable": "packing_fraction",
 		"pop_size": 4,
-		"generations": 2,
+		"generations": 10,
 		"mutation_probability": 0.5, 
 		"mating_probability": 0.5, 
 		"selection_operator": {
