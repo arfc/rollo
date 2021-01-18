@@ -112,7 +112,7 @@ def test_load_toolbox():
     def test_evaluator_fn():
         return tuple([1, 1])
 
-    toolbox = e.load_toolbox(
+    toolbox, creator = e.load_toolbox(
         evaluator_fn=test_evaluator_fn,
         input_algorithm=test_input_dict["algorithm"],
         input_ctrl_vars=test_input_dict["control_variables"],
