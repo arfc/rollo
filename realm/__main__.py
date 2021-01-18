@@ -5,8 +5,9 @@ from realm import executor
 
 if __name__ == "__main__":
     argv = sys.argv[1:]
+    print(argv)
     try:
-        opts, args = getopt.getopt(argv, "hi:o:", ["ifile="])
+        opts, args = getopt.getopt(argv, "i:c:")
     except getopt.GetoptError:
         print("python realm -i <inputfile>")
     opts_dict = {}

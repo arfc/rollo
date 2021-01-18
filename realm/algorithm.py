@@ -31,9 +31,11 @@ class Algorithm(object):
             self.backend.initialize_new_backend()
             pop = self.initialize_pop(pop)
             self.cp_file = "checkpoint.pkl"
+        print(self.backend.results["logbook"].stream)
         for gen in range(self.backend.results["start_gen"] + 1, self.toolbox.ngen):
-            print(self.backend.results["logbook"].stream)
+            print(pop)
             pop = self.apply_algorithm_ngen(pop, gen)
+            print(self.backend.results["logbook"])
         print("Completed!")
         return pop
 
@@ -69,7 +71,6 @@ class Algorithm(object):
             ind.fitness.values = (fitness[0],)
             ind.output = fitness
         pop = self.constraint_obj.apply_constraints(pop)
-        invalids = [ind for ind in pop if not ind.fitness.valid]
         self.backend.update_backend(pop, gen, invalids, random.getstate())
         return pop
 
