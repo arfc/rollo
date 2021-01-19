@@ -1,5 +1,4 @@
 from .backend import BackEnd
-from num2words import num2words
 import random
 
 ## GIVE CREDIT TO DEAP NOTEBOOK
