@@ -66,14 +66,14 @@ class Algorithm(object):
             ind.num = i
         # evaluate fitness of newly created pop for inds with invalid fitness
         invalids = [ind for ind in pop if not ind.fitness.valid]
+        copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
         fitnesses = self.toolbox.map(self.toolbox.evaluate, invalids)
         # assign fitness values to individuals
         for ind, fitness in zip(invalids, fitnesses):
             ind.fitness.values = (fitness[0],)
             ind.output = fitness
         pop = self.constraint_obj.apply_constraints(pop)
-        invalids = [ind for ind in pop if not ind.fitness.valid]
-        self.backend.update_backend(pop, gen, invalids, random.getstate())
+        self.backend.update_backend(pop, gen, copy_invalids, random.getstate())
         return pop
 
     def apply_selection_operator(self, pop):
