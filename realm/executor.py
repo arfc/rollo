@@ -5,12 +5,19 @@ from realm.deap_operators import DeapOperators
 from realm.algorithm import Algorithm
 from realm.constraints import Constraints
 from deap import base, creator, tools, algorithms
-import json, re, random
+import json, re, random, warnings
 from collections import OrderedDict
-import multiprocessing_on_dill as multiprocessing
+
+try:
+    import multiprocessing_on_dill as multiprocessing
+except:
+    warnings.warn(
+        "Multiprocessing_on_dill package not installed, REALM will continue to run without parallelization."
+    )
 
 creator.create("obj", base.Fitness, weights=(-1.0,))
 creator.create("Ind", list, fitness=creator.obj)
+
 
 class Executor(object):
     """A generalized framework to generate reactor designs
@@ -38,18 +45,20 @@ class Executor(object):
             control_dict,
             output_dict,
         )
-        try: 
+        try:
             pool = multiprocessing.Pool()
             toolbox.register("map", pool.map)
-        except: 
+        except:
             pass
         # load constraints if they exist
-        constraints = self.load_constraints(output_dict, input_dict["constraints"], toolbox)
+        constraints = self.load_constraints(
+            output_dict, input_dict["constraints"], toolbox
+        )
         alg = Algorithm(
             deap_toolbox=toolbox,
             constraint_obj=constraints,
             checkpoint_file=self.checkpoint_file,
-            deap_creator=creator
+            deap_creator=creator,
         )
         alg.generate()
 
