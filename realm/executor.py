@@ -41,6 +41,8 @@ class Executor(object):
         try: 
             pool = multiprocessing.Pool()
             toolbox.register("map", pool.map)
+        except: 
+            pass
         # load constraints if they exist
         constraints = self.load_constraints(output_dict, input_dict["constraints"], toolbox)
         alg = Algorithm(
