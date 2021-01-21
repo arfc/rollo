@@ -112,7 +112,7 @@ class Evaluation:
             else:
                 ind_vars = []
                 for j in range(control_dict[var][1]):
-                    ind_vars.append(ind[i+j])
+                    ind_vars.append(ind[i + j])
             control_vars[control_dict[var][0]][var] = ind_vars
         return control_vars
 

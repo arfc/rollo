@@ -8,11 +8,11 @@ if __name__ == "__main__":
     argv = sys.argv[1:]
     msg = "python realm -i <inputfile> -c <checkpoint file> -p <min or max obj>"
     try:
-        opts, args= getopt.getopt(argv, "i:p:c:")
+        opts, args = getopt.getopt(argv, "i:p:c:")
     except getopt.GetoptError:
         print("To run realm:")
         print(msg)
-    wt_dict = {"min":-1.0, "max":+1.0}
+    wt_dict = {"min": -1.0, "max": +1.0}
     opts_dict = {}
     for opt, arg in opts:
         opts_dict[opt] = arg

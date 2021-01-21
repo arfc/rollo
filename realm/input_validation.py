@@ -1,6 +1,7 @@
 from jsonschema import validate
 from realm.special_variables import SpecialVariables
 
+
 class InputValidation:
     """This class does the initial validation of the *.rlm input file and
     and solver's templated input scripts
@@ -84,8 +85,8 @@ class InputValidation:
                 "optimized_variable": {"type": "string"},
                 "pop_size": {"type": "number"},
                 "generations": {"type": "number"},
-                "mutation_probability": {"type": "number"}, 
-                "mating_probability": {"type": "number"}, 
+                "mutation_probability": {"type": "number"},
+                "mating_probability": {"type": "number"},
                 "selection_operator": {"type": "object"},
                 "mutation_operator": {"type": "object"},
                 "mating_operator": {"type": "object"},
@@ -197,7 +198,7 @@ class InputValidation:
                     "constrained_val": {
                         "type": "array",
                         "items": {"type": "number"},
-                    }
+                    },
                 },
             }
         validate(instance=input_constraints, schema=schema_constraints)
@@ -262,11 +263,11 @@ class InputValidation:
                 "properties": {
                     "order": {"type": "number"},
                     "min": {"type": "number"},
-                    "max": {"type": "number"}, 
-                    "radius": {"type": "number"}, 
-                    "volume": {"type": "number"}, 
-                    "slices": {"type": "number"}, 
-                    "height": {"type": "number"}, 
+                    "max": {"type": "number"},
+                    "radius": {"type": "number"},
+                    "volume": {"type": "number"},
+                    "slices": {"type": "number"},
+                    "height": {"type": "number"},
                 },
             }
             validate(instance=input_ctrl_vars_poly, schema=schema_ctrl_vars_poly)

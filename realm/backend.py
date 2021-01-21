@@ -2,7 +2,7 @@ from collections import defaultdict
 import pandas as pd
 from deap import base, creator, tools, algorithms
 import pickle
-import numpy 
+import numpy
 
 
 class BackEnd(object):
