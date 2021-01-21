@@ -1,4 +1,5 @@
 import sys, getopt
+from deap import creator, base
 
 sys.path.insert(1, "realm/")
 from realm import executor
@@ -7,7 +8,7 @@ if __name__ == "__main__":
     argv = sys.argv[1:]
     print(argv)
     try:
-        opts, args = getopt.getopt(argv, "i:c:")
+        opts, args = getopt.getopt(argv, "i:m:c:")
     except getopt.GetoptError:
         print("python realm -i <inputfile>")
     opts_dict = {}
@@ -22,6 +23,7 @@ if __name__ == "__main__":
             )
         else:
             new_run = executor.Executor(input_file=opts_dict["-i"])
-
+    creator.create("obj", base.Fitness, weights=(-1.0,))
+    creator.create("Ind", list, fitness=creator.obj)
     if "-i" in opts_dict:
         new_run.execute()

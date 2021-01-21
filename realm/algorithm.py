@@ -40,6 +40,7 @@ class Algorithm(object):
 
     def initialize_pop(self, pop):
         """Initialize population for genetic algorithm"""
+        print("INITIALiZE")
         for i, ind in enumerate(pop):
             ind.gen = 0
             ind.num = i
@@ -55,6 +56,7 @@ class Algorithm(object):
         return pop
 
     def apply_algorithm_ngen(self, pop, gen):
+        print("APPLIED")
         pop = self.apply_selection_operator(pop)
         pop = self.apply_mating_operator(pop)
         pop = self.apply_mutation_operator(pop)

@@ -15,9 +15,6 @@ except:
         "Multiprocessing_on_dill package not installed, REALM will continue to run without parallelization."
     )
 
-creator.create("obj", base.Fitness, weights=(-1.0,))
-creator.create("Ind", list, fitness=creator.obj)
-
 
 class Executor(object):
     """A generalized framework to generate reactor designs
