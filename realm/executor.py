@@ -7,8 +7,10 @@ from realm.constraints import Constraints
 from deap import base, creator, tools, algorithms
 import json, re, random
 from collections import OrderedDict
-from scoop import futures
-#import multiprocessing
+import multiprocessing_on_dill as multiprocessing
+
+creator.create("obj", base.Fitness, weights=(-1.0,))
+creator.create("Ind", list, fitness=creator.obj)
 
 class Executor(object):
     """A generalized framework to generate reactor designs
@@ -36,9 +38,9 @@ class Executor(object):
             control_dict,
             output_dict,
         )
-        toolbox.register("map", futures.map)
-        #pool = multiprocessing.Pool()
-        #toolbox.register("map", pool.map)
+        try: 
+            pool = multiprocessing.Pool()
+            toolbox.register("map", pool.map)
         # load constraints if they exist
         constraints = self.load_constraints(output_dict, input_dict["constraints"], toolbox)
         alg = Algorithm(
