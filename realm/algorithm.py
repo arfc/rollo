@@ -38,7 +38,7 @@ class Algorithm(object):
             self.backend.initialize_new_backend()
             pop = self.initialize_pop(pop)
             self.cp_file = "checkpoint.pkl"
-        print(self.backend.results["logbook"].stream)
+        print(self.backend.results["logbook"])
         for gen in range(self.backend.results["start_gen"] + 1, self.toolbox.ngen):
             print(pop)
             pop = self.apply_algorithm_ngen(pop, gen)

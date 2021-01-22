@@ -20,6 +20,9 @@ class BackEnd(object):
         self.results["start_gen"] = 0
         self.results["halloffame"] = tools.HallOfFame(maxsize=1)
         self.results["logbook"] = tools.Logbook()
+        self.results["logbook"].header = "gen", "evals", "ind", "oup"
+        self.results["logbook"].chapters["ind"].header = "avg", "std", "min", "max"
+        self.results["logbook"].chapters["oup"].header = "avg", "std", "min", "max"
         self.results["all"] = {}
         self.results["all"]["ind_naming"] = self.ind_naming()
         self.results["all"]["oup_naming"] = self.output_naming()
@@ -60,13 +63,21 @@ class BackEnd(object):
         return
 
     def initialize_stats(self):
-        self.stats = tools.Statistics(lambda ind: ind.fitness.values)
-        self.stats.register("avg", numpy.mean)
-        self.stats.register("max", numpy.max)
+        stats_ind = tools.Statistics(key=lambda ind: ind)
+        stats_ind.register("avg", numpy.mean, axis=0)
+        stats_ind.register("std", numpy.std, axis=0)
+        stats_ind.register("min", numpy.min, axis=0)
+        stats_ind.register("max", numpy.max, axis=0)
+        stats_oup = tools.Statistics(key=lambda ind: ind.output)
+        stats_oup.register("avg", numpy.mean, axis=0)
+        stats_oup.register("std", numpy.std, axis=0)
+        stats_oup.register("min", numpy.min, axis=0)
+        stats_oup.register("max", numpy.max, axis=0)
+        self.mstats = tools.MultiStatistics(ind=stats_ind, oup=stats_oup)
 
     def update_backend(self, pop, gen, invalid_ind, rndstate):
         self.results["halloffame"].update(pop)
-        record = self.stats.compile(pop)
+        record = self.mstats.compile(pop)
         self.results["logbook"].record(gen=gen, evals=len(invalid_ind), **record)
         self.results["all"]["populations"].append(pop)
         pop_oup = []
