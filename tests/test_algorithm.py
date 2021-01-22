@@ -37,6 +37,18 @@ toolbox.register(
 toolbox.cxpb = 1.0
 toolbox.mutpb = 1.0
 
+control_dict = OrderedDict(
+    {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
+)
+output_dict = OrderedDict(
+    {
+        "packing_fraction": "openmc",
+        "keff": "openmc",
+        "num_batches": "openmc",
+        "max_temp": "moltres",
+    }
+)
+
 
 def evaluator_fn(ind):
     return tuple([ind[0] + ind[1], 5])
@@ -53,8 +65,14 @@ test_constraints = Constraints(
 
 
 def test_generate():
-    a = Algorithm(deap_toolbox=toolbox, constraint_obj=test_constraints, 
-    checkpoint_file=None, deap_creator=creator)
+    a = Algorithm(
+        deap_toolbox=toolbox,
+        constraint_obj=test_constraints,
+        checkpoint_file=None,
+        deap_creator=creator,
+        control_dict=control_dict,
+        output_dict=output_dict,
+    )
     final_pop = a.generate()
     assert len(final_pop) == toolbox.pop_size
     for ind in final_pop:
@@ -74,6 +92,8 @@ def test_initialize_pop():
         constraint_obj=test_constraints,
         checkpoint_file=None,
         deap_creator=creator,
+        control_dict=control_dict,
+        output_dict=output_dict,
     )
     a.backend.initialize_new_backend()
     pop = toolbox.population(n=5)
@@ -100,6 +120,8 @@ def test_apply_algorithm_ngen():
         constraint_obj=test_constraints,
         checkpoint_file=None,
         deap_creator=creator,
+        control_dict=control_dict,
+        output_dict=output_dict,
     )
     pop = toolbox.population(n=10)
     a.backend.initialize_new_backend()
@@ -124,6 +146,8 @@ def test_apply_selection_operator():
         constraint_obj=test_constraints,
         checkpoint_file=None,
         deap_creator=creator,
+        control_dict=control_dict,
+        output_dict=output_dict,
     )
     a.backend.initialize_new_backend()
     pop = toolbox.population(n=toolbox.pop_size)
@@ -144,6 +168,8 @@ def test_apply_mating_operator():
         constraint_obj=test_constraints,
         checkpoint_file=None,
         deap_creator=creator,
+        control_dict=control_dict,
+        output_dict=output_dict,
     )
     pop = toolbox.population(n=toolbox.pop_size)
     mated_pop = [toolbox.clone(ind) for ind in pop]
@@ -159,6 +185,8 @@ def test_apply_mutation_operator():
         constraint_obj=test_constraints,
         checkpoint_file=None,
         deap_creator=creator,
+        control_dict=control_dict,
+        output_dict=output_dict,
     )
     pop = toolbox.population(n=toolbox.pop_size)
     mutated_pop = [toolbox.clone(ind) for ind in pop]
