@@ -7,11 +7,19 @@ import random
 class Algorithm(object):
     """Holds genetic algorithms."""
 
-    def __init__(self, deap_toolbox, constraint_obj, checkpoint_file, deap_creator):
+    def __init__(
+        self,
+        deap_toolbox,
+        constraint_obj,
+        checkpoint_file,
+        deap_creator,
+        control_dict,
+        output_dict,
+    ):
         self.toolbox = deap_toolbox
         self.constraint_obj = constraint_obj
         self.cp_file = checkpoint_file
-        self.backend = BackEnd(checkpoint_file, deap_creator)
+        self.backend = BackEnd(checkpoint_file, deap_creator, control_dict, output_dict)
 
     def generate(self):
         """Executes the genetic algorithm and outputs the summarized

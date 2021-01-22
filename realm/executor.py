@@ -46,7 +46,7 @@ class Executor(object):
             pool = multiprocessing.Pool()
             toolbox.register("map", pool.map)
         except:
-            pass
+            warnings.warn("multiprocessing failed to launch, realm will run serially.")
         # load constraints if they exist
         constraints = self.load_constraints(
             output_dict, input_dict["constraints"], toolbox
@@ -56,6 +56,8 @@ class Executor(object):
             constraint_obj=constraints,
             checkpoint_file=self.checkpoint_file,
             deap_creator=creator,
+            control_dict=control_dict,
+            output_dict=output_dict,
         )
         alg.generate()
 

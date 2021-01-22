@@ -1,6 +1,7 @@
 from realm.backend import BackEnd
 from deap import base, creator, tools, algorithms
 import os, random
+from collections import OrderedDict
 
 creator.create("obj", base.Fitness, weights=(1.0,))
 creator.create("Ind", list, fitness=creator.obj)
@@ -26,21 +27,60 @@ def evaluator_fn(ind):
 
 
 toolbox.register("evaluate", evaluator_fn)
+control_dict = OrderedDict(
+    {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
+)
+output_dict = OrderedDict(
+    {
+        "packing_fraction": "openmc",
+        "keff": "openmc",
+        "num_batches": "openmc",
+        "max_temp": "moltres",
+    }
+)
 
 
 def test_initialize_new_backend():
-    b = BackEnd("square_checkpoint.pkl", creator)
+    b = BackEnd("square_checkpoint.pkl", creator, control_dict, output_dict)
     b.initialize_new_backend()
     assert b.results["start_gen"] == 0
     assert type(b.results["halloffame"]) == tools.HallOfFame
     assert type(b.results["logbook"]) == tools.Logbook
+    assert type(b.results["all"]) == dict
+
+
+def test_ind_naming():
+    b = BackEnd("square_checkpoint.pkl", creator, control_dict, output_dict)
+    ind_dict = b.ind_naming()
+    expected_ind_dict = {
+        "packing_fraction": 0,
+        "polynomial_triso_0": 1,
+        "polynomial_triso_1": 2,
+        "polynomial_triso_2": 3,
+        "polynomial_triso_3": 4,
+    }
+    assert ind_dict == expected_ind_dict
+
+
+def test_output_naming():
+    b = BackEnd("square_checkpoint.pkl", creator, control_dict, output_dict)
+    oup_dict = b.output_naming()
+    expected_oup_dict = {
+        "packing_fraction": 0,
+        "keff": 1,
+        "num_batches": 2,
+        "max_temp": 3,
+    }
+    assert oup_dict == expected_oup_dict
 
 
 def test_initialize_checkpoint_backend():
     os.chdir("./input_test_files")
     os.system("python generate_backend_pickle.py")
     os.chdir("../")
-    b = BackEnd("input_test_files/test_checkpoint.pkl", creator)
+    b = BackEnd(
+        "input_test_files/test_checkpoint.pkl", creator, control_dict, output_dict
+    )
     b.initialize_checkpoint_backend()
     pop = b.results["population"]
     assert len(pop) == 10
@@ -62,20 +102,25 @@ def test_update_backend():
     os.chdir("./input_test_files")
     os.system("python generate_backend_pickle.py")
     os.chdir("../")
-    b = BackEnd("input_test_files/test_checkpoint.pkl", creator)
+    b = BackEnd(
+        "input_test_files/test_checkpoint.pkl", creator, control_dict, output_dict
+    )
     b.initialize_checkpoint_backend()
     new_pop = toolbox.population(n=toolbox.pop_size)
     gen = 1
     fitnesses = toolbox.map(toolbox.evaluate, new_pop)
     for ind, fitness in zip(new_pop, fitnesses):
         ind.fitness.values = (fitness[0],)
+        ind.output = fitness
     invalids = [ind for ind in new_pop if not ind.fitness.valid]
     rndstate = random.getstate()
     b.update_backend(new_pop, gen, invalids, rndstate)
     pop = b.results["population"]
     assert b.results["halloffame"].items[0] == max(pop + new_pop, key=lambda x: x[2])
     assert len(b.results["logbook"]) == 2
-    bb = BackEnd("input_test_files/test_checkpoint.pkl", creator)
+    bb = BackEnd(
+        "input_test_files/test_checkpoint.pkl", creator, control_dict, output_dict
+    )
     bb.initialize_checkpoint_backend()
     assert len(bb.results["logbook"]) == 2
     os.remove("./input_test_files/test_checkpoint.pkl")

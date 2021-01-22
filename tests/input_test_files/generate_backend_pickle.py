@@ -46,14 +46,33 @@ stats = tools.Statistics(lambda ind: ind.fitness.values)
 stats.register("avg", np.mean)
 stats.register("max", np.max)
 record = stats.compile(pop)
-gen=0
+gen = 0
 logbook.record(gen=gen, evals=len(invalids), **record)
+all = {}
+all["ind_naming"] = {
+    "packing_fraction": 0,
+    "polynomial_triso_0": 1,
+    "polynomial_triso_1": 2,
+    "polynomial_triso_2": 3,
+    "polynomial_triso_3": 4,
+}
+all["oup_naming"] = {
+    "packing_fraction": 0,
+    "keff": 1,
+    "num_batches": 2,
+    "max_temp": 3,
+}
+all["populations"] = [pop]
+for ind in pop:
+    oup = ind.output
+all["outputs"] = [oup]
 cp = dict(
     population=pop,
     generation=gen,
     halloffame=hof,
     logbook=logbook,
     rndstate=random.getstate(),
+    all=all,
 )
 checkpoint_file = "test_checkpoint.pkl"
 with open(checkpoint_file, "wb") as cp_file:
