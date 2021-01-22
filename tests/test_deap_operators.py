@@ -53,10 +53,13 @@ def test_add_mutation_operators():
     for j in range(100):
         for mutation_dict in mutation_dict_list:
             ind = creator.Ind([0.05, 0.9, 0.9, 0.8, 0.7])
-            toolbox = do.add_mutation_operators(toolbox, mutation_dict, min_list, max_list)
+            toolbox = do.add_mutation_operators(
+                toolbox, mutation_dict, min_list, max_list
+            )
             mutated = toolbox.mutate(ind)
             assert "mutate" in dir(toolbox)
             assert mutated != ind
+
 
 def test_add_mating_operators():
     do = DeapOperators()
@@ -64,7 +67,7 @@ def test_add_mating_operators():
     mating_dict_list = [
         {"operator": "cxOnePoint"},
         {"operator": "cxUniform", "indpb": 0.5},
-        {"operator": "cxBlend", "alpha": 0.5}
+        {"operator": "cxBlend", "alpha": 0.5},
     ]
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
