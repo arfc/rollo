@@ -1,6 +1,6 @@
 #!/bin/bash
-#PBS -l nodes=128:ppn=32:xe
-#PBS -l walltime=48:00:00
+#PBS -l nodes=32:ppn=16:xk
+#PBS -l walltime=1:00:00
 #PBS -N fhr_p1b_c1b
 #PBS -j oe
 #PBS -q normal
@@ -52,4 +52,4 @@ export PMI_NO_FORK=1
 
 export OMP_NUM_THREADS=32
 
-aprun -b -n 128 -N1 -d 32 -- bwpy-environ -- python -u openmc_input.py
+aprun -b -n 32 -N1 -d 16 -- bwpy-environ -- python -u openmc_input.py
