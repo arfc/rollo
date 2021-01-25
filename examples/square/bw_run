@@ -41,6 +41,15 @@ cd /u/sciteam/chee1/github/realm/examples/square/openmc_0_0
 
 ### NOTE: (the "in" file must exist for input)
 
+module load bwpy/2.0.2 
+module load bwpy-mpi
+module swap PrgEnv-cray/5.2.82 PrgEnv-gnu/5.2.82-gcc.4.9.3
+module swap gcc gcc/5.3.0 
+module unload cray-mpich
+module load cray-mpich/7.5.0
+module load cmake/3.9.4
+module load cray-hdf5-parallel
+
 source /projects/sciteam/bbcc/projects/openmc/openmc-parallel-python/openmc/build/myvirtualenv/bin/activate
 
 # to debug
