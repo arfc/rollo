@@ -1,0 +1,209 @@
+----------------------------------------
+Begin Torque Prologue on nid25335
+at Wed Jan 27 08:03:37 CST 2021
+Job Id:			11881544.bw
+Username:		chee1
+Group:			ILL_bbcc
+Job name:		openmc_input.py
+Requested resources:	nodes=32:ppn=16:xk,walltime=01:00:00,neednodes=32:ppn=16:xk
+Queue:			normal
+Account:		bbcc
+End Torque Prologue:  0.153 elapsed
+----------------------------------------
+
+
+
+
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:52 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+Wed Jan 27 08:03:53 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:53 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+[Wed Jan 27 08:03:53 2021] [c1-2c0s0n0] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+[Wed Jan 27 08:03:53 2021] [c5-2c2s5n1] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+[Wed Jan 27 08:03:53 2021] [c1-2c1s7n2] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+[Wed Jan 27 08:03:53 2021] [c3-2c1s7n3] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+[Wed Jan 27 08:03:53 2021] [c5-2c0s0n2] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+[Wed Jan 27 08:03:53 2021] [c3-2c0s0n0] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+[Wed Jan 27 08:03:53 2021] [c1-2c1s3n1] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+[Wed Jan 27 08:03:53 2021] [c5-2c1s7n2] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+[Wed Jan 27 08:03:53 2021] [c3-2c1s7n2] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+[Wed Jan 27 08:03:53 2021] [c3-2c1s7n1] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+[Wed Jan 27 08:03:53 2021] [c1-2c2s7n0] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+[Wed Jan 27 08:03:53 2021] [c1-2c2s7n1] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+[Wed Jan 27 08:03:53 2021] [c1-2c1s7n3] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+[Wed Jan 27 08:03:53 2021] [c3-2c1s7n0] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+MPID_Init(611).......:  PMI2 init failed: 1 
+MPID_Init(611).......:  PMI2 init failed: 1 
+[Wed Jan 27 08:03:53 2021] [c5-2c1s7n3] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+[Wed Jan 27 08:03:53 2021] [c3-2c1s5n3] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+[Wed Jan 27 08:03:53 2021] [c1-2c1s3n0] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+[Wed Jan 27 08:03:53 2021] [c3-2c1s3n0] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+[Wed Jan 27 08:03:53 2021] [c1-2c1s0n1] Fatal error in MPI_Init: Other MPI error, error stack:
+[Wed Jan 27 08:03:53 2021] [c1-2c1s0n2] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+[Wed Jan 27 08:03:53 2021] [c1-2c0s1n0] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+[Wed Jan 27 08:03:53 2021] [c1-2c0s1n2] Fatal error in MPI_Init: Other MPI error, error stack:
+[Wed Jan 27 08:03:53 2021] [c1-2c0s0n1] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(611).......:  PMI2 init failed: 1 
+MPID_Init(611).......:  PMI2 init failed: 1 
+[Wed Jan 27 08:03:53 2021] [c5-2c0s0n3] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+[Wed Jan 27 08:03:53 2021] [c1-2c0s1n3] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+[Wed Jan 27 08:03:53 2021] [c1-2c0s1n1] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+MPID_Init(611).......:  PMI2 init failed: 1 
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+MPID_Init(611).......:  PMI2 init failed: 1 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+MPID_Init(611).......:  PMI2 init failed: 1 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+[Wed Jan 27 08:03:53 2021] [c1-2c1s7n0] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+[Wed Jan 27 08:03:53 2021] [c1-2c1s6n0] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+MPID_Init(611).......:  PMI2 init failed: 1 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+MPID_Init(611).......:  PMI2 init failed: 1 
+MPID_Init(611).......:  PMI2 init failed: 1 
+Wed Jan 27 08:03:53 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:53 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+[Wed Jan 27 08:03:53 2021] [c1-2c0s0n3] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+[Wed Jan 27 08:03:53 2021] [c4-2c0s2n1] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+[Wed Jan 27 08:03:53 2021] [c1-2c1s6n1] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
+out
+Wed Jan 27 08:03:53 2021: [unset]:_pmi_alps_get_apid:alps_app_lli_put_request failed
+Wed Jan 27 08:03:53 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+[Wed Jan 27 08:03:53 2021] [c5-2c2s5n0] Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(525): 
+MPID_Init(228).......: channel initialization failed
+MPID_Init(611).......:  PMI2 init failed: 1 
