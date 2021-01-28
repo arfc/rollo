@@ -1,1 +1,0 @@
-python openmc_input.py
