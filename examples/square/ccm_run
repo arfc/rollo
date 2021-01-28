@@ -17,7 +17,7 @@ cd /u/sciteam/chee1/github/realm/examples/square/
 TPN=16
 NNODES=4
 HOSTLIST=znodelist
-LAUNCH=openmc_input.py
+LAUNCH=zstart.sh
 cat $HOME/.crayccm/ccm_nodelist.$PBS_JOBID | sort -u | awk -v n=$TPN '{for(i=0;i<n;i++) print $0}' > $HOSTLIST
 
 let NTASKS=$NNODES*$TPN
@@ -26,4 +26,4 @@ echo "#!/bin/bash
 $HOME/openmpi/bin/mpirun -v -np $NTASKS --mca btl tcp,self --mca btl_tcp_if_include ipogif0 --hostfile $HOSTLIST -npernode $TPN ./a.out > job.out" > $LAUNCH
 chmod 755 $LAUNCH
 
-ccmrun -n 32 -d 16 python openmc_input.py
+ccmrun $LAUNCH
