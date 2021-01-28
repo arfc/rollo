@@ -1,8 +1,9 @@
 #!/bin/bash
 #PBS -j oe
-#PBS -l nodes=32:ppn=16:xk
+#PBS -l nodes=4:ppn=16:xk
 #PBS -l walltime=1:00:00
 #PBS -l gres=ccm
+#PBS -l flags=commlocal:commtolerant
 #PBS -N ccm
 #PBS -q normal
 #PBS -A bbcc
@@ -11,19 +12,12 @@ source /opt/modules/default/init/bash
 module list
 cd /u/sciteam/chee1/github/realm/examples/square/
 
-
-module load bwpy/2.0.2
-module swap PrgEnv-cray/5.2.82 PrgEnv-gnu/5.2.82-gcc.4.9.3
-module swap gcc gcc/5.3.0 
-module load cmake/3.9.4
-module load cray-hdf5
-
-source /projects/sciteam/bbcc/projects/openmc/openmc-parallel-python/openmc/build/myvirtualenv/bin/activate
+#source /projects/sciteam/bbcc/projects/openmc/openmc-parallel-python/openmc/build/myvirtualenv/bin/activate
 
 TPN=16
-NNODES=32
+NNODES=4
 HOSTLIST=znodelist
-LAUNCH=zstart.sh
+LAUNCH=openmc_input.py
 cat $HOME/.crayccm/ccm_nodelist.$PBS_JOBID | sort -u | awk -v n=$TPN '{for(i=0;i<n;i++) print $0}' > $HOSTLIST
 
 let NTASKS=$NNODES*$TPN
