@@ -47,6 +47,7 @@ class Evaluation:
                     control_vars_solver=control_vars[solver],
                 )
                 # enter directory for this particular solver's run
+                print("IN",path)
                 os.mkdir(path)
                 os.chdir(path)
                 # run solver's function where run is executed
