@@ -5,20 +5,20 @@ import random
 
 
 class Algorithm(object):
-    """ Builds and runs Genetic Algorithms.
+    """Builds and runs Genetic Algorithms.
 
-    This class holds functions to generate a generic genetic algorithm. 
+    This class holds functions to generate a generic genetic algorithm.
 
     Parameters
     ----------
     deap_toolbox : deap.base.Toolbox
-        Deap toolbox populated with genetic algorithm parameters for this 
+        Deap toolbox populated with genetic algorithm parameters for this
         simulation.
     constraint_obj : openmc.Constraints
     checkpoint_file : str
     deap_creator : deap.creator
-    control_dict : dict 
-    output_dict : dict 
+    control_dict : dict
+    output_dict : dict
     """
 
     def __init__(
@@ -29,11 +29,14 @@ class Algorithm(object):
         deap_creator,
         control_dict,
         output_dict,
+        input_file,
     ):
         self.toolbox = deap_toolbox
         self.constraint_obj = constraint_obj
         self.cp_file = checkpoint_file
-        self.backend = BackEnd(checkpoint_file, deap_creator, control_dict, output_dict)
+        self.backend = BackEnd(
+            checkpoint_file, deap_creator, control_dict, output_dict, input_file
+        )
 
     def generate(self):
         """Executes the genetic algorithm and outputs the summarized

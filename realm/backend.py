@@ -8,15 +8,19 @@ import numpy
 class BackEnd(object):
     """This class contains and manipulates the output backend"""
 
-    def __init__(self, checkpoint_file, deap_creator, control_dict, output_dict):
+    def __init__(
+        self, checkpoint_file, deap_creator, control_dict, output_dict, input_file
+    ):
         self.results = {}
         self.checkpoint_file = checkpoint_file
         self.creator = deap_creator
         self.control_dict = control_dict
         self.output_dict = output_dict
+        self.input_file = input_file
         self.initialize_stats()
 
     def initialize_new_backend(self):
+        self.results["input_file"] = self.input_file
         self.results["start_gen"] = 0
         self.results["halloffame"] = tools.HallOfFame(maxsize=1)
         self.results["logbook"] = tools.Logbook()

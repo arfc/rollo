@@ -31,14 +31,16 @@ class Executor(object):
         InputValidation(input_dict).validate()
         complete_input_dict = self.add_defaults(input_dict)
         # organize control variables and output dict
-        control_dict, output_dict = self.organize_input_output(input_dict)
+        control_dict, output_dict = self.organize_input_output(complete_input_dict)
         # generate evaluator function
-        evaluator_fn = self.load_evaluator(control_dict, output_dict, input_dict)
+        evaluator_fn = self.load_evaluator(
+            control_dict, output_dict, complete_input_dict
+        )
         # DEAP toolbox set up
         toolbox, creator = self.load_toolbox(
             evaluator_fn,
-            input_dict["algorithm"],
-            input_dict["control_variables"],
+            complete_input_dict["algorithm"],
+            complete_input_dict["control_variables"],
             control_dict,
             output_dict,
         )
@@ -49,7 +51,7 @@ class Executor(object):
             warnings.warn("multiprocessing failed to launch, realm will run serially.")
         # load constraints if they exist
         constraints = self.load_constraints(
-            output_dict, input_dict["constraints"], toolbox
+            output_dict, complete_input_dict["constraints"], toolbox
         )
         alg = Algorithm(
             deap_toolbox=toolbox,
@@ -58,6 +60,7 @@ class Executor(object):
             deap_creator=creator,
             control_dict=control_dict,
             output_dict=output_dict,
+            input_file=self.input_file,
         )
         alg.generate()
 

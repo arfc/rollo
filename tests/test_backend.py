@@ -39,9 +39,11 @@ output_dict = OrderedDict(
     }
 )
 
+input_file = {}  # placeholder
+
 
 def test_initialize_new_backend():
-    b = BackEnd("square_checkpoint.pkl", creator, control_dict, output_dict)
+    b = BackEnd("square_checkpoint.pkl", creator, control_dict, output_dict, input_file)
     b.initialize_new_backend()
     assert b.results["start_gen"] == 0
     assert type(b.results["halloffame"]) == tools.HallOfFame
@@ -50,7 +52,7 @@ def test_initialize_new_backend():
 
 
 def test_ind_naming():
-    b = BackEnd("square_checkpoint.pkl", creator, control_dict, output_dict)
+    b = BackEnd("square_checkpoint.pkl", creator, control_dict, output_dict, input_file)
     ind_dict = b.ind_naming()
     expected_ind_dict = {
         "packing_fraction": 0,
@@ -63,7 +65,7 @@ def test_ind_naming():
 
 
 def test_output_naming():
-    b = BackEnd("square_checkpoint.pkl", creator, control_dict, output_dict)
+    b = BackEnd("square_checkpoint.pkl", creator, control_dict, output_dict, input_file)
     oup_dict = b.output_naming()
     expected_oup_dict = {
         "packing_fraction": 0,
@@ -79,7 +81,11 @@ def test_initialize_checkpoint_backend():
     os.system("python generate_backend_pickle.py")
     os.chdir("../")
     b = BackEnd(
-        "input_test_files/test_checkpoint.pkl", creator, control_dict, output_dict
+        "input_test_files/test_checkpoint.pkl",
+        creator,
+        control_dict,
+        output_dict,
+        input_file,
     )
     b.initialize_checkpoint_backend()
     pop = b.results["population"]
@@ -103,7 +109,11 @@ def test_update_backend():
     os.system("python generate_backend_pickle.py")
     os.chdir("../")
     b = BackEnd(
-        "input_test_files/test_checkpoint.pkl", creator, control_dict, output_dict
+        "input_test_files/test_checkpoint.pkl",
+        creator,
+        control_dict,
+        output_dict,
+        input_file,
     )
     b.initialize_checkpoint_backend()
     new_pop = toolbox.population(n=toolbox.pop_size)
@@ -119,7 +129,11 @@ def test_update_backend():
     assert b.results["halloffame"].items[0] == max(pop + new_pop, key=lambda x: x[2])
     assert len(b.results["logbook"]) == 2
     bb = BackEnd(
-        "input_test_files/test_checkpoint.pkl", creator, control_dict, output_dict
+        "input_test_files/test_checkpoint.pkl",
+        creator,
+        control_dict,
+        output_dict,
+        input_file,
     )
     bb.initialize_checkpoint_backend()
     assert len(bb.results["logbook"]) == 2
