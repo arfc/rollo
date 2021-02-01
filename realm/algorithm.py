@@ -5,7 +5,21 @@ import random
 
 
 class Algorithm(object):
-    """Holds genetic algorithms."""
+    """ Builds and runs Genetic Algorithms.
+
+    This class holds functions to generate a generic genetic algorithm. 
+
+    Parameters
+    ----------
+    deap_toolbox : deap.base.Toolbox
+        Deap toolbox populated with genetic algorithm parameters for this 
+        simulation.
+    constraint_obj : openmc.Constraints
+    checkpoint_file : str
+    deap_creator : deap.creator
+    control_dict : dict 
+    output_dict : dict 
+    """
 
     def __init__(
         self,
