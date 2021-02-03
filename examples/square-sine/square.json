@@ -5,7 +5,7 @@
     },
     "evaluators": {
         "openmc": {
-            "input_script": "openmc_inp.py",
+            "input_script": "openmcinp.py",
             "inputs": ["sine_b", "sine_c"],
             "outputs": ["keff"]
         }

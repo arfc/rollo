@@ -138,9 +138,9 @@ point = openmc.stats.Point((0.2, 0.2, 12.5))
 src = openmc.Source(space=point)
 settings = openmc.Settings()
 settings.source = src
-settings.batches = 50
-settings.inactive = 10
-settings.particles = 1000
+settings.batches = 10
+settings.inactive = 2
+settings.particles = 100
 settings.temperature = {"multipole": True, "method": "interpolation"}
 settings.export_to_xml()
 
