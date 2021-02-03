@@ -15,8 +15,8 @@
     "algorithm": {
         "objective": "min",
         "optimized_variable": "packing_fraction",
-        "pop_size": 4,
-        "generations": 10,
+        "pop_size": 10,
+        "generations": 20,
         "mutation_probability": 0.5,
         "mating_probability": 0.5,
         "selection_operator": {"operator": "selBest", "k": 1},

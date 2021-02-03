@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -j oe
-#PBS -l nodes=4:ppn=16:xk
-#PBS -l walltime=00:05:00
+#PBS -l nodes=4:ppn=20:xe
+#PBS -l walltime=01:00:00
 #PBS -l gres=ccm
 #PBS -l flags=commlocal:commtolerant
 #PBS -N ccm
@@ -10,7 +10,7 @@
 
 source /opt/modules/default/init/bash
 module list
-cd /u/sciteam/chee1/github/realm/examples/square-ccm/
+cd /u/sciteam/chee1/github/realm/examples/square-sine/
 
 source /projects/sciteam/bbcc/projects/openmc/openmc-parallel-python/openmc/build/myvirtualenv/bin/activate
 
