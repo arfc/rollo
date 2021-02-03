@@ -6,13 +6,13 @@ class SpecialVariables:
     def __init__(self):
         # developer's should add to this list when defining a new special
         # variable
-        self.special_variables = ["polynomial_triso"]
+        self.special_variables = ["polynomial_triso", "sine"]
         return
 
     def polynomial_triso_num(self, poly_dict):
         return poly_dict["order"] + 1
 
-    def polynomial_triso_values(self, poly_dict, toolbox, var_dict):
+    def polynomial_triso_values(self, poly_dict, var_dict):
         """Returns a list of polynomial coefficients"""
         """This function returns polynomial values"""
         total_pf = var_dict["packing_fraction"]
@@ -34,3 +34,13 @@ class SpecialVariables:
             pf_z_over_max = [i for i in pf_z if i > 0.25]
             poly_val_under_zero = [i for i in poly_val if i < 0]
         return poly
+
+    def sine_num(self):
+        return 4
+
+    def sine_values(self, sine_dict, var_dict):
+        a = random.uniform(sine_dict["a"][0], sine_dict["a"][1])
+        b = random.uniform(sine_dict["b"][0], sine_dict["b"][1])
+        c = random.uniform(sine_dict["c"][0], sine_dict["c"][1])
+        d = random.uniform(sine_dict["d"][0], sine_dict["d"][1])
+        return [a, b, c, d]

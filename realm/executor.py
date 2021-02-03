@@ -225,7 +225,7 @@ class Executor(object):
             if var in special_control_vars:
                 # this func must return a list
                 method = getattr(sv, var + "_values")
-                result = method(input_ctrl_vars[var], toolbox, var_dict)
+                result = method(input_ctrl_vars[var], var_dict)
                 input_vals += result
                 var_dict[var] = result
             else:
