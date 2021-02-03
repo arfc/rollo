@@ -1,0 +1,30 @@
+{
+    "control_variables": {
+        "packing_fraction": {"min": 0.01, "max": 0.3},
+        "sine_b": {"min": 0.1, "max": 10.0},
+        "sine_c": {"min": 0.0, "max": 10.0}
+    },
+    "evaluators": {
+        "openmc": {
+            "input_script": "openmc_inp.py",
+            "inputs": ["packing_fraction", "sine_b", "sine_c"],
+            "outputs": ["packing_fraction", "keff"]
+        }
+    },
+    "constraints": {"keff": {"operator": [">="], "constrained_val": [1.0]}},
+    "algorithm": {
+        "objective": "min",
+        "optimized_variable": "packing_fraction",
+        "pop_size": 4,
+        "generations": 10,
+        "mutation_probability": 0.5,
+        "mating_probability": 0.5,
+        "selection_operator": {"operator": "selBest", "k": 1},
+        "mutation_operator": {
+            "operator": "mutPolynomialBounded",
+            "indpb": 0.5,
+            "eta": 0.5
+        },
+        "mating_operator": {"operator": "cxOnePoint"}
+    }
+}
