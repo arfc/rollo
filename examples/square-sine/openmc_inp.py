@@ -3,7 +3,7 @@ import numpy as np
 from numpy import sin, cos, tan, pi
 
 # Templating
-total_pf = {{packing_fraction}}
+total_pf = 0.05
 sine_b = {{sine_b}}
 sine_c = {{sine_c}}
 volume, slices, height = 10, 10, 25
