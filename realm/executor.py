@@ -176,9 +176,12 @@ class Executor(object):
         creator.create("Ind", list, fitness=creator.obj)
         toolbox = base.Toolbox()
         # register control variables + individual
+        sv = SpecialVariables()
+        special_control_vars = sv.special_variables
         for var in input_ctrl_vars:
-            var_dict = input_ctrl_vars[var]
-            toolbox.register(var, random.uniform, var_dict["min"], var_dict["max"])
+            if var not in special_control_vars: 
+                var_dict = input_ctrl_vars[var]
+                toolbox.register(var, random.uniform, var_dict["min"], var_dict["max"])
         toolbox.register(
             "individual", self.individual_values, input_ctrl_vars, control_dict, toolbox
         )

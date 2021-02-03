@@ -49,14 +49,3 @@ def test_polynomial_triso_values():
         assert len([i for i in pf_z if i > 0.25]) == 0
         assert len([i for i in poly_val if i < 0]) == 0
 
-
-def test_sine_func_values():
-    sv = SpecialVariables()
-    sine_dict = {"a": [1, 1], "b": [0.1, 10], "c": [0, 10], "d": [1, 1]}
-    sine_coeff = sv.sine_values(sine_dict, {})
-    assert sine_coeff[0] == 1
-    assert sine_coeff[1] >= 0.1
-    assert sine_coeff[1] <= 10
-    assert sine_coeff[2] >= 0
-    assert sine_coeff[2] <= 10
-    assert sine_coeff[3] == 1
