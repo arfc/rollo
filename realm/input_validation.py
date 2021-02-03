@@ -69,10 +69,10 @@ class InputValidation:
         except KeyError:
             print("<Input Validation Error> The algorithm must be defined.")
         else:
-            self.validate_algorithm(input_algorithm, input_ctrl_vars)
+            self.validate_algorithm(input_algorithm, input_ctrl_vars, input_evaluators)
         return
 
-    def validate_algorithm(self, input_algorithm, input_ctrl_vars):
+    def validate_algorithm(self, input_algorithm, input_ctrl_vars, input_evaluators):
         """This function validates the "algorithm" segment of the JSON input
         file.
         """
@@ -111,9 +111,12 @@ class InputValidation:
         )
         # validation for objective and optimized variable
         self.validate_in_list(input_algorithm["objective"], ["min", "max"], "objective")
+        output_list = []
+        for solver in input_evaluators:
+            output_list += input_evaluators[solver]["outputs"]
         self.validate_in_list(
             input_algorithm["optimized_variable"],
-            list(input_ctrl_vars.keys()),
+            output_list,
             "optimized_variable",
         )
 
