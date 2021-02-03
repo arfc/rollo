@@ -33,6 +33,7 @@ class BackEnd(object):
         self.results["all"]["populations"] = []
         self.results["all"]["outputs"] = []
         self.checkpoint_file = "checkpoint.pkl"
+
         return
 
     def ind_naming(self):
