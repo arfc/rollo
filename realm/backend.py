@@ -90,6 +90,7 @@ class BackEnd(object):
             pop_oup.append(ind.output)
         self.results["all"]["outputs"].append(pop_oup)
         cp = dict(
+            input_file=self.input_file, 
             population=pop,
             generation=gen,
             halloffame=self.results["halloffame"],
