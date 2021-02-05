@@ -117,8 +117,7 @@ def test_load_toolbox():
         evaluator_fn=test_evaluator_fn,
         input_algorithm=test_input_dict["algorithm"],
         input_ctrl_vars=test_input_dict["control_variables"],
-        control_dict=ctrl_dict,
-        output_dict=output_dict,
+        control_dict=ctrl_dict
     )
 
     test_toolbox_ind = toolbox.individual()

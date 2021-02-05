@@ -58,8 +58,7 @@ class Executor(object):
             evaluator_fn,
             complete_input_dict["algorithm"],
             complete_input_dict["control_variables"],
-            control_dict,
-            output_dict,
+            control_dict
         )
         try:
             pool = multiprocessing.Pool()
@@ -215,7 +214,7 @@ class Executor(object):
         return evaluator_fn
 
     def load_toolbox(
-        self, evaluator_fn, input_algorithm, input_ctrl_vars, control_dict, output_dict
+        self, evaluator_fn, input_algorithm, input_ctrl_vars, control_dict
     ):
         """This function creates a DEAP toolbox object based on user-defined
         parameters
