@@ -76,7 +76,7 @@ class Executor(object):
             deap_creator=creator,
             control_dict=control_dict,
             output_dict=output_dict,
-            input_file=self.input_file,
+            input_dict=complete_input_dict
         )
         alg.generate()
         return

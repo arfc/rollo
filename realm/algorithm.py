@@ -29,13 +29,13 @@ class Algorithm(object):
         deap_creator,
         control_dict,
         output_dict,
-        input_file,
+        input_dict,
     ):
         self.toolbox = deap_toolbox
         self.constraint_obj = constraint_obj
         self.cp_file = checkpoint_file
         self.backend = BackEnd(
-            checkpoint_file, deap_creator, control_dict, output_dict, input_file
+            checkpoint_file, deap_creator, control_dict, output_dict, input_dict
         )
 
     def generate(self):
