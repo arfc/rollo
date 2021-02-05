@@ -58,7 +58,7 @@ class Executor(object):
             evaluator_fn,
             complete_input_dict["algorithm"],
             complete_input_dict["control_variables"],
-            control_dict
+            control_dict,
         )
         try:
             pool = multiprocessing.Pool()
@@ -158,7 +158,21 @@ class Executor(object):
         """This function numbers the control variables and output variables
         to keep consistency between evaluation, constraints, and algorithm
         classes
+
+        Parameters
+        ----------
+        input_dict: dict
+            input file dict
+
+        Returns
+        -------
+        control_vars: OrderedDict
+            Ordered dict of control variables as keys and a list of their
+            solver and number of variables as each value
+        output_vars: OrderedDict
+            Ordered dict of output variables as keys and solvers as values
         """
+
         input_ctrl_vars = input_dict["control_variables"]
         input_evaluators = input_dict["evaluators"]
         input_algorithm = input_dict["algorithm"]
@@ -194,7 +208,24 @@ class Executor(object):
         return control_vars, output_vars
 
     def load_evaluator(self, control_dict, output_dict, input_dict):
-        """This function creates an Evaluation function object"""
+        """This function creates an Evaluation function object
+        
+        Parameters
+        ----------
+        control_dict: OrderedDict
+            Ordered dict of control variables as keys and a list of their
+            solver and number of variables as each value
+        output_dict: OrderedDict
+            Ordered dict of output variables as keys and solvers as values
+        input_dict: dict
+            input file dict with default values filled
+
+        Returns
+        -------
+        evaluator_fn: function 
+            
+
+        """
         input_evaluators = input_dict["evaluators"]
         evaluator = realm.Evaluation()
         for solver in input_evaluators:
