@@ -12,13 +12,23 @@ try:
     import multiprocessing_on_dill as multiprocessing
 except:
     warnings.warn(
-        "Multiprocessing_on_dill package not installed, REALM will continue to run without parallelization."
+        "Multiprocessing_on_dill package not installed, REALM will continue \
+        to run without parallelization."
     )
 
 
 class Executor(object):
-    """A generalized framework to generate reactor designs
-    using genetic algorithms.
+    """REALM Executor for a run.
+
+    Instances of this class can be used to perform a REALM run.
+
+    Parameters
+    ----------
+    input_file : str
+        Name of input file
+    checkpoint_file : str, optional
+        Name of checkpoint file
+
     """
 
     def __init__(self, input_file, checkpoint_file=None):
@@ -26,6 +36,13 @@ class Executor(object):
         self.checkpoint_file = checkpoint_file
 
     def execute(self):
+        """Executes realm simulation to generate reactor designs.
+        1) Read and validate input file
+        2) Initialize evaluator
+        3) Initialize DEAP toolbox
+        4) Initialize constraints
+        5) Run genetic algorithm
+        """
         print("execute realm")
         input_dict = self.read_input_file()
         InputValidation(input_dict).validate()
@@ -63,9 +80,17 @@ class Executor(object):
             input_file=self.input_file,
         )
         alg.generate()
+        return
 
     def read_input_file(self):
-        """This function reads a json input file and returns a dictionary"""
+        """This function reads a json input file and returns a dictionary
+
+        Returns
+        -------
+        data: dict
+            json input file converted into a dict
+        """
+
         with open(self.input_file) as json_file:
             data = json.load(json_file)
         return data
@@ -73,6 +98,17 @@ class Executor(object):
     def add_defaults(self, input_dict):
         """This function adds default inputs if they are missing from
         the input_dict
+
+        Parameters
+        ----------
+        input_dict: dict
+            input file dict
+
+        Returns
+        -------
+        reloaded_input_dict: dict
+            input file dict with additional missing default inputs
+
         """
         input_algorithm = input_dict["algorithm"]
         input_algorithm = self.default_check(input_algorithm, "objective", "min")
@@ -95,7 +131,23 @@ class Executor(object):
 
     def default_check(self, input_dict, variable, default_val):
         """This function checks if a variable is missing from a dict, and
-        adds a default value if it is
+        adds a default value if it is.
+
+        Parameters
+        ----------
+        input_dict: dict
+            input file dict
+        variable: str
+            variable name
+        default_val: any type accepted
+            default input for that variable (can be str, float, dict, etc.)
+
+        Returns
+        -------
+        input_dict: dict
+            input file dict with additional missing default input defined by
+            parameters of this function
+
         """
         try:
             a = input_dict[variable]
@@ -179,7 +231,7 @@ class Executor(object):
         sv = SpecialVariables()
         special_control_vars = sv.special_variables
         for var in input_ctrl_vars:
-            if var not in special_control_vars: 
+            if var not in special_control_vars:
                 var_dict = input_ctrl_vars[var]
                 toolbox.register(var, random.uniform, var_dict["min"], var_dict["max"])
         toolbox.register(
