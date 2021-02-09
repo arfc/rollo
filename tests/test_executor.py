@@ -117,7 +117,7 @@ def test_load_toolbox():
         evaluator_fn=test_evaluator_fn,
         input_algorithm=test_input_dict["algorithm"],
         input_ctrl_vars=test_input_dict["control_variables"],
-        control_dict=ctrl_dict
+        control_dict=ctrl_dict,
     )
 
     test_toolbox_ind = toolbox.individual()
@@ -130,38 +130,6 @@ def test_load_toolbox():
     assert toolbox.ngen == 10
     assert toolbox.mutpb == 0.5
     assert toolbox.cxpb == 0.5
-
-
-def test_min_max_list():
-    e = Executor("input_file_placeholder")
-    ctrl_dict = OrderedDict(
-        {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
-    )
-    min_list, max_list = e.min_max_list(ctrl_dict, test_input_dict["control_variables"])
-    expected_min_list = [0.005, 1, 1, 1, 1]
-    expected_max_list = [0.1, 1, 1, 1, 1]
-
-
-def test_individual_values():
-    e = Executor("input_file_placeholder")
-    ctrl_dict = OrderedDict(
-        {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
-    )
-    poly_dict = test_input_dict["control_variables"]["polynomial_triso"]
-    toolbox = base.Toolbox()
-    creator.create("obj", base.Fitness, weights=(-1.0,))
-    creator.create("Ind", list, fitness=creator.obj)
-    toolbox.register("packing_fraction", random.uniform, 0.005, 0.1)
-    toolbox.register("polynomial_triso", random.uniform, 1, 1)
-    ind_values = e.individual_values(
-        test_input_dict["control_variables"], ctrl_dict, toolbox
-    )
-    assert type(ind_values) is creator.Ind
-    assert ind_values[0] >= 0.005
-    assert ind_values[0] <= 0.1
-    for i in range(1, 4):
-        ind_values[i] >= -1
-        ind_values[i] <= 1
 
 
 def test_load_constraints():

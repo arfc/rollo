@@ -4,6 +4,7 @@ from realm.special_variables import SpecialVariables
 from realm.deap_operators import DeapOperators
 from realm.algorithm import Algorithm
 from realm.constraints import Constraints
+from realm.toolbox_generator import ToolboxGenerator
 from deap import base, creator, tools, algorithms
 import json, re, random, warnings
 from collections import OrderedDict
@@ -76,7 +77,7 @@ class Executor(object):
             deap_creator=creator,
             control_dict=control_dict,
             output_dict=output_dict,
-            input_dict=complete_input_dict
+            input_dict=complete_input_dict,
         )
         alg.generate()
         return
@@ -209,7 +210,7 @@ class Executor(object):
 
     def load_evaluator(self, control_dict, output_dict, input_dict):
         """This function creates an Evaluation function object
-        
+
         Parameters
         ----------
         control_dict: OrderedDict
@@ -222,8 +223,8 @@ class Executor(object):
 
         Returns
         -------
-        evaluator_fn: function 
-            
+        evaluator_fn: function
+
 
         """
         input_evaluators = input_dict["evaluators"]
@@ -250,74 +251,11 @@ class Executor(object):
         """This function creates a DEAP toolbox object based on user-defined
         parameters
         """
-        if input_algorithm["objective"] == "min":
-            weight = -1.0
-        elif input_algorithm["objective"] == "max":
-            weight = +1.0
-        creator.create("obj", base.Fitness, weights=(weight,))
-        creator.create("Ind", list, fitness=creator.obj)
-        toolbox = base.Toolbox()
-        # register control variables + individual
-        sv = SpecialVariables()
-        special_control_vars = sv.special_variables
-        for var in input_ctrl_vars:
-            if var not in special_control_vars:
-                var_dict = input_ctrl_vars[var]
-                toolbox.register(var, random.uniform, var_dict["min"], var_dict["max"])
-        toolbox.register(
-            "individual", self.individual_values, input_ctrl_vars, control_dict, toolbox
+        toolbox_generator = ToolboxGenerator()
+        toolbox, creator = toolbox_generator.setup(
+            evaluator_fn, input_algorithm, input_ctrl_vars, control_dict
         )
-        toolbox.register("population", tools.initRepeat, list, toolbox.individual)
-        toolbox.register("evaluate", evaluator_fn)
-        min_list, max_list = self.min_max_list(control_dict, input_ctrl_vars)
-        toolbox.min_list, toolbox.max_list = min_list, max_list
-        do = DeapOperators()
-        toolbox = do.add_toolbox_operators(
-            toolbox,
-            selection_dict=input_algorithm["selection_operator"],
-            mutation_dict=input_algorithm["mutation_operator"],
-            mating_dict=input_algorithm["mating_operator"],
-            min_list=min_list,
-            max_list=max_list,
-        )
-        toolbox.pop_size = input_algorithm["pop_size"]
-        toolbox.ngen = input_algorithm["generations"]
-        toolbox.mutpb = input_algorithm["mutation_probability"]
-        toolbox.cxpb = input_algorithm["mating_probability"]
         return toolbox, creator
-
-    def min_max_list(self, control_dict, input_ctrl_vars):
-        """Returns an ordered list of min values and max values for the
-        individual
-        """
-        min_list = []
-        max_list = []
-        for var in control_dict:
-            for i in range(control_dict[var][1]):
-                min_list.append(input_ctrl_vars[var]["min"])
-                max_list.append(input_ctrl_vars[var]["max"])
-        return min_list, max_list
-
-    def individual_values(self, input_ctrl_vars, control_dict, toolbox):
-        """This function returns an individual with ordered control variable
-        values
-        """
-        var_dict = {}
-        input_vals = []
-        sv = SpecialVariables()
-        special_control_vars = sv.special_variables
-        for var in control_dict:
-            if var in special_control_vars:
-                # this func must return a list
-                method = getattr(sv, var + "_values")
-                result = method(input_ctrl_vars[var], var_dict)
-                input_vals += result
-                var_dict[var] = result
-            else:
-                result = getattr(toolbox, var)()
-                input_vals += [result]
-                var_dict[var] = result
-        return creator.Ind(input_vals)
 
     def load_constraints(self, output_dict, input_constraints, toolbox):
         constraint_obj = Constraints(output_dict, input_constraints, toolbox)
