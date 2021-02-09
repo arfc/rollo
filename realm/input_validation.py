@@ -10,6 +10,66 @@ class InputValidation:
     def __init__(self, input_dict):
         self.input = input_dict
 
+    def add_defaults(self, input_dict):
+        """This function adds default inputs if they are missing from
+        the input_dict
+
+        Parameters
+        ----------
+        input_dict: dict
+            input file dict
+
+        Returns
+        -------
+        reloaded_input_dict: dict
+            input file dict with additional missing default inputs
+
+        """
+        input_algorithm = input_dict["algorithm"]
+        input_algorithm = self.default_check(input_algorithm, "objective", "min")
+        input_algorithm = self.default_check(input_algorithm, "pop_size", 100)
+        input_algorithm = self.default_check(input_algorithm, "generations", 10)
+        input_algorithm = self.default_check(
+            input_algorithm, "selection_operator", {"operator": "selBest", "k": 1}
+        )
+        input_algorithm = self.default_check(
+            input_algorithm,
+            "mutation_operator",
+            {"operator": "mutGaussian", "indpb": 0.5, "mu": 0.5, "sigma": 0.5},
+        )
+        input_algorithm = self.default_check(
+            input_algorithm, "mating_operator", {"operator": "cxOnePoint"}
+        )
+        reloaded_input_dict = input_dict.copy()
+        reloaded_input_dict["algorithm"] = input_algorithm
+        return reloaded_input_dict
+
+    def default_check(self, input_dict, variable, default_val):
+        """This function checks if a variable is missing from a dict, and
+        adds a default value if it is.
+
+        Parameters
+        ----------
+        input_dict: dict
+            input file dict
+        variable: str
+            variable name
+        default_val: any type accepted
+            default input for that variable (can be str, float, dict, etc.)
+
+        Returns
+        -------
+        input_dict: dict
+            input file dict with additional missing default input defined by
+            parameters of this function
+
+        """
+        try:
+            a = input_dict[variable]
+        except KeyError:
+            input_dict[variable] = default_val
+        return input_dict
+
     def validate(self):
         """This function validates the input dictionary and throws errors if
         the input file does not meet realm input file rules.
