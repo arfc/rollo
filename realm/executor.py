@@ -6,7 +6,7 @@ from realm.algorithm import Algorithm
 from realm.constraints import Constraints
 from realm.toolbox_generator import ToolboxGenerator
 from deap import base, creator, tools, algorithms
-import json, re, random, warnings
+import json, re, random, warnings, time
 from collections import OrderedDict
 
 try:
@@ -44,6 +44,7 @@ class Executor(object):
         4) Initialize constraints
         5) Run genetic algorithm
         """
+        t0 = time.time()
         print("execute realm")
         input_dict = self.read_input_file()
         iv = InputValidation(input_dict)
@@ -81,6 +82,8 @@ class Executor(object):
             input_dict=complete_input_dict,
         )
         alg.generate()
+        t1 = time.time()
+        print("TOTAL TIME", t1-t0)
         return
 
     def read_input_file(self):
