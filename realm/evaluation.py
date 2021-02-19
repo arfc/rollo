@@ -1,6 +1,7 @@
 import os, sys, subprocess, ast, shutil
 from jinja2 import nativetypes
 import openmc
+import subprocess
 
 from realm.openmc_evaluation import OpenMCEvaluation
 from realm.moltres_evaluation import MoltresEvaluation
@@ -144,7 +145,8 @@ class Evaluation:
         f = open("openmc_input.py", "w+")
         f.write(rendered_openmc_script)
         f.close()
-        self.system_call("python openmc_input.py")
+        with open("output.txt", "w+") as output:
+            subprocess.call(["python", "./openmc_input.py"], stdout=output)
         return
 
     def moltres_run(self, rendered_moltres_script):
