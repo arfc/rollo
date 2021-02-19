@@ -43,7 +43,9 @@ input_file = {}  # placeholder
 
 
 def test_initialize_new_backend():
-    b = BackEnd("square_checkpoint.pkl", creator, control_dict, output_dict, input_file)
+    b = BackEnd(
+        "square_checkpoint.pkl", creator, control_dict, output_dict, input_file, 0
+    )
     b.initialize_new_backend()
     assert b.results["start_gen"] == 0
     assert type(b.results["halloffame"]) == tools.HallOfFame
@@ -52,7 +54,9 @@ def test_initialize_new_backend():
 
 
 def test_ind_naming():
-    b = BackEnd("square_checkpoint.pkl", creator, control_dict, output_dict, input_file)
+    b = BackEnd(
+        "square_checkpoint.pkl", creator, control_dict, output_dict, input_file, 0
+    )
     ind_dict = b.ind_naming()
     expected_ind_dict = {
         "packing_fraction": 0,
@@ -65,7 +69,9 @@ def test_ind_naming():
 
 
 def test_output_naming():
-    b = BackEnd("square_checkpoint.pkl", creator, control_dict, output_dict, input_file)
+    b = BackEnd(
+        "square_checkpoint.pkl", creator, control_dict, output_dict, input_file, 0
+    )
     oup_dict = b.output_naming()
     expected_oup_dict = {
         "packing_fraction": 0,
@@ -86,6 +92,7 @@ def test_initialize_checkpoint_backend():
         control_dict,
         output_dict,
         input_file,
+        0,
     )
     b.initialize_checkpoint_backend()
     pop = b.results["population"]
@@ -114,6 +121,7 @@ def test_update_backend():
         control_dict,
         output_dict,
         input_file,
+        0,
     )
     b.initialize_checkpoint_backend()
     new_pop = toolbox.population(n=toolbox.pop_size)
@@ -134,6 +142,7 @@ def test_update_backend():
         control_dict,
         output_dict,
         input_file,
+        0,
     )
     bb.initialize_checkpoint_backend()
     assert len(bb.results["logbook"]) == 2

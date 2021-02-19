@@ -30,12 +30,13 @@ class Algorithm(object):
         control_dict,
         output_dict,
         input_dict,
+        start_time
     ):
         self.toolbox = deap_toolbox
         self.constraint_obj = constraint_obj
         self.cp_file = checkpoint_file
         self.backend = BackEnd(
-            checkpoint_file, deap_creator, control_dict, output_dict, input_dict
+            checkpoint_file, deap_creator, control_dict, output_dict, input_dict, start_time
         )
 
     def generate(self):
@@ -57,7 +58,6 @@ class Algorithm(object):
             self.cp_file = "checkpoint.pkl"
         print(self.backend.results["logbook"])
         for gen in range(self.backend.results["start_gen"] + 1, self.toolbox.ngen):
-            print(pop)
             pop = self.apply_algorithm_ngen(pop, gen)
             print(self.backend.results["logbook"])
         print("Completed!")
@@ -70,12 +70,17 @@ class Algorithm(object):
             ind.gen = 0
             ind.num = i
         # evaluate fitness values of initial pop
-        fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
+        def generate_fitnesses(): 
+            fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
+            return fitnesses
+        fitnesses = generate_fitnesses()
+        print("finish fitnesses")
         # assign fitness values to individuals
         for ind, fitness in zip(pop, fitnesses):
             ind.fitness.values = (fitness[0],)
             ind.output = fitness
         invalids = [ind for ind in pop if not ind.fitness.valid]
+        print("done invalids in initialize_pop")
         pop = self.constraint_obj.apply_constraints(pop)
         self.backend.update_backend(pop, 0, invalids, random.getstate())
         return pop

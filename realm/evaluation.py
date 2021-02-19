@@ -68,6 +68,7 @@ class Evaluation:
         solver
         """
         if self.output_scripts[solver]:
+            print(" in if statement", self.output_scripts[solver])
             # copy rendered output script into a new file in the particular solver's run
             shutil.copyfile(
                 self.output_scripts[solver], path + "/" + solver + "_output.py"
@@ -83,18 +84,22 @@ class Evaluation:
 
         for i, var in enumerate(output_dict):
             if output_dict[var] == solver:
+                print("IN OUT")
                 # if variable is a control variable
                 if var in control_vars[solver]:
                     output_vals[i] = control_vars[solver][var]
                 # if variable's analysis script is pre-defined
                 elif var in self.eval_dict[solver].pre_defined_outputs:
+                    print("predefined")
                     os.chdir(path)
                     method = getattr(self.eval_dict[solver], "evaluate_" + var)
                     output_vals[i] = method()
                     os.chdir("../")
                 # if variable's defined in output script
                 else:
+                    #print("output scipt")
                     output_vals[i] = oup_script_results[var]
+                print("out out")
         return output_vals
 
     def system_call(self, command):

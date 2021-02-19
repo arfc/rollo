@@ -2,14 +2,20 @@ from collections import defaultdict
 import pandas as pd
 from deap import base, creator, tools, algorithms
 import pickle
-import numpy
+import numpy, time
 
 
 class BackEnd(object):
     """This class contains and manipulates the output backend"""
 
     def __init__(
-        self, checkpoint_file, deap_creator, control_dict, output_dict, input_file
+        self,
+        checkpoint_file,
+        deap_creator,
+        control_dict,
+        output_dict,
+        input_file,
+        start_time,
     ):
         self.results = {}
         self.checkpoint_file = checkpoint_file
@@ -17,6 +23,7 @@ class BackEnd(object):
         self.control_dict = control_dict
         self.output_dict = output_dict
         self.input_file = input_file
+        self.start_time = start_time
         self.initialize_stats()
 
     def initialize_new_backend(self):
@@ -24,8 +31,8 @@ class BackEnd(object):
         self.results["start_gen"] = 0
         self.results["halloffame"] = tools.HallOfFame(maxsize=1)
         self.results["logbook"] = tools.Logbook()
-        self.results["logbook"].header = "gen", "evals", "ind", "oup"
-        self.results["logbook"].chapters["ind"].header = "avg", "std", "min", "max"
+        self.results["logbook"].header = "time", "gen", "evals", "oup", "ind" 
+        self.results["logbook"].chapters["ind"].header = "avg", "min", "max"
         self.results["logbook"].chapters["oup"].header = "avg", "std", "min", "max"
         self.results["all"] = {}
         self.results["all"]["ind_naming"] = self.ind_naming()
@@ -83,7 +90,12 @@ class BackEnd(object):
     def update_backend(self, pop, gen, invalid_ind, rndstate):
         self.results["halloffame"].update(pop)
         record = self.mstats.compile(pop)
-        self.results["logbook"].record(gen=gen, evals=len(invalid_ind), **record)
+        self.results["logbook"].record(
+            time=time.time() - self.start_time,
+            gen=gen,
+            evals=len(invalid_ind),
+            **record
+        )
         self.results["all"]["populations"].append(pop)
         pop_oup = []
         for ind in pop:
