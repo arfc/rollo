@@ -80,11 +80,11 @@ class Executor(object):
             control_dict=control_dict,
             output_dict=output_dict,
             input_dict=complete_input_dict,
-            start_time=t0
+            start_time=t0,
         )
         alg.generate()
         t1 = time.time()
-        print("TOTAL TIME", t1-t0)
+        print("TOTAL TIME", t1 - t0)
         return
 
     def read_input_file(self):

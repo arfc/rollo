@@ -97,7 +97,7 @@ class Evaluation:
                     os.chdir("../")
                 # if variable's defined in output script
                 else:
-                    #print("output scipt")
+                    # print("output scipt")
                     output_vals[i] = oup_script_results[var]
                 print("out out")
         return output_vals

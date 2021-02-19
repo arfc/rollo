@@ -31,7 +31,7 @@ class BackEnd(object):
         self.results["start_gen"] = 0
         self.results["halloffame"] = tools.HallOfFame(maxsize=1)
         self.results["logbook"] = tools.Logbook()
-        self.results["logbook"].header = "time", "gen", "evals", "oup", "ind" 
+        self.results["logbook"].header = "time", "gen", "evals", "oup", "ind"
         self.results["logbook"].chapters["ind"].header = "avg", "min", "max"
         self.results["logbook"].chapters["oup"].header = "avg", "std", "min", "max"
         self.results["all"] = {}

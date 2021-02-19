@@ -30,13 +30,18 @@ class Algorithm(object):
         control_dict,
         output_dict,
         input_dict,
-        start_time
+        start_time,
     ):
         self.toolbox = deap_toolbox
         self.constraint_obj = constraint_obj
         self.cp_file = checkpoint_file
         self.backend = BackEnd(
-            checkpoint_file, deap_creator, control_dict, output_dict, input_dict, start_time
+            checkpoint_file,
+            deap_creator,
+            control_dict,
+            output_dict,
+            input_dict,
+            start_time,
         )
 
     def generate(self):
@@ -70,9 +75,10 @@ class Algorithm(object):
             ind.gen = 0
             ind.num = i
         # evaluate fitness values of initial pop
-        def generate_fitnesses(): 
+        def generate_fitnesses():
             fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
             return fitnesses
+
         fitnesses = generate_fitnesses()
         print("finish fitnesses")
         # assign fitness values to individuals
