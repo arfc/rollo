@@ -81,9 +81,9 @@ point = openmc.stats.Point((10, 1, 1))
 src = openmc.Source(space=point)
 settings = openmc.Settings()
 settings.source = src
-settings.batches = 5
-settings.inactive = 1
-settings.particles = 100
+settings.batches = 10
+settings.inactive = 2
+settings.particles = 1000
 settings.temperature = {"multipole": True, "method": "interpolation"}
 
 plot = openmc.Plot()
