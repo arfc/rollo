@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -j oe
-#PBS -l nodes=12:ppn=16:xk
+#PBS -l nodes=4:ppn=16:xk
 #PBS -l walltime=01:00:00
 #PBS -l gres=ccm
 #PBS -l flags=commlocal:commtolerant
@@ -16,7 +16,7 @@ source /projects/sciteam/bbcc/projects/openmc/openmc-parallel-python/openmc/buil
 
 
 TPN=16
-NNODES=12
+NNODES=4
 HOSTLIST=znodelist
 LAUNCH=zstart.sh
 cat $HOME/.crayccm/ccm_nodelist.$PBS_JOBID | sort -u | awk -v n=$TPN '{for(i=0;i<n;i++) print $0}' > $HOSTLIST
