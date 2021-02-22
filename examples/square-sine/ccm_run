@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -j oe
-#PBS -l nodes=4:ppn=16:xk
+#PBS -l nodes=4:ppn=32:xe
 #PBS -l walltime=01:00:00
 #PBS -l gres=ccm
 #PBS -l flags=commlocal:commtolerant
@@ -15,7 +15,7 @@ cd /u/sciteam/chee1/github/realm/examples/square-sine/
 source /projects/sciteam/bbcc/projects/openmc/openmc-parallel-python/openmc/build/myvirtualenv/bin/activate
 
 
-TPN=16
+TPN=32
 NNODES=4
 HOSTLIST=znodelist
 LAUNCH=zstart.sh
