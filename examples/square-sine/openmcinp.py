@@ -81,9 +81,9 @@ point = openmc.stats.Point((10, 1, 1))
 src = openmc.Source(space=point)
 settings = openmc.Settings()
 settings.source = src
-settings.batches = 10
-settings.inactive = 2
-settings.particles = 1000
+settings.batches = 100
+settings.inactive = 20
+settings.particles = 8000
 settings.temperature = {"multipole": True, "method": "interpolation"}
 
 plot = openmc.Plot()
@@ -110,5 +110,5 @@ geom.export_to_xml()
 settings.export_to_xml()
 #plots.export_to_xml()
 
-#openmc.run(openmc_exec="openmc-ccm")
-openmc.run()
+openmc.run(openmc_exec="openmc-ccm")
+#openmc.run()
