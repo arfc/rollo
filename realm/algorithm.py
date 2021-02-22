@@ -75,6 +75,7 @@ class Algorithm(object):
             ind.gen = 0
             ind.num = i
         # evaluate fitness values of initial pop
+        invalids = [ind for ind in pop if not ind.fitness.valid]
         def generate_fitnesses():
             fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
             return fitnesses
@@ -85,7 +86,6 @@ class Algorithm(object):
         for ind, fitness in zip(pop, fitnesses):
             ind.fitness.values = (fitness[0],)
             ind.output = fitness
-        invalids = [ind for ind in pop if not ind.fitness.valid]
         #print("done invalids in initialize_pop")
         pop = self.constraint_obj.apply_constraints(pop)
         self.backend.update_backend(pop, 0, invalids, random.getstate())
