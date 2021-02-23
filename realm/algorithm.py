@@ -75,6 +75,7 @@ class Algorithm(object):
             print("in labeling", ind)
             ind.gen = 0
             ind.num = i
+            print(ind.gen, ind.num)
         # evaluate fitness values of initial pop
         #copy_pop = [self.toolbox.clone(ind) for ind in pop]
         #invalids = [ind for ind in copy_pop if not ind.fitness.valid]
