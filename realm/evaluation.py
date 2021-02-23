@@ -36,6 +36,7 @@ class Evaluation:
             """This function accepts a DEAP individual
             and returns a tuple of output values listed in outputs
             """
+            print(ind, ind.gen, ind.num)
             control_vars = self.name_ind(ind, control_dict, input_evaluators)
             output_vals = [None] * len(output_dict)
 
