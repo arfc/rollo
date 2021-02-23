@@ -10,8 +10,10 @@ import json, re, random, warnings, time
 from collections import OrderedDict
 
 try:
-    import multiprocessing_on_dill as multiprocessing
+    #import multiprocessing_on_dill as multiprocessing
+    from scoop import futures
 except:
+    print("SCOOP not working")
     warnings.warn(
         "Multiprocessing_on_dill package not installed, REALM will continue \
         to run without parallelization."
@@ -63,12 +65,13 @@ class Executor(object):
             complete_input_dict["control_variables"],
             control_dict,
         )
-        """
+        
         try:
-            pool = multiprocessing.Pool()
-            toolbox.register("map", pool.map)
+            toolbox.register("map", futures.map)
+            #pool = multiprocessing.Pool()
+            #toolbox.register("map", pool.map)
         except:
-            warnings.warn("multiprocessing failed to launch, realm will run serially.")"""
+            warnings.warn("multiprocessing failed to launch, realm will run serially.")
         # load constraints if they exist
         constraints = self.load_constraints(
             output_dict, complete_input_dict["constraints"], toolbox
