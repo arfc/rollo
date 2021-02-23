@@ -76,8 +76,8 @@ class Algorithm(object):
             ind.gen = 0
             ind.num = i
         # evaluate fitness values of initial pop
-        copy_pop = [self.toolbox.clone(ind) for ind in pop]
-        invalids = [ind for ind in copy_pop if not ind.fitness.valid]
+        #copy_pop = [self.toolbox.clone(ind) for ind in pop]
+        #invalids = [ind for ind in copy_pop if not ind.fitness.valid]
         fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
         # print("finish fitnesses")
         # assign fitness values to individuals
