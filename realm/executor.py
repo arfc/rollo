@@ -8,7 +8,7 @@ from realm.toolbox_generator import ToolboxGenerator
 from deap import base, creator, tools, algorithms
 import json, re, random, warnings, time
 from collections import OrderedDict
-
+"""
 try:
     #import multiprocessing_on_dill as multiprocessing
     from scoop import futures
@@ -17,7 +17,7 @@ except:
     warnings.warn(
         "Multiprocessing_on_dill package not installed, REALM will continue \
         to run without parallelization."
-    )
+    )"""
 
 
 class Executor(object):
@@ -65,13 +65,13 @@ class Executor(object):
             complete_input_dict["control_variables"],
             control_dict,
         )
-        
+        """
         try:
             toolbox.register("map", futures.map)
             #pool = multiprocessing.Pool()
             #toolbox.register("map", pool.map)
         except:
-            warnings.warn("multiprocessing failed to launch, realm will run serially.")
+            warnings.warn("multiprocessing failed to launch, realm will run serially.")"""
         # load constraints if they exist
         constraints = self.load_constraints(
             output_dict, complete_input_dict["constraints"], toolbox
