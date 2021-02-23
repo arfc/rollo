@@ -72,6 +72,7 @@ class Algorithm(object):
         """Initialize population for genetic algorithm"""
         print("INITIALiZE")
         for i, ind in enumerate(pop):
+            print("in labeling", ind)
             ind.gen = 0
             ind.num = i
         # evaluate fitness values of initial pop
