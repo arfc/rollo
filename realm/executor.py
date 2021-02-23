@@ -63,11 +63,12 @@ class Executor(object):
             complete_input_dict["control_variables"],
             control_dict,
         )
+        """
         try:
             pool = multiprocessing.Pool()
             toolbox.register("map", pool.map)
         except:
-            warnings.warn("multiprocessing failed to launch, realm will run serially.")
+            warnings.warn("multiprocessing failed to launch, realm will run serially.")"""
         # load constraints if they exist
         constraints = self.load_constraints(
             output_dict, complete_input_dict["constraints"], toolbox
