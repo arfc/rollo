@@ -8,16 +8,19 @@ from realm.toolbox_generator import ToolboxGenerator
 from deap import base, creator, tools, algorithms
 import json, re, random, warnings, time
 from collections import OrderedDict
-"""
+
 try:
     #import multiprocessing_on_dill as multiprocessing
-    from scoop import futures
+    #from scoop import futures
+    import dask.bag as db
+    creator.create("obj", base.Fitness, weights=(1.0,))
+    creator.create("Ind", list, fitness=creator.obj)
 except:
-    print("SCOOP not working")
+    print("DASK not working")
     warnings.warn(
         "Multiprocessing_on_dill package not installed, REALM will continue \
         to run without parallelization."
-    )"""
+    )
 
 
 class Executor(object):
@@ -65,13 +68,16 @@ class Executor(object):
             complete_input_dict["control_variables"],
             control_dict,
         )
-        """
+        def dask_map(func, iterable):
+            bag = db.from_sequence(iterable).map(func)
+            return bag.compute()
         try:
-            toolbox.register("map", futures.map)
+            toolbox.register('map', dask_map)
+            #toolbox.register("map", futures.map)
             #pool = multiprocessing.Pool()
             #toolbox.register("map", pool.map)
         except:
-            warnings.warn("multiprocessing failed to launch, realm will run serially.")"""
+            warnings.warn("multiprocessing failed to launch, realm will run serially.")
         # load constraints if they exist
         constraints = self.load_constraints(
             output_dict, complete_input_dict["constraints"], toolbox
