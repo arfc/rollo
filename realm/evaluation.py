@@ -147,6 +147,7 @@ class Evaluation:
 
     def openmc_run(self, rendered_openmc_script):
         """This function runs the rendered openmc script"""
+        print("openmc run")
         f = open("openmc_input.py", "w+")
         f.write(rendered_openmc_script)
         f.close()
