@@ -1,7 +1,6 @@
 import realm
 from realm.input_validation import InputValidation
 from realm.special_variables import SpecialVariables
-from realm.deap_operators import DeapOperators
 from realm.algorithm import Algorithm
 from realm.constraints import Constraints
 from realm.toolbox_generator import ToolboxGenerator
@@ -13,8 +12,8 @@ try:
     #import multiprocessing_on_dill as multiprocessing
     #from scoop import futures
     #import dask.bag as db
-    #creator.create("obj", base.Fitness, weights=(1.0,))
-    #creator.create("Ind", list, fitness=creator.obj)
+    creator.create("obj", base.Fitness, weights=(1.0,))
+    creator.create("Ind", list, fitness=creator.obj)
     from ray.util.multiprocessing import Pool
 except:
     print("DASK not working")

@@ -77,8 +77,8 @@ class Algorithm(object):
             ind.num = i
             print(ind.gen, ind.num)
         # evaluate fitness values of initial pop
-        #copy_pop = [self.toolbox.clone(ind) for ind in pop]
-        #invalids = [ind for ind in copy_pop if not ind.fitness.valid]
+        invalids = [ind for ind in pop if not ind.fitness.valid]
+        copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
         fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
         # print("finish fitnesses")
         # assign fitness values to individuals
@@ -87,7 +87,7 @@ class Algorithm(object):
             ind.output = fitness
         # print("done invalids in initialize_pop")
         pop = self.constraint_obj.apply_constraints(pop)
-        self.backend.update_backend(pop, 0, invalids, random.getstate())
+        self.backend.update_backend(pop, 0, copy_invalids, random.getstate())
         return pop
 
     def apply_algorithm_ngen(self, pop, gen):
