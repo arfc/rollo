@@ -12,9 +12,10 @@ from collections import OrderedDict
 try:
     #import multiprocessing_on_dill as multiprocessing
     #from scoop import futures
-    import dask.bag as db
-    creator.create("obj", base.Fitness, weights=(1.0,))
-    creator.create("Ind", list, fitness=creator.obj)
+    #import dask.bag as db
+    #creator.create("obj", base.Fitness, weights=(1.0,))
+    #creator.create("Ind", list, fitness=creator.obj)
+    from ray.util.multiprocessing import Pool
 except:
     print("DASK not working")
     warnings.warn(
@@ -68,14 +69,13 @@ class Executor(object):
             complete_input_dict["control_variables"],
             control_dict,
         )
-        def dask_map(func, iterable):
-            bag = db.from_sequence(iterable).map(func)
-            return bag.compute()
         try:
-            toolbox.register('map', dask_map)
+            #toolbox.register('map', dask_map)
             #toolbox.register("map", futures.map)
             #pool = multiprocessing.Pool()
             #toolbox.register("map", pool.map)
+            pool = Pool()
+            toolbox.register("map", pool.map)
         except:
             warnings.warn("multiprocessing failed to launch, realm will run serially.")
         # load constraints if they exist
