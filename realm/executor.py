@@ -9,13 +9,13 @@ import json, re, random, warnings, time
 from collections import OrderedDict
 
 try:
-    #import multiprocessing_on_dill as multiprocessing
+    import multiprocessing_on_dill as multiprocessing
     #from scoop import futures
     #import dask.bag as db
-    creator.create("obj", base.Fitness, weights=(1.0,))
-    creator.create("Ind", list, fitness=creator.obj)
+    #creator.create("obj", base.Fitness, weights=(1.0,))
+    #creator.create("Ind", list, fitness=creator.obj)
     #from ray.util.multiprocessing import Pool
-    from mpipool import Pool
+    #from mpipool import Pool
 except:
     print("MPI not working")
     warnings.warn(
@@ -72,9 +72,9 @@ class Executor(object):
         try:
             #toolbox.register('map', dask_map)
             #toolbox.register("map", futures.map)
-            #pool = multiprocessing.Pool()
+            pool = multiprocessing.Pool()
             #toolbox.register("map", pool.map)
-            pool = Pool()
+            #pool = Pool()
             toolbox.register("map", pool.map)
         except:
             warnings.warn("multiprocessing failed to launch, realm will run serially.")
