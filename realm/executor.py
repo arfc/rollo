@@ -14,9 +14,10 @@ try:
     #import dask.bag as db
     creator.create("obj", base.Fitness, weights=(1.0,))
     creator.create("Ind", list, fitness=creator.obj)
-    from ray.util.multiprocessing import Pool
+    #from ray.util.multiprocessing import Pool
+    from mpipool import Pool
 except:
-    print("DASK not working")
+    print("MPI not working")
     warnings.warn(
         "Multiprocessing_on_dill package not installed, REALM will continue \
         to run without parallelization."
