@@ -72,7 +72,7 @@ class Executor(object):
         try:
             #toolbox.register('map', dask_map)
             #toolbox.register("map", futures.map)
-            pool = multiprocessing.Pool()
+            pool = multiprocessing.Pool(4)
             #toolbox.register("map", pool.map)
             #pool = Pool()
             toolbox.register("map", pool.map)
