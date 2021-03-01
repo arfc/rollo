@@ -86,6 +86,7 @@ class Algorithm(object):
             print("spawning")
             with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
                 if executor is not None:
+                    print("poptype", type(pop))
                     fitnesses = executor.map(self.toolbox.evaluate, pop)
                 else:
                     print("IS NONE")
