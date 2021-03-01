@@ -83,6 +83,7 @@ class Algorithm(object):
         invalids = [ind for ind in pop if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
         try: 
+            print("spawning")
             with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
                 if executor is not None:
                     fitnesses = executor.map(self.toolbox.evaluate, pop)
@@ -111,6 +112,7 @@ class Algorithm(object):
         invalids = [ind for ind in pop if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
         try: 
+            print("spawning")
             with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
                 if executor is not None:
                     fitnesses = executor.map(self.toolbox.evaluate, pop)
