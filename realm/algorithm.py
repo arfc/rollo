@@ -88,6 +88,7 @@ class Algorithm(object):
                 if executor is not None:
                     print("poptype", type(pop))
                     fitnesses = executor.map(self.toolbox.evaluate, pop)
+                    print("fitness",fitnesses)
                 else:
                     print("IS NONE")
         except: 
