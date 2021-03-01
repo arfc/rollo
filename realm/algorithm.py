@@ -1,6 +1,8 @@
 from .backend import BackEnd
 import random
 from mpi4py import MPI
+import dill
+MPI.pickle.__init__(dill.dumps, dill.loads)
 from mpi4py.futures import MPICommExecutor
 import os
 
