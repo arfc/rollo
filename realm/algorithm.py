@@ -1,5 +1,8 @@
 from .backend import BackEnd
 import random
+from mpi4py import MPI
+from mpi4py.futures import MPICommExecutor
+import os
 
 ## GIVE CREDIT TO DEAP NOTEBOOK
 
@@ -79,7 +82,12 @@ class Algorithm(object):
         # evaluate fitness values of initial pop
         invalids = [ind for ind in pop if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
-        fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
+        try: 
+            with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
+                if executor is not None:
+                    fitnesses = executor.map(self.toolbox.evaluate, pop)
+        except: 
+            print("DIDNT WORK")
         # print("finish fitnesses")
         # assign fitness values to individuals
         for ind, fitness in zip(pop, fitnesses):
@@ -102,7 +110,12 @@ class Algorithm(object):
         # evaluate fitness of newly created pop for inds with invalid fitness
         invalids = [ind for ind in pop if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
-        fitnesses = self.toolbox.map(self.toolbox.evaluate, invalids)
+        try: 
+            with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
+                if executor is not None:
+                    fitnesses = executor.map(self.toolbox.evaluate, pop)
+        except: 
+            print("DIDNT WORK")
         # assign fitness values to individuals
         for ind, fitness in zip(invalids, fitnesses):
             ind.fitness.values = (fitness[0],)

@@ -69,15 +69,16 @@ class Executor(object):
             complete_input_dict["control_variables"],
             control_dict,
         )
-        try:
+        #try:
             #toolbox.register('map', dask_map)
             #toolbox.register("map", futures.map)
-            pool = multiprocessing.Pool(4)
+            #pool = multiprocessing.Pool(4)
             #toolbox.register("map", pool.map)
             #pool = Pool()
-            toolbox.register("map", pool.map)
-        except:
-            warnings.warn("multiprocessing failed to launch, realm will run serially.")
+
+            #toolbox.register("map", executor.map)
+        #except:
+        #    warnings.warn("multiprocessing failed to launch, realm will run serially.")
         # load constraints if they exist
         constraints = self.load_constraints(
             output_dict, complete_input_dict["constraints"], toolbox
