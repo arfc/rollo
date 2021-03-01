@@ -87,6 +87,8 @@ class Algorithm(object):
             with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
                 if executor is not None:
                     fitnesses = executor.map(self.toolbox.evaluate, pop)
+                else:
+                    print("IS NONE")
         except: 
             print("DIDNT WORK")
         # print("finish fitnesses")
