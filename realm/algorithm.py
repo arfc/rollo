@@ -2,7 +2,7 @@ from .backend import BackEnd
 import random
 from mpi4py import MPI
 from mpi4py.futures import MPICommExecutor
-import sys
+import os
 
 ## GIVE CREDIT TO DEAP NOTEBOOK
 
@@ -74,7 +74,6 @@ class Algorithm(object):
     def initialize_pop(self, pop):
         """Initialize population for genetic algorithm"""
         print("INITIALiZE")
-        sys.stdout.flush()
         for i, ind in enumerate(pop):
             print("in labeling", ind)
             ind.gen = 0
@@ -85,7 +84,6 @@ class Algorithm(object):
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
         try: 
             print("spawning")
-            sys.stdout.flush()
             with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
                 if executor is not None:
                     fitnesses = executor.map(self.toolbox.evaluate, pop)
