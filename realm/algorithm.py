@@ -87,7 +87,7 @@ class Algorithm(object):
             with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
                 if executor is not None:
                     print("poptype", type(pop))
-                    fitnesses = executor.map(self.toolbox.evaluate, pop)
+                    fitnesses = executor.map(self.toolbox.evaluate, list(pop))
                     print("fitness",fitnesses)
                 else:
                     print("IS NONE")
