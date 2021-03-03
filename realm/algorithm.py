@@ -121,7 +121,11 @@ class Algorithm(object):
             print("spawning")
             with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
                 if executor is not None:
-                    fitnesses = executor.map(self.toolbox.evaluate, pop)
+                    print("poptype", type(pop))
+                    fitnesses = executor.map(self.toolbox.evaluate, list(pop))
+                    print("fitness",fitnesses)
+                else:
+                    print("IS NONE")
         except: 
             print("DIDNT WORK")
         # assign fitness values to individuals
