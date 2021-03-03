@@ -97,12 +97,13 @@ class Algorithm(object):
             print("DIDNT WORK")
         # print("finish fitnesses")
         # assign fitness values to individuals
-        for ind, fitness in zip(pop, fitnesses):
-            ind.fitness.values = (fitness[0],)
-            ind.output = fitness
-        # print("done invalids in initialize_pop")
-        pop = self.constraint_obj.apply_constraints(pop)
-        self.backend.update_backend(pop, 0, copy_invalids, random.getstate())
+        if MPI.COMM_WORLD.rank == 0:
+            for ind, fitness in zip(pop, fitnesses):
+                ind.fitness.values = (fitness[0],)
+                ind.output = fitness
+            # print("done invalids in initialize_pop")
+            pop = self.constraint_obj.apply_constraints(pop)
+            self.backend.update_backend(pop, 0, copy_invalids, random.getstate())
         return pop
 
     def apply_algorithm_ngen(self, pop, gen):
