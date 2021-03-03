@@ -4,7 +4,7 @@ from mpi4py import MPI
 import dill
 MPI.pickle.__init__(dill.dumps, dill.loads)
 from mpi4py.futures import MPICommExecutor
-import os
+import sys
 
 ## GIVE CREDIT TO DEAP NOTEBOOK
 
@@ -58,6 +58,11 @@ class Algorithm(object):
 
         """
         pop = self.toolbox.population(n=self.toolbox.pop_size)
+        if MPI.COMM_WORLD.rank > 0:
+            while MPI.COMM_WORLD.bcast(None):
+                with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
+                    pass
+            sys.exit(0)
         if self.cp_file:
             self.backend.initialize_checkpoint_backend()
             pop = self.backend.results["population"]
@@ -71,6 +76,7 @@ class Algorithm(object):
             pop = self.apply_algorithm_ngen(pop, gen)
             print(self.backend.results["logbook"])
         print("Completed!")
+        MPI.COMM_WORLD.bcast(False)
         return pop
 
     def initialize_pop(self, pop):
@@ -86,6 +92,7 @@ class Algorithm(object):
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
         try: 
             print("spawning")
+            MPI.COMM_WORLD.bcast(True)
             with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
                 if executor is not None:
                     print("poptype", type(pop))
@@ -120,6 +127,7 @@ class Algorithm(object):
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
         try: 
             print("spawning")
+            MPI.COMM_WORLD.bcast(True)
             with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
                 if executor is not None:
                     print("invalids", type(invalids))
