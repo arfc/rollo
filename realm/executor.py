@@ -8,21 +8,6 @@ from deap import base, creator, tools, algorithms
 import json, re, random, warnings, time
 from collections import OrderedDict
 
-try:
-    import multiprocessing_on_dill as multiprocessing
-    #from scoop import futures
-    #import dask.bag as db
-    #creator.create("obj", base.Fitness, weights=(1.0,))
-    #creator.create("Ind", list, fitness=creator.obj)
-    #from ray.util.multiprocessing import Pool
-    #from mpipool import Pool
-except:
-    print("MPI not working")
-    warnings.warn(
-        "Multiprocessing_on_dill package not installed, REALM will continue \
-        to run without parallelization."
-    )
-
 
 class Executor(object):
     """REALM Executor for a run.

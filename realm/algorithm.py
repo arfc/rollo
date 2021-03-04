@@ -83,10 +83,8 @@ class Algorithm(object):
         """Initialize population for genetic algorithm"""
         print("INITIALiZE")
         for i, ind in enumerate(pop):
-            print("in labeling", ind)
             ind.gen = 0
             ind.num = i
-            print(ind.gen, ind.num)
         # evaluate fitness values of initial pop
         invalids = [ind for ind in pop if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
@@ -94,13 +92,7 @@ class Algorithm(object):
             print("spawning")
             MPI.COMM_WORLD.bcast(True)
             with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
-                if executor is not None:
-                    print("poptype", type(pop))
-                    fitnesses = executor.map(self.toolbox.evaluate, list(pop))
-                    print("fitness",fitnesses)
-                else:
-                    print("IS NONE")
-                executor.shutdown()
+                fitnesses = executor.map(self.toolbox.evaluate, list(pop))
         except: 
             print("DIDNT WORK")
         # print("finish fitnesses")
@@ -129,14 +121,9 @@ class Algorithm(object):
             print("spawning")
             MPI.COMM_WORLD.bcast(True)
             with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
-                if executor is not None:
-                    print("invalids", type(invalids))
-                    fitnesses = executor.map(self.toolbox.evaluate, list(invalids))
-                    print("fitness",fitnesses)
-                else:
-                    print("IS NONE")
+                fitnesses = executor.map(self.toolbox.evaluate, list(invalids))
         except: 
-            print("DIDNT WORK")
+            print("MPI COMM DID NOT WORK")
         # assign fitness values to individuals
         for ind, fitness in zip(invalids, fitnesses):
             ind.fitness.values = (fitness[0],)
