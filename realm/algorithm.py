@@ -169,7 +169,6 @@ class Algorithm(object):
         final_pop = [] 
         for mutant in pop:
             new_mutant = self.toolbox.clone(mutant)
-            print("NEWMUTANT",new_mutant)
             if random.random() < self.toolbox.mutpb:
                 outside_bounds = True
                 while outside_bounds: 
