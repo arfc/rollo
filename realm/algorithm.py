@@ -150,10 +150,10 @@ class Algorithm(object):
     def apply_mutation_operator(self, pop):
         final_pop = [] 
         for mutant in pop:
+            new_mutant = self.toolbox.clone(mutant)
             if random.random() < self.toolbox.mutpb:
                 outside_bounds = True
-                while outside_bounds:
-                    new_mutant = self.toolbox.clone(mutant) 
+                while outside_bounds: 
                     self.toolbox.mutate(new_mutant)
                     del new_mutant.fitness.values
                     outside_bounds = False
