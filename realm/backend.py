@@ -102,18 +102,21 @@ class BackEnd(object):
             pop_oup.append(ind.output)
         self.results["all"]["outputs"].append(pop_oup)
         evaluator_files = {}
-        for solver in self.input_file["evaluators"]:
-            with open(
-                self.input_file["evaluators"][solver]["input_script"], "r"
-            ) as file:
-                evaluator_files[solver + "_input"] = file.read()
-            try:
+        try:
+            for solver in self.input_file["evaluators"]:
                 with open(
-                    self.input_file["evaluators"][solver]["output_script"], "r"
+                    self.input_file["evaluators"][solver]["input_script"], "r"
                 ) as file:
-                    evaluator_files[solver + "_output"] = file.read()
-            except:
-                pass
+                    evaluator_files[solver + "_input"] = file.read()
+                try:
+                    with open(
+                        self.input_file["evaluators"][solver]["output_script"], "r"
+                    ) as file:
+                        evaluator_files[solver + "_output"] = file.read()
+                except:
+                    pass
+        except: 
+            pass
         cp = dict(
             input_file=self.input_file,
             evaluator_files=evaluator_files,

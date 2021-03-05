@@ -148,8 +148,19 @@ class Algorithm(object):
         return pop
 
     def apply_mutation_operator(self, pop):
+        final_pop = [] 
         for mutant in pop:
             if random.random() < self.toolbox.mutpb:
-                self.toolbox.mutate(mutant)
-                del mutant.fitness.values
-        return pop
+                outside_bounds = True
+                while outside_bounds:
+                    new_mutant = self.toolbox.clone(mutant) 
+                    self.toolbox.mutate(new_mutant)
+                    del new_mutant.fitness.values
+                    outside_bounds = False
+                    for i, val in enumerate(new_mutant):
+                        if val < self.toolbox.min_list[i]:
+                            outside_bounds = True
+                        if val > self.toolbox.max_list[i]:
+                            outside_bounds = True
+            final_pop.append(new_mutant)
+        return final_pop
