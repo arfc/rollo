@@ -141,11 +141,29 @@ class Algorithm(object):
         return select_pop
 
     def apply_mating_operator(self, pop):
+        final_pop = []
         for child1, child2 in zip(pop[::2], pop[1::2]):
+            new_child1 = self.toolbox.clone(child1)
+            new_child2 = self.toolbox.clone(child2)
             if random.random() < self.toolbox.cxpb:
-                self.toolbox.mate(child1, child2)
-                del child1.fitness.values, child2.fitness.values
-        return pop
+                outside_bounds = True
+                while outside_bounds: 
+                    self.toolbox.mate(new_child1, new_child2)
+                    del new_child1.fitness.values, new_child2.fitness.values
+                    outside_bounds = False
+                    for i, val in enumerate(new_child1):
+                        if val < self.toolbox.min_list[i]:
+                            outside_bounds = True
+                        if val > self.toolbox.max_list[i]:
+                            outside_bounds = True
+                    for i, val in enumerate(new_child2):
+                        if val < self.toolbox.min_list[i]:
+                            outside_bounds = True
+                        if val > self.toolbox.max_list[i]:
+                            outside_bounds = True
+            final_pop.append(new_child1)
+            final_pop.append(new_child2)
+        return final_pop
 
     def apply_mutation_operator(self, pop):
         final_pop = [] 
