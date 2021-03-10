@@ -75,13 +75,13 @@ class Algorithm(object):
         for gen in range(self.backend.results["start_gen"] + 1, self.toolbox.ngen):
             pop = self.apply_algorithm_ngen(pop, gen)
             print(self.backend.results["logbook"])
-        print("Completed!")
+        print("REALM Simulation Completed!")
         MPI.COMM_WORLD.bcast(False)
         return pop
 
     def initialize_pop(self, pop):
         """Initialize population for genetic algorithm"""
-        print("INITIALiZE")
+        print("Entering generation 0")
         for i, ind in enumerate(pop):
             ind.gen = 0
             ind.num = i
@@ -95,18 +95,16 @@ class Algorithm(object):
                 fitnesses = executor.map(self.toolbox.evaluate, list(pop))
         except: 
             print("DIDNT WORK")
-        # print("finish fitnesses")
         # assign fitness values to individuals
         for ind, fitness in zip(pop, fitnesses):
             ind.fitness.values = (fitness[0],)
             ind.output = fitness
-        # print("done invalids in initialize_pop")
         pop = self.constraint_obj.apply_constraints(pop)
         self.backend.update_backend(pop, 0, copy_invalids, random.getstate())
         return pop
 
     def apply_algorithm_ngen(self, pop, gen):
-        print("APPLIED")
+        print("Entering generation "+ str(gen))
         pop = self.apply_selection_operator(pop)
         pop = self.apply_mating_operator(pop)
         pop = self.apply_mutation_operator(pop)

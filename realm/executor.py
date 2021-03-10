@@ -36,7 +36,6 @@ class Executor(object):
         5) Run genetic algorithm
         """
         t0 = time.time()
-        print("execute realm")
         input_dict = self.read_input_file()
         iv = InputValidation(input_dict)
         iv.validate()
@@ -80,7 +79,7 @@ class Executor(object):
         )
         alg.generate()
         t1 = time.time()
-        print("TOTAL TIME", t1 - t0)
+        print("Total time in simulation "+ str(t1 - t0)+ " seconds")
         return
 
     def read_input_file(self):
