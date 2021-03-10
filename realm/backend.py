@@ -115,7 +115,7 @@ class BackEnd(object):
                         evaluator_files[solver + "_output"] = file.read()
                 except:
                     pass
-        except: 
+        except:
             pass
         cp = dict(
             input_file=self.input_file,

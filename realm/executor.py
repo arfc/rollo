@@ -53,15 +53,15 @@ class Executor(object):
             complete_input_dict["control_variables"],
             control_dict,
         )
-        #try:
-            #toolbox.register('map', dask_map)
-            #toolbox.register("map", futures.map)
-            #pool = multiprocessing.Pool(4)
-            #toolbox.register("map", pool.map)
-            #pool = Pool()
+        # try:
+        # toolbox.register('map', dask_map)
+        # toolbox.register("map", futures.map)
+        # pool = multiprocessing.Pool(4)
+        # toolbox.register("map", pool.map)
+        # pool = Pool()
 
-            #toolbox.register("map", executor.map)
-        #except:
+        # toolbox.register("map", executor.map)
+        # except:
         #    warnings.warn("multiprocessing failed to launch, realm will run serially.")
         # load constraints if they exist
         constraints = self.load_constraints(
@@ -79,7 +79,7 @@ class Executor(object):
         )
         alg.generate()
         t1 = time.time()
-        print("Total time in simulation "+ str(t1 - t0)+ " seconds")
+        print("Total time in simulation " + str(t1 - t0) + " seconds")
         return
 
     def read_input_file(self):

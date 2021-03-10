@@ -145,7 +145,7 @@ class Evaluation:
         f.write(rendered_openmc_script)
         f.close()
         with open("output.txt", "wb") as output:
-            subprocess.call(["python","-u", "./openmc_input.py"], stdout=output)
+            subprocess.call(["python", "-u", "./openmc_input.py"], stdout=output)
         return
 
     def moltres_run(self, rendered_moltres_script):

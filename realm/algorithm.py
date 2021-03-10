@@ -2,6 +2,7 @@ from .backend import BackEnd
 import random
 from mpi4py import MPI
 import dill
+
 MPI.pickle.__init__(dill.dumps, dill.loads)
 from mpi4py.futures import MPICommExecutor
 import sys
@@ -81,19 +82,19 @@ class Algorithm(object):
 
     def initialize_pop(self, pop):
         """Initialize population for genetic algorithm"""
-        print("Entering generation 0")
+        print("Entering generation 0...")
         for i, ind in enumerate(pop):
             ind.gen = 0
             ind.num = i
         # evaluate fitness values of initial pop
         invalids = [ind for ind in pop if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
-        try: 
+        try:
             print("spawning")
             MPI.COMM_WORLD.bcast(True)
             with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
                 fitnesses = executor.map(self.toolbox.evaluate, list(pop))
-        except: 
+        except:
             print("DIDNT WORK")
         # assign fitness values to individuals
         for ind, fitness in zip(pop, fitnesses):
@@ -104,7 +105,7 @@ class Algorithm(object):
         return pop
 
     def apply_algorithm_ngen(self, pop, gen):
-        print("Entering generation "+ str(gen))
+        print("Entering generation " + str(gen) + "...")
         pop = self.apply_selection_operator(pop)
         pop = self.apply_mating_operator(pop)
         pop = self.apply_mutation_operator(pop)
@@ -115,12 +116,12 @@ class Algorithm(object):
         # evaluate fitness of newly created pop for inds with invalid fitness
         invalids = [ind for ind in pop if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
-        try: 
+        try:
             print("spawning")
             MPI.COMM_WORLD.bcast(True)
             with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
                 fitnesses = executor.map(self.toolbox.evaluate, list(invalids))
-        except: 
+        except:
             print("MPI COMM DID NOT WORK")
         # assign fitness values to individuals
         for ind, fitness in zip(invalids, fitnesses):
@@ -145,7 +146,7 @@ class Algorithm(object):
             new_child2 = self.toolbox.clone(child2)
             if random.random() < self.toolbox.cxpb:
                 outside_bounds = True
-                while outside_bounds: 
+                while outside_bounds:
                     self.toolbox.mate(new_child1, new_child2)
                     del new_child1.fitness.values, new_child2.fitness.values
                     outside_bounds = False
@@ -164,12 +165,12 @@ class Algorithm(object):
         return final_pop
 
     def apply_mutation_operator(self, pop):
-        final_pop = [] 
+        final_pop = []
         for mutant in pop:
             new_mutant = self.toolbox.clone(mutant)
             if random.random() < self.toolbox.mutpb:
                 outside_bounds = True
-                while outside_bounds: 
+                while outside_bounds:
                     self.toolbox.mutate(new_mutant)
                     del new_mutant.fitness.values
                     outside_bounds = False
