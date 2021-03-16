@@ -36,6 +36,7 @@ class Executor(object):
         5) Run genetic algorithm
         """
         t0 = time.time()
+        print("starting execution", t0)
         input_dict = self.read_input_file()
         iv = InputValidation(input_dict)
         iv.validate()
