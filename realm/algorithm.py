@@ -94,6 +94,7 @@ class Algorithm(object):
         try:
             print("spawning", time.time()-enter_time)
             MPI.COMM_WORLD.bcast(True)
+            print(MPI.COMM_WORLD.rank)
             with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
                 fitnesses = executor.map(self.toolbox.evaluate, list(pop))
         except:
