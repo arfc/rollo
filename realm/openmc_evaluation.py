@@ -13,7 +13,7 @@ class OpenMCEvaluation:
 
     def evaluate_keff(self):
         """This function analyzes the openmc output file"""
-        for file in glob.glob("statepoint.*"):
+        for file in glob.glob("statepoint*"):
             h5file = file
         sp = openmc.StatePoint(h5file)
         keff = sp.k_combined.nominal_value
