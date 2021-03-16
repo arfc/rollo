@@ -39,8 +39,8 @@ class Evaluation:
             """This function accepts a DEAP individual
             and returns a tuple of output values listed in outputs
             """
-            rank_time = time.time()
-            print("RANK",MPI.COMM_WORLD.rank, rank_time)
+            self.rank_time = time.time()
+            print("RANK",MPI.COMM_WORLD.rank, self.rank_time)
             control_vars = self.name_ind(ind, control_dict, input_evaluators)
             output_vals = [None] * len(output_dict)
 
@@ -56,17 +56,17 @@ class Evaluation:
                 # enter directory for this particular solver's run
                 os.mkdir(path)
                 os.chdir(path)
-                print("B4 solver",time.time()-rank_time)
+                print("B4 solver",time.time()-self.rank_time)
                 # run solver's function where run is executed
                 exec("self." + solver + "_run(rendered_script)")
                 # go back to normal directory with all files
                 os.chdir("../")
-                print("aft solver",time.time()-rank_time)
+                print("aft solver",time.time()-self.rank_time)
                 # get output values
                 output_vals = self.get_output_vals(
                     output_vals, solver, output_dict, control_vars, path
                 )
-                print("aft get ooutput vals",time.time()-rank_time)
+                print("aft get ooutput vals",time.time()-self.rank_time)
             return tuple(output_vals)
 
         return eval_function
@@ -75,6 +75,7 @@ class Evaluation:
         """This function returns a populated list with output values for each
         solver
         """
+        print("1", time.time()-self.rank_time)
         if self.output_scripts[solver]:
             # copy rendered output script into a new file in the particular solver's run
             shutil.copyfile(
@@ -88,7 +89,7 @@ class Evaluation:
             oup_script_results = ast.literal_eval(oup_bytes.decode("utf-8"))
             # go back to normal directory with all files
             os.chdir("../")
-
+        print("2", time.time()-self.rank_time)
         for i, var in enumerate(output_dict):
             if output_dict[var] == solver:
                 # if variable is a control variable
@@ -96,13 +97,16 @@ class Evaluation:
                     output_vals[i] = control_vars[solver][var]
                 # if variable's analysis script is pre-defined
                 elif var in self.eval_dict[solver].pre_defined_outputs:
+                    print("3", time.time()-self.rank_time)
                     os.chdir(path)
                     method = getattr(self.eval_dict[solver], "evaluate_" + var)
                     output_vals[i] = method()
                     os.chdir("../")
+                    print("4", time.time()-self.rank_time)
                 # if variable's defined in output script
                 else:
                     output_vals[i] = oup_script_results[var]
+        print("5", time.time()-self.rank_time)
         return output_vals
 
     def system_call(self, command):
