@@ -2,6 +2,9 @@ import os, sys, subprocess, ast, shutil
 from jinja2 import nativetypes
 import openmc
 import subprocess
+from mpi4py import MPI
+import dill
+MPI.pickle.__init__(dill.dumps, dill.loads)
 
 from realm.openmc_evaluation import OpenMCEvaluation
 from realm.moltres_evaluation import MoltresEvaluation
@@ -36,10 +39,12 @@ class Evaluation:
             """This function accepts a DEAP individual
             and returns a tuple of output values listed in outputs
             """
+            print("RANK",MPI.COMM_WORLD.rank)
             control_vars = self.name_ind(ind, control_dict, input_evaluators)
             output_vals = [None] * len(output_dict)
 
             for solver in input_evaluators:
+                print(solver, ind.num)
                 # path name for solver's run
                 path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
                 # render jinja-ed input script
