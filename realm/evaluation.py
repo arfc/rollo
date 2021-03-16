@@ -1,7 +1,7 @@
 import os, sys, subprocess, ast, shutil
 from jinja2 import nativetypes
 import openmc
-import subprocess
+import subprocess, time
 from mpi4py import MPI
 import dill
 MPI.pickle.__init__(dill.dumps, dill.loads)
@@ -39,7 +39,8 @@ class Evaluation:
             """This function accepts a DEAP individual
             and returns a tuple of output values listed in outputs
             """
-            print("RANK",MPI.COMM_WORLD.rank)
+            rank_time = time.time()
+            print("RANK",MPI.COMM_WORLD.rank, rank_time)
             control_vars = self.name_ind(ind, control_dict, input_evaluators)
             output_vals = [None] * len(output_dict)
 
@@ -55,14 +56,17 @@ class Evaluation:
                 # enter directory for this particular solver's run
                 os.mkdir(path)
                 os.chdir(path)
+                print("B4 solver",time.time()-rank_time)
                 # run solver's function where run is executed
                 exec("self." + solver + "_run(rendered_script)")
                 # go back to normal directory with all files
                 os.chdir("../")
+                print("aft solver",time.time()-rank_time)
                 # get output values
                 output_vals = self.get_output_vals(
                     output_vals, solver, output_dict, control_vars, path
                 )
+                print("aft get ooutput vals",time.time()-rank_time)
             return tuple(output_vals)
 
         return eval_function
