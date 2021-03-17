@@ -59,6 +59,8 @@ class Evaluation:
                 output_vals = self.get_output_vals(
                     output_vals, solver, output_dict, control_vars, path
                 )
+                if input_evaluators[solver]["keep_files"] == False:
+                    shutil.rmtree(path)
             return tuple(output_vals)
 
         return eval_function

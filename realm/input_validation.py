@@ -25,6 +25,12 @@ class InputValidation:
             input file dict with additional missing default inputs
 
         """
+        input_evaluators = {}
+        for solver in input_dict["evaluators"]:
+            input_evaluators[solver] = input_dict["evaluators"][solver]
+            input_evaluators[solver] = self.default_check(
+                input_evaluators[solver], "keep_files", True
+            )
         input_algorithm = input_dict["algorithm"]
         input_algorithm = self.default_check(input_algorithm, "objective", "min")
         input_algorithm = self.default_check(input_algorithm, "pop_size", 100)
@@ -41,6 +47,7 @@ class InputValidation:
             input_algorithm, "mating_operator", {"operator": "cxOnePoint"}
         )
         reloaded_input_dict = input_dict.copy()
+        reloaded_input_dict["evaluators"] = input_evaluators
         reloaded_input_dict["algorithm"] = input_algorithm
         return reloaded_input_dict
 
@@ -375,6 +382,7 @@ class InputValidation:
                         "items": {"type": "string"},
                     },
                     "output_script": {"type": "string"},
+                    "keep_files": {"type": "boolean"},
                 },
             }
         validate(instance=input_evaluators, schema=schema_evaluators)
@@ -382,7 +390,7 @@ class InputValidation:
             self.validate_correct_keys(
                 input_evaluators[evaluator],
                 ["input_script", "inputs", "outputs"],
-                ["output_script"],
+                ["output_script", "keep_files"],
                 "evaluator: " + evaluator,
             )
             # check if outputs are in predefined outputs or inputs, and if not

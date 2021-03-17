@@ -34,7 +34,10 @@ def test_eval_fn_generator():
                 "num_batches": "openmc",
             }
         ),
-        input_evaluators={"openmc": {}, "moltres": {}},
+        input_evaluators={
+            "openmc": {"keep_files": True},
+            "moltres": {"keep_files": True},
+        },
     )
 
     creator.create("obj", base.Fitness, weights=(-1.0,))

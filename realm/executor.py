@@ -36,7 +36,6 @@ class Executor(object):
         5) Run genetic algorithm
         """
         t0 = time.time()
-        print("starting execution", t0)
         input_dict = self.read_input_file()
         iv = InputValidation(input_dict)
         iv.validate()
@@ -123,7 +122,9 @@ class Executor(object):
         control_vars = OrderedDict()
         sv = SpecialVariables()
         special_control_vars = sv.special_variables
+        print(input_evaluators)
         for solver in input_evaluators:
+            print("hi", input_evaluators[solver])
             for var in input_evaluators[solver]["inputs"]:
                 if var in special_control_vars:
                     method = getattr(sv, var + "_num")
