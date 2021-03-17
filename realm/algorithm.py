@@ -92,22 +92,18 @@ class Algorithm(object):
         invalids = [ind for ind in pop if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
         try:
-            print("spawning", time.time()-enter_time)
+            print("spawning")
             MPI.COMM_WORLD.bcast(True)
-            print("RANK",MPI.COMM_WORLD.rank)
             with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
                 fitnesses = executor.map(self.toolbox.evaluate, list(pop))
         except:
             print("DIDNT WORK")
-        print("completed spawning", time.time()-enter_time)
         # assign fitness values to individuals
         for ind, fitness in zip(pop, fitnesses):
             ind.fitness.values = (fitness[0],)
             ind.output = fitness
         pop = self.constraint_obj.apply_constraints(pop)
-        print("start update backend", time.time()-enter_time)
         self.backend.update_backend(pop, 0, copy_invalids, random.getstate())
-        print("end update backend", time.time()-enter_time)
         return pop
 
     def apply_algorithm_ngen(self, pop, gen):
