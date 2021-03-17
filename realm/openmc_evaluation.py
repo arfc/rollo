@@ -17,9 +17,9 @@ class OpenMCEvaluation:
         print("eval_keff start", start)
         for file in glob.glob("statepoint*"):
             h5file = file
-        print(h5file)
+        print(h5file, type(h5file))
         print("in_1", time.time()-start)
-        sp = openmc.StatePoint(h5file)
+        sp = openmc.StatePoint("statepoint.10.h5", autolink=False)
         print("in_2", time.time()-start)
         keff = sp.k_combined.nominal_value
         print("in_3", time.time()-start)
