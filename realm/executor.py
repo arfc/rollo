@@ -122,9 +122,7 @@ class Executor(object):
         control_vars = OrderedDict()
         sv = SpecialVariables()
         special_control_vars = sv.special_variables
-        print(input_evaluators)
         for solver in input_evaluators:
-            print("hi", input_evaluators[solver])
             for var in input_evaluators[solver]["inputs"]:
                 if var in special_control_vars:
                     method = getattr(sv, var + "_num")
