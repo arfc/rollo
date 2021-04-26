@@ -1,11 +1,14 @@
 from .backend import BackEnd
 import random
-from mpi4py import MPI
-import dill
 import time
-
-MPI.pickle.__init__(dill.dumps, dill.loads)
-from mpi4py.futures import MPICommExecutor
+import warnings
+try: 
+    from mpi4py import MPI
+    import dill
+    MPI.pickle.__init__(dill.dumps, dill.loads)
+    from mpi4py.futures import MPICommExecutor
+except: 
+    warnings.warn("Failed to import MPI4py")
 import sys
 
 ## GIVE CREDIT TO DEAP NOTEBOOK
@@ -60,11 +63,14 @@ class Algorithm(object):
 
         """
         pop = self.toolbox.population(n=self.toolbox.pop_size)
-        if MPI.COMM_WORLD.rank > 0:
-            while MPI.COMM_WORLD.bcast(None):
-                with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
-                    pass
-            sys.exit(0)
+        try: 
+            if MPI.COMM_WORLD.rank > 0:
+                while MPI.COMM_WORLD.bcast(None):
+                    with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
+                        pass
+                sys.exit(0)
+        except:
+            pass
         if self.cp_file:
             self.backend.initialize_checkpoint_backend()
             pop = self.backend.results["population"]
@@ -78,7 +84,10 @@ class Algorithm(object):
             pop = self.apply_algorithm_ngen(pop, gen)
             print(self.backend.results["logbook"])
         print("REALM Simulation Completed!")
-        MPI.COMM_WORLD.bcast(False)
+        try:
+            MPI.COMM_WORLD.bcast(False)
+        except: 
+            pass
         return pop
 
     def initialize_pop(self, pop):
@@ -98,6 +107,7 @@ class Algorithm(object):
                 fitnesses = executor.map(self.toolbox.evaluate, list(pop))
         except:
             print("DIDNT WORK")
+            fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
         # assign fitness values to individuals
         for ind, fitness in zip(pop, fitnesses):
             ind.fitness.values = (fitness[0],)
