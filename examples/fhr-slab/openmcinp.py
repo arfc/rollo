@@ -2,7 +2,7 @@ import openmc
 import numpy as np
 from numpy import sin, cos, tan, pi
 import sys 
-sys.path.insert(1, '../../')
+sys.path.insert(1, '../')
 from constants import *
 
 # Templating
@@ -18,6 +18,7 @@ x_right = -openmc.XPlane(x0=27.1, boundary_type="periodic")
 y_top = -openmc.YPlane(y0=3.25, boundary_type="periodic")
 y_bot =  +openmc.YPlane(y0=0, boundary_type="periodic")
 y_top.periodic_surface = y_bot
+x_left.periodic_surface = x_right
 z_top = -openmc.ZPlane(z0=T_pitch*20, boundary_type="reflective")
 z_bot = +openmc.ZPlane(z0=0, boundary_type="reflective")
 bounds = openmc.Cell(fill=flibe)
@@ -99,9 +100,9 @@ point = openmc.stats.Point((13.5, 1.7, T_pitch*9.5))
 src = openmc.Source(space=point)
 settings = openmc.Settings()
 settings.source = src
-settings.batches = 80
-settings.inactive = 20
-settings.particles = 8000
+settings.batches = 10
+settings.inactive = 2
+settings.particles = 100
 settings.temperature = {"multipole": True, "method": "interpolation"}
 
 plot = openmc.Plot()
@@ -127,4 +128,4 @@ mats.export_to_xml()
 geom.export_to_xml()
 settings.export_to_xml()
 plots.export_to_xml()
-openmc.run(openmc_exec="openmc-ccm-nompi",threads=32)
+openmc.run(openmc_exec="openmc-ccm-nompi",threads=16)
