@@ -2,12 +2,14 @@ from .backend import BackEnd
 import random
 import time
 import warnings
-try: 
+
+try:
     from mpi4py import MPI
     import dill
+
     MPI.pickle.__init__(dill.dumps, dill.loads)
     from mpi4py.futures import MPICommExecutor
-except: 
+except:
     warnings.warn("Failed to import MPI4py")
 import sys
 
@@ -63,7 +65,7 @@ class Algorithm(object):
 
         """
         pop = self.toolbox.population(n=self.toolbox.pop_size)
-        try: 
+        try:
             if MPI.COMM_WORLD.rank > 0:
                 while MPI.COMM_WORLD.bcast(None):
                     with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
@@ -86,7 +88,7 @@ class Algorithm(object):
         print("REALM Simulation Completed!")
         try:
             MPI.COMM_WORLD.bcast(False)
-        except: 
+        except:
             pass
         return pop
 
