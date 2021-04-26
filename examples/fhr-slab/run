@@ -26,7 +26,7 @@ cat $HOME/.crayccm/ccm_nodelist.$PBS_JOBID | sort -u | awk -v n=$TPN '{for(i=0;i
 let NTASKS=$NNODES*$TPN
 
 echo "#!/bin/bash
-$HOME/openmpi/bin/mpirun --bind-to none $(export -p | sed 's/declare //;s/=.*//;s/-rx/-x/' | paste -s) -v -np $NTASKS --mca btl tcp,self --mca btl_tcp_if_include ipogif0 --hostfile $HOSTLIST -npernode $TPN $(which python) ../../../../realm/realm -i realm_input.json -p max &> job.out" > $LAUNCH
+$HOME/openmpi/bin/mpirun --bind-to none $(export -p | sed 's/declare //;s/=.*//;s/-rx/-x/' | paste -s) -v -np $NTASKS --mca btl tcp,self --mca btl_tcp_if_include ipogif0 --hostfile $HOSTLIST -npernode $TPN $(which python) ../../realm -i realm_input.json -p max &> job.out" > $LAUNCH
 chmod 755 $LAUNCH
 
 export PMI_NO_FORK=1
