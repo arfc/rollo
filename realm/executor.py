@@ -125,15 +125,16 @@ class Executor(object):
         output_vars = OrderedDict()
         optimized_variable = input_algorithm["optimized_variable"]
         # find optimized variable
-        output_list = []
+        var_to_solver = {}
         for solver in input_evaluators:
             for var in input_evaluators[solver]["outputs"]:
-                if var == optimized_variable:
-                    output_vars[var] = solver
+                var_to_solver[var] = solver
+        for opt_var in optimized_variable:
+            output_vars[opt_var] = var_to_solver[opt_var]
         # put in the rest of the output variables
         for solver in input_evaluators:
             for var in input_evaluators[solver]["outputs"]:
-                if var != optimized_variable:
+                if var not in optimized_variable:
                     output_vars[var] = solver
 
         return control_vars, output_vars

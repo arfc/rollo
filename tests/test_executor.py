@@ -36,8 +36,8 @@ test_input_dict = {
     },
     "constraints": {"keff": {"operator": ">", "constrained_val": 1}},
     "algorithm": {
-        "objective": "min",
-        "optimized_variable": "packing_fraction",
+        "objective": ["max", "min"],
+        "optimized_variable": ["keff", "packing_fraction"],
         "pop_size": 100,
         "generations": 10,
         "mutation_probability": 0.5,
@@ -62,8 +62,8 @@ def test_organize_input_output():
     )
     expected_output_dict = OrderedDict(
         {
-            "packing_fraction": "openmc",
             "keff": "openmc",
+            "packing_fraction": "openmc",
             "num_batches": "openmc",
             "max_temp": "moltres",
         }
@@ -85,13 +85,20 @@ def test_load_evaluator():
         output_dict=test_output_dict,
         input_dict=test_input_dict,
     )
-    creator.create("obj", base.Fitness, weights=(-1.0,))
+    creator.create(
+        "obj",
+        base.Fitness,
+        weights=(
+            1.0,
+            -1.0,
+        ),
+    )
     creator.create("Ind", list, fitness=creator.obj)
     ind = creator.Ind([0.03, 1, 1, 1, 1])
     ind.gen = 0
     ind.num = 0
     output_vals = eval_function(ind)
-    expected_output_vals = tuple([0.03, output_vals[1], 10, 1000])
+    expected_output_vals = tuple([output_vals[0], 0.03, 10, 1000])
     shutil.rmtree("./openmc_0_0")
     shutil.rmtree("./moltres_0_0")
     os.chdir("../")

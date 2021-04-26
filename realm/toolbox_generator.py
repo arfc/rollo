@@ -7,11 +7,13 @@ class ToolboxGenerator(object):
     """A class that initializes the DEAP toolbox."""
 
     def setup(self, evaluator_fn, input_algorithm, input_ctrl_vars, control_dict):
-        if input_algorithm["objective"] == "min":
-            weight = -1.0
-        elif input_algorithm["objective"] == "max":
-            weight = +1.0
-        creator.create("obj", base.Fitness, weights=(weight,))
+        weight_list = []
+        for obj in input_algorithm["objective"]:
+            if obj == "min":
+                weight_list.append(-1.0)
+            elif obj == "max":
+                weight_list.append(+1.0)
+        creator.create("obj", base.Fitness, weights=tuple(weight_list))
         creator.create("Ind", list, fitness=creator.obj)
         toolbox = base.Toolbox()
         # register control variables + individual
