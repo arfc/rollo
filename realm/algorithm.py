@@ -112,7 +112,10 @@ class Algorithm(object):
             fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
         # assign fitness values to individuals
         for ind, fitness in zip(pop, fitnesses):
-            ind.fitness.values = (fitness[0],)
+            fitness_vals = []
+            for i in range(self.toolbox.objs):
+                fitness_vals.append(fitness[i])
+            ind.fitness.values = tuple(fitness_vals)
             ind.output = fitness
         pop = self.constraint_obj.apply_constraints(pop)
         self.backend.update_backend(pop, 0, copy_invalids, random.getstate())
@@ -139,7 +142,10 @@ class Algorithm(object):
             print("MPI COMM DID NOT WORK")
         # assign fitness values to individuals
         for ind, fitness in zip(invalids, fitnesses):
-            ind.fitness.values = (fitness[0],)
+            fitness_vals = []
+            for i in range(self.toolbox.objs):
+                fitness_vals.append(fitness[i])
+            ind.fitness.values = tuple(fitness_vals)
             ind.output = fitness
         pop = self.constraint_obj.apply_constraints(pop)
         self.backend.update_backend(pop, gen, copy_invalids, random.getstate())

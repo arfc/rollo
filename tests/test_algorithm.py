@@ -4,7 +4,14 @@ from deap import base, creator, tools, algorithms
 import random, os
 from collections import OrderedDict
 
-creator.create("obj", base.Fitness, weights=(1.0,))
+creator.create(
+    "obj",
+    base.Fitness,
+    weights=(
+        1.0,
+        -1.0,
+    ),
+)
 creator.create("Ind", list, fitness=creator.obj)
 toolbox = base.Toolbox()
 toolbox.register("pf", random.uniform, 0, 1)
@@ -36,6 +43,7 @@ toolbox.register(
 )
 toolbox.cxpb = 1.0
 toolbox.mutpb = 1.0
+toolbox.objs = 2
 
 control_dict = OrderedDict(
     {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
