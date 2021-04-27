@@ -33,8 +33,8 @@ test_input_dict = {
     },
     "constraints": {"keff": {"operator": ">", "constrained_val": 1}},
     "algorithm": {
-        "objective": "min",
-        "optimized_variable": "packing_fraction",
+        "objective": ["max", "min"],
+        "optimized_variable": ["keff", "packing_fraction"],
         "pop_size": 100,
         "generations": 10,
         "mutation_probability": 0.5,
@@ -85,6 +85,7 @@ def test_setup():
     assert toolbox.ngen == 10
     assert toolbox.mutpb == 0.5
     assert toolbox.cxpb == 0.5
+    assert toolbox.objs == 2
 
 
 def test_individual_values():

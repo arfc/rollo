@@ -42,6 +42,7 @@ class ToolboxGenerator(object):
         toolbox.ngen = input_algorithm["generations"]
         toolbox.mutpb = input_algorithm["mutation_probability"]
         toolbox.cxpb = input_algorithm["mating_probability"]
+        toolbox.objs = len(input_algorithm["objective"])
         return toolbox, creator
 
     def individual_values(self, input_ctrl_vars, control_dict, toolbox):
