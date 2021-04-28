@@ -14,8 +14,8 @@
     },
     "constraints": {"keff": {"operator": [">="], "constrained_val": [1.0]}},
     "algorithm": {
-        "objective": "max",
-        "optimized_variable": "keff",
+        "objective": ["max"],
+        "optimized_variable": ["keff"],
         "pop_size": 60,
         "generations": 10,
         "mutation_probability": 0.2374127402121101,
