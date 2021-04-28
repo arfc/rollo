@@ -3,7 +3,14 @@ from deap import base, creator, tools, algorithms
 import os, random
 from collections import OrderedDict
 
-creator.create("obj", base.Fitness, weights=(1.0,))
+creator.create(
+    "obj",
+    base.Fitness,
+    weights=(
+        1.0,
+        -1.0,
+    ),
+)
 creator.create("Ind", list, fitness=creator.obj)
 toolbox = base.Toolbox()
 toolbox.register("pf", random.uniform, 0, 1)
@@ -128,7 +135,10 @@ def test_update_backend():
     gen = 1
     fitnesses = toolbox.map(toolbox.evaluate, new_pop)
     for ind, fitness in zip(new_pop, fitnesses):
-        ind.fitness.values = (fitness[0],)
+        ind.fitness.values = (
+            fitness[0],
+            fitness[1],
+        )
         ind.output = fitness
     invalids = [ind for ind in new_pop if not ind.fitness.valid]
     rndstate = random.getstate()
