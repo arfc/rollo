@@ -17,8 +17,9 @@ if __name__ == "__main__":
     for opt, arg in opts:
         opts_dict[opt] = arg
     if "-i" in opts_dict and "-p" in opts_dict:
-        creator.create("obj", base.Fitness, weights=(wt_dict[opts_dict["-p"]],))
-        creator.create("Ind", list, fitness=creator.obj)
+        print("hi")
+        #creator.create("obj", base.Fitness, weights=(wt_dict[opts_dict["-p"]],))
+        #creator.create("Ind", list, fitness=creator.obj)
         if "-c" in opts_dict:
             new_run = executor.Executor(
                 input_file=opts_dict["-i"], checkpoint_file=opts_dict["-c"]
