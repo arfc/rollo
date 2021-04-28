@@ -43,7 +43,14 @@ def test_constraints_list():
 
 
 def test_apply_constraints():
-    creator.create("obj", base.Fitness, weights=(-1.0,))
+    creator.create(
+        "obj",
+        base.Fitness,
+        weights=(
+            -1.0,
+            1.0,
+        ),
+    )
     creator.create("Ind", list, fitness=creator.obj)
     ind1 = creator.Ind([1])
     ind2 = creator.Ind([2])
