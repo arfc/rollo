@@ -148,8 +148,14 @@ class InputValidation:
         schema_algorithm = {
             "type": "object",
             "properties": {
-                "objective": {"type": "string"},
-                "optimized_variable": {"type": "string"},
+                "objective": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                },
+                "optimized_variable": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                },
                 "pop_size": {"type": "number"},
                 "generations": {"type": "number"},
                 "mutation_probability": {"type": "number"},
@@ -177,15 +183,17 @@ class InputValidation:
             "algorithm",
         )
         # validation for objective and optimized variable
-        self.validate_in_list(input_algorithm["objective"], ["min", "max"], "objective")
+        for obj in input_algorithm["objective"]:
+            self.validate_in_list(obj, ["min", "max"], "objective")
         output_list = []
         for solver in input_evaluators:
             output_list += input_evaluators[solver]["outputs"]
-        self.validate_in_list(
-            input_algorithm["optimized_variable"],
-            output_list,
-            "optimized_variable",
-        )
+        for opt_var in input_algorithm["optimized_variable"]:
+            self.validate_in_list(
+                opt_var,
+                output_list,
+                "optimized_variable",
+            )
 
         # validation for operator sections
         self.validate_algorithm_operators("selection", input_algorithm)
