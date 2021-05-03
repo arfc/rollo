@@ -17,7 +17,7 @@
         "parallel": "mpi_evals",
         "objective": ["max"],
         "optimized_variable": ["keff"],
-        "pop_size": 60,
+        "pop_size": 20,
         "generations": 10,
         "mutation_probability": 0.2374127402121101,
         "mating_probability": 0.4699131568275016,

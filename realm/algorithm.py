@@ -177,17 +177,14 @@ class Algorithm(object):
         return pop
 
     def apply_selection_operator(self, pop):
-        print("select")
         pre_pop = self.toolbox.select(pop)
         select_pop = [self.toolbox.clone(ind) for ind in pre_pop]
         # extend pop length to pop_size
         while len(select_pop) != self.toolbox.pop_size:
             select_pop.append(self.toolbox.clone(random.choice(pre_pop)))
-        print("select end")
         return select_pop
 
     def apply_mating_operator(self, pop):
-        print("mate")
         final_pop = []
         for child1, child2 in zip(pop[::2], pop[1::2]):
             new_child1 = self.toolbox.clone(child1)
@@ -213,7 +210,6 @@ class Algorithm(object):
         return final_pop
 
     def apply_mutation_operator(self, pop):
-        print("mutate")
         final_pop = []
         for mutant in pop:
             new_mutant = self.toolbox.clone(mutant)
