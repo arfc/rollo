@@ -14,6 +14,7 @@
     },
     "constraints": {"keff": {"operator": [">="], "constrained_val": [1.0]}},
     "algorithm": {
+        "parallel": "mpi_evals",
         "objective": ["max"],
         "optimized_variable": ["keff"],
         "pop_size": 60,
