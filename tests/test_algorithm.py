@@ -82,6 +82,7 @@ def test_generate():
         output_dict=output_dict,
         input_dict={},
         start_time=0,
+        parallel_method="none",
     )
     final_pop = a.generate()
     assert len(final_pop) == toolbox.pop_size
@@ -106,6 +107,7 @@ def test_initialize_pop():
         output_dict=output_dict,
         input_dict={},
         start_time=0,
+        parallel_method="none",
     )
     a.backend.initialize_new_backend()
     pop = toolbox.population(n=5)
@@ -136,6 +138,7 @@ def test_apply_algorithm_ngen():
         output_dict=output_dict,
         input_dict={},
         start_time=0,
+        parallel_method="none",
     )
     pop = toolbox.population(n=10)
     a.backend.initialize_new_backend()
@@ -164,6 +167,7 @@ def test_apply_selection_operator():
         output_dict=output_dict,
         input_dict={},
         start_time=0,
+        parallel_method="none",
     )
     a.backend.initialize_new_backend()
     pop = toolbox.population(n=toolbox.pop_size)
@@ -188,6 +192,7 @@ def test_apply_mating_operator():
         output_dict=output_dict,
         input_dict={},
         start_time=0,
+        parallel_method="none",
     )
     pop = toolbox.population(n=toolbox.pop_size)
     mated_pop = [toolbox.clone(ind) for ind in pop]
@@ -207,6 +212,7 @@ def test_apply_mutation_operator():
         output_dict=output_dict,
         input_dict={},
         start_time=0,
+        parallel_method="none",
     )
     pop = toolbox.population(n=toolbox.pop_size)
     mutated_pop = [toolbox.clone(ind) for ind in pop]
