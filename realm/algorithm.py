@@ -183,6 +183,7 @@ class Algorithm(object):
         # extend pop length to pop_size
         while len(select_pop) != self.toolbox.pop_size:
             select_pop.append(self.toolbox.clone(random.choice(pre_pop)))
+        print("select end")
         return select_pop
 
     def apply_mating_operator(self, pop):
