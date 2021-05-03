@@ -206,6 +206,11 @@ class InputValidation:
         self.validate_algorithm_operators("selection", input_algorithm)
         self.validate_algorithm_operators("mutation", input_algorithm)
         self.validate_algorithm_operators("mating", input_algorithm)
+
+        # k value cannot be larger than pop size
+        if input_algorithm["selection_operator"]["operator"] == "selTournament":
+            if input_algorithm["selection_operator"]["k"] > input_algorithm["pop_size"]:
+                raise Exception("Population size must be larger than k.")
         return
 
     def validate_algorithm_operators(self, operator_type, input_algorithm):

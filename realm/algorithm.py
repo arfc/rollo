@@ -141,11 +141,10 @@ class Algorithm(object):
         return pop
 
     def apply_algorithm_ngen(self, pop, gen):
-        print("Entering generation " + str(gen) + "...1")
+        print("Entering generation " + str(gen) + "...")
         pop = self.apply_selection_operator(pop)
         pop = self.apply_mating_operator(pop)
         pop = self.apply_mutation_operator(pop)
-        print("hi")
         # define pop's gen, ind num
         for i, ind in enumerate(pop):
             ind.gen = gen
@@ -153,10 +152,8 @@ class Algorithm(object):
         # evaluate fitness of newly created pop for inds with invalid fitness
         invalids = [ind for ind in pop if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
-        print("owo")
         if self.parallel_method == "mpi_evals":
             try:
-                print("in")
                 MPI.COMM_WORLD.bcast(True)
                 with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
                     fitnesses = executor.map(self.toolbox.evaluate, list(invalids))
