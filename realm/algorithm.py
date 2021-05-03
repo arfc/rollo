@@ -4,6 +4,16 @@ import time
 import warnings
 import sys
 
+try:
+    from mpi4py import MPI
+    import dill
+
+    MPI.pickle.__init__(dill.dumps, dill.loads)
+    from mpi4py.futures import MPICommExecutor
+except:
+    warnings.warn(
+        "Failed to import mpi4py. (Only important for parallel method: mpi_evals"
+    )
 ## GIVE CREDIT TO DEAP NOTEBOOK
 
 
@@ -71,19 +81,13 @@ class Algorithm(object):
                 pass
         elif self.parallel_method == "mpi_evals":
             try:
-                from mpi4py import MPI
-                import dill
-
-                MPI.pickle.__init__(dill.dumps, dill.loads)
-                from mpi4py.futures import MPICommExecutor
-
                 if MPI.COMM_WORLD.rank > 0:
                     while MPI.COMM_WORLD.bcast(None):
                         with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
                             pass
                     sys.exit(0)
             except:
-                print("import fail")
+                warnings.warn("MPI Failed.")
                 pass
         if self.cp_file:
             self.backend.initialize_checkpoint_backend()
@@ -108,7 +112,7 @@ class Algorithm(object):
     def initialize_pop(self, pop):
         """Initialize population for genetic algorithm"""
         enter_time = time.time()
-        print("Entering generation 0...", enter_time)
+        print("Entering generation 0...")
         for i, ind in enumerate(pop):
             ind.gen = 0
             ind.num = i
@@ -117,12 +121,11 @@ class Algorithm(object):
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
         if self.parallel_method == "mpi_evals":
             try:
-                print("spawning")
                 MPI.COMM_WORLD.bcast(True)
                 with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
                     fitnesses = executor.map(self.toolbox.evaluate, list(pop))
             except:
-                print("DIDNT WORK")
+                warnings.warn("MPI Failed, realm will run serially.")
                 fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
         else:
             fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
@@ -138,10 +141,11 @@ class Algorithm(object):
         return pop
 
     def apply_algorithm_ngen(self, pop, gen):
-        print("Entering generation " + str(gen) + "...")
+        print("Entering generation " + str(gen) + "...1")
         pop = self.apply_selection_operator(pop)
         pop = self.apply_mating_operator(pop)
         pop = self.apply_mutation_operator(pop)
+        print("hi")
         # define pop's gen, ind num
         for i, ind in enumerate(pop):
             ind.gen = gen
@@ -149,13 +153,18 @@ class Algorithm(object):
         # evaluate fitness of newly created pop for inds with invalid fitness
         invalids = [ind for ind in pop if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
-        try:
-            print("spawning")
-            MPI.COMM_WORLD.bcast(True)
-            with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
-                fitnesses = executor.map(self.toolbox.evaluate, list(invalids))
-        except:
-            print("MPI COMM DID NOT WORK")
+        print("owo")
+        if self.parallel_method == "mpi_evals":
+            try:
+                print("in")
+                MPI.COMM_WORLD.bcast(True)
+                with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
+                    fitnesses = executor.map(self.toolbox.evaluate, list(invalids))
+            except:
+                warnings.warn("MPI Failed, realm will run serially.")
+                fitnesses = self.toolbox.map(self.toolbox.evaluate, list(invalids))
+        else:
+            fitnesses = self.toolbox.map(self.toolbox.evaluate, list(invalids))
         # assign fitness values to individuals
         for ind, fitness in zip(invalids, fitnesses):
             fitness_vals = []
@@ -168,6 +177,7 @@ class Algorithm(object):
         return pop
 
     def apply_selection_operator(self, pop):
+        print("select")
         pre_pop = self.toolbox.select(pop)
         select_pop = [self.toolbox.clone(ind) for ind in pre_pop]
         # extend pop length to pop_size
@@ -176,6 +186,7 @@ class Algorithm(object):
         return select_pop
 
     def apply_mating_operator(self, pop):
+        print("mate")
         final_pop = []
         for child1, child2 in zip(pop[::2], pop[1::2]):
             new_child1 = self.toolbox.clone(child1)
@@ -201,6 +212,7 @@ class Algorithm(object):
         return final_pop
 
     def apply_mutation_operator(self, pop):
+        print("mutate")
         final_pop = []
         for mutant in pop:
             new_mutant = self.toolbox.clone(mutant)
