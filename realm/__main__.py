@@ -13,12 +13,12 @@ if __name__ == "__main__":
         for opt, arg in opts:
             opts_dict[opt] = arg
         if "-i" in opts_dict:
-                if "-c" in opts_dict:
-                    new_run = executor.Executor(
-                        input_file=opts_dict["-i"], checkpoint_file=opts_dict["-c"]
-                    )
-                else:
-                    new_run = executor.Executor(input_file=opts_dict["-i"])
-                new_run.execute()
+            if "-c" in opts_dict:
+                new_run = executor.Executor(
+                    input_file=opts_dict["-i"], checkpoint_file=opts_dict["-c"]
+                )
+            else:
+                new_run = executor.Executor(input_file=opts_dict["-i"])
+            new_run.execute()
     except getopt.GetoptError:
-        raise Exception("To run realm: "+ msg)
+        raise Exception("To run realm: " + msg)

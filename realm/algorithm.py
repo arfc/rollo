@@ -2,15 +2,6 @@ from .backend import BackEnd
 import random
 import time
 import warnings
-
-try:
-    from mpi4py import MPI
-    import dill
-
-    MPI.pickle.__init__(dill.dumps, dill.loads)
-    from mpi4py.futures import MPICommExecutor
-except:
-    warnings.warn("Failed to import MPI4py")
 import sys
 
 ## GIVE CREDIT TO DEAP NOTEBOOK
@@ -43,6 +34,7 @@ class Algorithm(object):
         output_dict,
         input_dict,
         start_time,
+        parallel_method,
     ):
         self.toolbox = deap_toolbox
         self.constraint_obj = constraint_obj
@@ -55,6 +47,7 @@ class Algorithm(object):
             input_dict,
             start_time,
         )
+        self.parallel_method = parallel_method
 
     def generate(self):
         """Executes the genetic algorithm and outputs the summarized
@@ -65,14 +58,33 @@ class Algorithm(object):
 
         """
         pop = self.toolbox.population(n=self.toolbox.pop_size)
-        try:
-            if MPI.COMM_WORLD.rank > 0:
-                while MPI.COMM_WORLD.bcast(None):
-                    with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
-                        pass
-                sys.exit(0)
-        except:
-            pass
+        if self.parallel_method == "multiprocessing":
+            try:
+                import multiprocessing_on_dill as multiprocessing
+
+                pool = multiprocessing.Pool()
+                self.toolbox.register("map", pool.map)
+            except:
+                warnings.warn(
+                    "multiprocessing_on_dill failed to import, realm will run serially."
+                )
+                pass
+        elif self.parallel_method == "mpi_evals":
+            try:
+                from mpi4py import MPI
+                import dill
+
+                MPI.pickle.__init__(dill.dumps, dill.loads)
+                from mpi4py.futures import MPICommExecutor
+
+                if MPI.COMM_WORLD.rank > 0:
+                    while MPI.COMM_WORLD.bcast(None):
+                        with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
+                            pass
+                    sys.exit(0)
+            except:
+                print("import fail")
+                pass
         if self.cp_file:
             self.backend.initialize_checkpoint_backend()
             pop = self.backend.results["population"]
@@ -86,10 +98,11 @@ class Algorithm(object):
             pop = self.apply_algorithm_ngen(pop, gen)
             print(self.backend.results["logbook"])
         print("REALM Simulation Completed!")
-        try:
-            MPI.COMM_WORLD.bcast(False)
-        except:
-            pass
+        if self.parallel_method == "mpi_evals":
+            try:
+                MPI.COMM_WORLD.bcast(False)
+            except:
+                pass
         return pop
 
     def initialize_pop(self, pop):
@@ -102,13 +115,16 @@ class Algorithm(object):
         # evaluate fitness values of initial pop
         invalids = [ind for ind in pop if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
-        try:
-            print("spawning")
-            MPI.COMM_WORLD.bcast(True)
-            with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
-                fitnesses = executor.map(self.toolbox.evaluate, list(pop))
-        except:
-            print("DIDNT WORK")
+        if self.parallel_method == "mpi_evals":
+            try:
+                print("spawning")
+                MPI.COMM_WORLD.bcast(True)
+                with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
+                    fitnesses = executor.map(self.toolbox.evaluate, list(pop))
+            except:
+                print("DIDNT WORK")
+                fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
+        else:
             fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
         # assign fitness values to individuals
         for ind, fitness in zip(pop, fitnesses):

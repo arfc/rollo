@@ -66,6 +66,7 @@ class Executor(object):
             output_dict=output_dict,
             input_dict=complete_input_dict,
             start_time=t0,
+            parallel_method=complete_input_dict["algorithm"]["parallel"],
         )
         alg.generate()
         t1 = time.time()

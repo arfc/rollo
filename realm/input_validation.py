@@ -148,6 +148,7 @@ class InputValidation:
         schema_algorithm = {
             "type": "object",
             "properties": {
+                "parallel": {"type": "string"},
                 "objective": {
                     "type": "array",
                     "items": {"type": "string"},
@@ -171,6 +172,7 @@ class InputValidation:
             input_algorithm,
             ["optimized_variable"],
             [
+                "parallel",
                 "objective",
                 "pop_size",
                 "generations",
@@ -183,6 +185,11 @@ class InputValidation:
             "algorithm",
         )
         # validation for objective and optimized variable
+        self.validate_in_list(
+            input_algorithm["parallel"],
+            ["none", "multiprocessing", "mpi_evals"],
+            "parallel",
+        )
         for obj in input_algorithm["objective"]:
             self.validate_in_list(obj, ["min", "max"], "objective")
         output_list = []
