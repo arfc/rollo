@@ -55,9 +55,20 @@ class Evaluation:
         """
 
         def eval_function(ind):
-            """This function accepts a DEAP individual
-            and returns a tuple of output values listed in outputs
+            """Accepts a DEAP individual and returns a tuple of output values
+            listed in outputs
+
+            Parameters
+            ----------
+            ind : deap.creator.Ind
+
+            Returns
+            -------
+            tuple
+                output values from evaluators ordered by output_dict
+
             """
+
             self.rank_time = time.time()
             control_vars = self.name_ind(ind, control_dict, input_evaluators)
             output_vals = [None] * len(output_dict)
@@ -88,8 +99,25 @@ class Evaluation:
         return eval_function
 
     def get_output_vals(self, output_vals, solver, output_dict, control_vars, path):
-        """This function returns a populated list with output values for each
-        solver
+        """Returns a populated list with output values for each solver
+
+        Parameters
+        ----------
+        output_vals : list
+
+        solver : str
+            name of solver
+        output_dict : OrderedDict
+            Ordered dict of output variables as keys and solvers as values
+        control_vars : dict
+            maps the control_dict's variable names to values from ind list
+        path : str
+            path name
+
+        Returns
+        -------
+        output_vals :
+
         """
         if self.output_scripts[solver]:
             # copy rendered output script into a new file in the particular solver's run
@@ -125,8 +153,8 @@ class Evaluation:
         return p.stdout.read()
 
     def name_ind(self, ind, control_dict, input_evaluators):
-        """This function returns a dictionary that maps the control_dict's variable
-        names to values from ind list
+        """Returns a dictionary that maps the control_dict's variable names to
+        values from ind list
         """
         control_vars = {}
         for solver in input_evaluators:
