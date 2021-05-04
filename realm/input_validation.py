@@ -11,8 +11,7 @@ class InputValidation:
         self.input = input_dict
 
     def add_defaults(self, input_dict):
-        """This function adds default inputs if they are missing from
-        the input_dict
+        """Adds default inputs if they are missing from the input_dict
 
         Parameters
         ----------
@@ -52,8 +51,8 @@ class InputValidation:
         return reloaded_input_dict
 
     def default_check(self, input_dict, variable, default_val):
-        """This function checks if a variable is missing from a dict, and
-        adds a default value if it is.
+        """Checks if a variable is missing from a dict, and adds a default
+        value if it is
 
         Parameters
         ----------
@@ -78,8 +77,9 @@ class InputValidation:
         return input_dict
 
     def validate(self):
-        """This function validates the input dictionary and throws errors if
-        the input file does not meet realm input file rules.
+        """Validates the input dictionary and throws errors if the input file
+        does not meet realm input file rules.
+
         """
 
         # validate top layer of JSON input
@@ -136,13 +136,11 @@ class InputValidation:
         except KeyError:
             print("<Input Validation Error> The algorithm must be defined.")
         else:
-            self.validate_algorithm(input_algorithm, input_ctrl_vars, input_evaluators)
+            self.validate_algorithm(input_algorithm, input_evaluators)
         return
 
-    def validate_algorithm(self, input_algorithm, input_ctrl_vars, input_evaluators):
-        """This function validates the "algorithm" segment of the JSON input
-        file.
-        """
+    def validate_algorithm(self, input_algorithm, input_evaluators):
+        """Validates the "algorithm" segment of the JSON input file"""
 
         # schema validation
         schema_algorithm = {
@@ -214,7 +212,16 @@ class InputValidation:
         return
 
     def validate_algorithm_operators(self, operator_type, input_algorithm):
-        """This function validates the DEAP operators. """
+        """Validates the DEAP operators
+
+        Parameters
+        ----------
+        operator_type : str
+            types are selection, mutation, and mating
+        input_algorithm : dict
+            algorithm sub-dictionary from input file
+
+        """
 
         deap_operators = {
             "selection": {
@@ -266,9 +273,17 @@ class InputValidation:
         return
 
     def validate_constraints(self, input_constraints, input_evaluators):
-        """This function validates the "constraints" segment of the JSON input
-        file.
+        """Validates the constraints segment of the JSON input file
+
+        Parameters
+        ----------
+        input_constraints : dict
+            constraints sub-dictionary from input file
+        input_evaluators : dict
+            evaluators sub-dictionary from input file
+
         """
+
         # check if constraints are in evaluators outputs
         allowed_constraints = []
         for evaluator in input_evaluators:
@@ -309,8 +324,13 @@ class InputValidation:
         return
 
     def validate_ctrl_vars(self, input_ctrl_vars):
-        """This function validates the "control variables" segment of the JSON
-        input file.
+        """Validates the control variables segment of the JSON input file
+
+        Parameters
+        ----------
+        input_ctrl_vars : dict
+            control variables sub-dictionary from input file
+
         """
         # special control variables with a non-conforming input style defined in
         # input*** (add file name that has this)
@@ -371,8 +391,13 @@ class InputValidation:
         return
 
     def validate_evaluators(self, input_evaluators):
-        """This function validates the "evaluators" segment of the JSON
-        input file.
+        """Validates the evaluators segment of the JSON input file
+
+        Parameters
+        ----------
+        input_evaluators : dict
+            evaluators sub-dictionary from input file
+
         """
         # evaluators available
         # add to this list if a developer adds a new evaluator
@@ -434,8 +459,23 @@ class InputValidation:
         return
 
     def validate_if_in_list(self, input_strings, accepted_strings):
-        """This function checks if strings are in a defined list of strings
-        and returns a boolean.
+        """Checks if strings are in a defined list of strings and returns a
+        boolean
+
+        Parameters
+        ----------
+        input_strings : list of str
+            list of variable names to check
+        accepted_strings : list of str
+            list of variable names to check against
+
+        Returns
+        -------
+        in_list : bool
+            boolean indicating if all input_strings are in accepted_strings
+        which_strings : list
+            list of variables from input_strings that are not in accepted_strings
+
         """
         in_list = True
         which_strings = []
@@ -446,7 +486,18 @@ class InputValidation:
         return in_list, which_strings
 
     def validate_in_list(self, variable, accepted_variables, name):
-        """This function checks if a variable is in a list of accepted variables"""
+        """Checks if a variable is in a list of accepted variables
+
+        Parameters
+        ----------
+        variable : str
+            name of variable to check
+        accepted_variables : list of str
+            name of variables to check against
+        name : str
+            parameter name
+
+        """
         assert variable in accepted_variables, (
             "<Input Validation Error> variable: "
             + name
@@ -460,9 +511,21 @@ class InputValidation:
     def validate_correct_keys(
         self, dict_to_validate, key_names, optional_key_names, variable_type
     ):
-        """This function runs a try except routine for to check if all key
-        names are in the dict_to_validate and ensure no unwanted keys are
-        defined."""
+        """Runs a try except routine for to check if all key names are in the
+        dict_to_validate and ensure no unwanted keys are defined
+
+        Parameters
+        ----------
+        dict_to_validate : dict
+            dict to validate
+        key_names : list of str
+            names of required keys
+        optional_key_names : list of str
+            names of optional keys
+        variable_type : str
+            parameter name
+
+        """
         try:
             combined_key_names = key_names + optional_key_names
             for key in key_names:
