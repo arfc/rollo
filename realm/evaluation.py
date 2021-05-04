@@ -1,8 +1,6 @@
-import os, sys, subprocess, ast, shutil
+import os, subprocess, ast, shutil
 from jinja2 import nativetypes
-import openmc
 import subprocess, time
-
 from realm.openmc_evaluation import OpenMCEvaluation
 from realm.moltres_evaluation import MoltresEvaluation
 
@@ -16,14 +14,21 @@ class Evaluation:
         self.eval_dict = {"openmc": OpenMCEvaluation(), "moltres": MoltresEvaluation()}
 
     def add_evaluator(self, solver_name, input_script, output_script):
-        """This function adds information an evaluator to this class for later
-        use in eval_fn_generator.
+        """Adds information about an evaluator to the Evaluation class object
+        for later use in eval_fn_generator.
+
+        Parameters
+        ----------
+        solver_name : str
+            name of solver
+        input_script : str
+            input script name
+        output_script : str
+            optional output script name
         """
         self.input_scripts[solver_name] = input_script
-        try:
+        if output_script:
             self.output_scripts[solver_name] = output_script
-        except:
-            pass
         return
 
     def eval_fn_generator(self, control_dict, output_dict, input_evaluators):
