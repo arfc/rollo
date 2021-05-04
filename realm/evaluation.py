@@ -26,16 +26,33 @@ class Evaluation:
         output_script : str
             optional output script name
         """
+
         self.input_scripts[solver_name] = input_script
         if output_script:
             self.output_scripts[solver_name] = output_script
         return
 
     def eval_fn_generator(self, control_dict, output_dict, input_evaluators):
-        """This function returns a function that accepts a DEAP individual
-        and returns a tuple of output values listed in outputs
+        """Returns a function that accepts a DEAP individual and returns a
+        tuple of output values listed in outputs
+
+        Parameters
+        ----------
+        control_dict : OrderedDict
+            Ordered dict of control variables as keys and a list of their
+            solver and number of variables as each value
+        output_dict : OrderedDict
+            Ordered dict of output variables as keys and solvers as values
+        input_evaluators : dict
+            evaluators sub-dictionary from input file
+
+        Returns
+        -------
+        eval_function : function
+            function that runs the evaluation software and returns output values
+            output by the software
+
         """
-        output_list = [0] * len(output_dict)
 
         def eval_function(ind):
             """This function accepts a DEAP individual
