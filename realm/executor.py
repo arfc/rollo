@@ -4,13 +4,12 @@ from realm.special_variables import SpecialVariables
 from realm.algorithm import Algorithm
 from realm.constraints import Constraints
 from realm.toolbox_generator import ToolboxGenerator
-from deap import base, creator, tools, algorithms
-import json, re, random, warnings, time
+import json, time
 from collections import OrderedDict
 
 
 class Executor(object):
-    """REALM Executor for a run.
+    """Executes REALM simulation from start to finish.
 
     Instances of this class can be used to perform a REALM run.
 
@@ -28,12 +27,13 @@ class Executor(object):
         self.checkpoint_file = checkpoint_file
 
     def execute(self):
-        """Executes realm simulation to generate reactor designs.
+        """Executes realm simulation to generate reactor designs. \n
         1) Read and validate input file
         2) Initialize evaluator
         3) Initialize DEAP toolbox
         4) Initialize constraints
         5) Run genetic algorithm
+
         """
         t0 = time.time()
         input_dict = self.read_input_file()
@@ -74,12 +74,13 @@ class Executor(object):
         return
 
     def read_input_file(self):
-        """This function reads a json input file and returns a dictionary
+        """Reads a json input file and returns a dictionary
 
         Returns
         -------
-        data: dict
+        data : dict
             json input file converted into a dict
+
         """
 
         with open(self.input_file) as json_file:
@@ -87,22 +88,23 @@ class Executor(object):
         return data
 
     def organize_input_output(self, input_dict):
-        """This function numbers the control variables and output variables
+        """Numbers the control variables and output variables
         to keep consistency between evaluation, constraints, and algorithm
         classes
 
         Parameters
         ----------
-        input_dict: dict
+        input_dict : dict
             input file dict
 
         Returns
         -------
-        control_vars: OrderedDict
+        control_vars : OrderedDict
             Ordered dict of control variables as keys and a list of their
             solver and number of variables as each value
-        output_vars: OrderedDict
+        output_vars : OrderedDict
             Ordered dict of output variables as keys and solvers as values
+
         """
 
         input_ctrl_vars = input_dict["control_variables"]
@@ -141,22 +143,23 @@ class Executor(object):
         return control_vars, output_vars
 
     def load_evaluator(self, control_dict, output_dict, input_dict):
-        """This function creates an Evaluation function object
+        """Creates an Evaluation function object
 
         Parameters
         ----------
-        control_dict: OrderedDict
+        control_dict : OrderedDict
             Ordered dict of control variables as keys and a list of their
             solver and number of variables as each value
-        output_dict: OrderedDict
+        output_dict : OrderedDict
             Ordered dict of output variables as keys and solvers as values
-        input_dict: dict
+        input_dict : dict
             input file dict with default values filled
 
         Returns
         -------
-        evaluator_fn: function
-
+        evaluator_fn : function
+            function that runs the evaluation software and returns output values
+            output by the software
 
         """
         input_evaluators = input_dict["evaluators"]
@@ -180,8 +183,31 @@ class Executor(object):
     def load_toolbox(
         self, evaluator_fn, input_algorithm, input_ctrl_vars, control_dict
     ):
-        """This function creates a DEAP toolbox object based on user-defined
-        parameters
+        """Creates a DEAP toolbox object based on user-defined
+        parameters.
+
+        Parameters
+        ----------
+        evaluator_fn : function
+            function that runs the evaluation software and returns output values
+            output by the software
+        input_algorithm : dict
+            algorithm sub-dictionary from input file
+        input_ctrl_vars : dict
+            control variables sub-dictionary from input file
+        control_dict : OrderedDict
+            Ordered dict of control variables as keys and a list of their
+            solver and number of variables as each value
+
+        Returns
+        -------
+        toolbox : deap.base.Toolbox object
+            DEAP toolbox populated with genetic algorithm parameters for this
+            creator
+        creator : deap.creator object
+            DEAP meta-factory allowing to create classes that will fulfill the
+            needs of the evolutionary algorithms
+
         """
         toolbox_generator = ToolboxGenerator()
         toolbox, creator = toolbox_generator.setup(
@@ -190,5 +216,26 @@ class Executor(object):
         return toolbox, creator
 
     def load_constraints(self, output_dict, input_constraints, toolbox):
+        """Creates a Constraints object loaded with user-defined
+        constraints information.
+
+        Parameters
+        ----------
+        output_dict : OrderedDict
+            Ordered dict of output variables as keys and solvers as values
+        input_constraints : dict
+            constraints sub-dictionary from input file
+        toolbox : deap.base.Toolbox object
+            DEAP toolbox populated with genetic algorithm parameters for this
+            creator
+
+        Returns
+        -------
+        constraints_obj : realm.Constraints object
+            Constraints object loaded with constraint information from the
+            input file
+
+        """
+
         constraint_obj = Constraints(output_dict, input_constraints, toolbox)
         return constraint_obj
