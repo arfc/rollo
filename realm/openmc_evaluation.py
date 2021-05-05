@@ -1,6 +1,5 @@
 import glob
 import openmc
-import time
 
 
 class OpenMCEvaluation:
@@ -13,7 +12,14 @@ class OpenMCEvaluation:
         self.pre_defined_outputs = ["keff"]
 
     def evaluate_keff(self):
-        """This function analyzes the openmc output file"""
+        """This function analyzes the openmc output file and returns keff value
+
+        Returns
+        -------
+        float
+            keff value
+
+        """
         for file in glob.glob("statepoint*"):
             h5file = file
         sp = openmc.StatePoint(h5file, autolink=False)
