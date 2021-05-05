@@ -202,8 +202,7 @@ class Executor(object):
         Returns
         -------
         toolbox : deap.base.Toolbox object
-            DEAP toolbox populated with genetic algorithm parameters for this
-            creator
+            DEAP toolbox populated with user-defined genetic algorithm parameters
         creator : deap.creator object
             DEAP meta-factory allowing to create classes that will fulfill the
             needs of the evolutionary algorithms

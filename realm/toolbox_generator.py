@@ -7,6 +7,30 @@ class ToolboxGenerator(object):
     """A class that initializes the DEAP toolbox."""
 
     def setup(self, evaluator_fn, input_algorithm, input_ctrl_vars, control_dict):
+        """sets up DEAP toolbox with user-defined inputs
+
+        Parameters
+        ----------
+        evaluator_fn : function
+            function that runs the evaluation software and returns output values
+        input_algorithm : dict
+            algorithm sub-dictionary from input file
+        input_ctrl_vars : dict
+            control variables sub-dictionary from input file
+        control_dict : OrderedDict
+            Ordered dict of control variables as keys and a list of their
+            solver and number of variables as each value
+
+        Returns
+        -------
+        toolbox : deap.base.Toolbox object
+            DEAP toolbox populated with user-defined genetic algorithm parameters
+        creator : deap.creator object
+            DEAP meta-factory allowing to create classes that will fulfill the
+            needs of the evolutionary algorithms
+
+        """
+
         weight_list = []
         for obj in input_algorithm["objective"]:
             if obj == "min":
@@ -46,9 +70,26 @@ class ToolboxGenerator(object):
         return toolbox, creator
 
     def individual_values(self, input_ctrl_vars, control_dict, toolbox):
-        """This function returns an individual with ordered control variable
-        values
+        """Returns an individual with ordered control variable values
+
+        Parameters
+        ----------
+        input_ctrl_vars : dict
+            control variables sub-dictionary from input file
+        control_dict : OrderedDict
+            Ordered dict of control variables as keys and a list of their
+            solver and number of variables as each value
+        toolbox : deap.base.Toolbox object
+            DEAP toolbox populated with user-defined genetic algorithm parameters
+
+        Returns
+        -------
+        deap.creator.Ind
+            Created in `realm.toolbox_generator.ToolboxGenerator`. It is
+            a list with special attributes.
+
         """
+
         var_dict = {}
         input_vals = []
         sv = SpecialVariables()
@@ -69,7 +110,24 @@ class ToolboxGenerator(object):
     def min_max_list(self, control_dict, input_ctrl_vars):
         """Returns an ordered list of min values and max values for the
         individual
+
+        Parameters
+        ----------
+        control_dict : OrderedDict
+            Ordered dict of control variables as keys and a list of their
+            solver and number of variables as each value
+        input_ctrl_vars : dict
+            control variables sub-dictionary from input file
+
+        Returns
+        -------
+        min_list : list
+            ordered list of minimum values for individual variables
+        max_list : list
+            ordered list of maximum values for individual variables
+
         """
+
         min_list = []
         max_list = []
         for var in control_dict:
@@ -81,9 +139,30 @@ class ToolboxGenerator(object):
     def add_toolbox_operators(
         self, toolbox, selection_dict, mutation_dict, mating_dict, min_list, max_list
     ):
-        """This function adds selection, mutation, and mating operators to
-        the deap toolbox
+        """Adds selection, mutation, and mating operators to the deap toolbox
+
+        Parameters
+        ----------
+        toolbox : deap.base.Toolbox object
+            initialized DEAP toolbox
+        selection_dict : dict
+            selection_operator sub-sub-directory from input file
+        mutation_dict : dict
+            mutation_operator sub-sub-directory from input file
+        mating_dict : dict
+            mating_operator sub-sub-directory from input file
+        min_list : list
+            ordered list of minimum values for individual variables
+        max_list : list
+            ordered list of maximum values for individual variables
+
+        Returns
+        -------
+        deap.base.Toolbox object
+            DEAP toolbox populated with user-defined genetic algorithm parameters
+
         """
+
         toolbox = self.add_selection_operators(toolbox, selection_dict)
         toolbox = self.add_mutation_operators(
             toolbox, mutation_dict, min_list, max_list
@@ -92,6 +171,23 @@ class ToolboxGenerator(object):
         return toolbox
 
     def add_selection_operators(self, toolbox, selection_dict):
+        """Adds selection operator to the deap toolbox
+
+        Parameters
+        ----------
+        toolbox : deap.base.Toolbox object
+            initialized DEAP toolbox
+        selection_dict : dict
+            selection_operator sub-sub-directory from input file
+
+        Returns
+        -------
+        deap.base.Toolbox object
+            DEAP toolbox populated with user-defined selection operator genetic
+            algorithm parameters
+
+        """
+
         operator = selection_dict["operator"]
         if operator == "selTournament":
             toolbox.register(
@@ -107,6 +203,23 @@ class ToolboxGenerator(object):
         return toolbox
 
     def add_mutation_operators(self, toolbox, mutation_dict, min_list, max_list):
+        """Adds mutation operator to the deap toolbox
+
+        Parameters
+        ----------
+        toolbox : deap.base.Toolbox object
+            initialized DEAP toolbox
+        mutation_dict : dict
+            mutation_operator sub-sub-directory from input file
+
+        Returns
+        -------
+        deap.base.Toolbox object
+            DEAP toolbox populated with user-defined mutation operator genetic
+            algorithm parameters
+
+        """
+
         operator = mutation_dict["operator"]
         if operator == "mutPolynomialBounded":
             toolbox.register(
@@ -120,6 +233,23 @@ class ToolboxGenerator(object):
         return toolbox
 
     def add_mating_operators(self, toolbox, mating_dict):
+        """Adds mating operator to the deap toolbox
+
+        Parameters
+        ----------
+        toolbox : deap.base.Toolbox object
+            initialized DEAP toolbox
+        mating_dict : dict
+            mating_operator sub-sub-directory from input file
+
+        Returns
+        -------
+        deap.base.Toolbox object
+            DEAP toolbox populated with user-defined mating operator genetic
+            algorithm parameters
+
+        """
+
         operator = mating_dict["operator"]
         if operator == "cxOnePoint":
             toolbox.register("mate", tools.cxOnePoint)
