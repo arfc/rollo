@@ -14,7 +14,7 @@ test_output_dict = OrderedDict(
 
 test_input_constraints = {
     "keff": {"operator": [">=", "<="], "constrained_val": [1, 1.2]},
-    "max_temp": {"operator": "<", "constrained_val": 500},
+    "max_temp": {"operator": ["<"], "constrained_val": [500]},
 }
 toolbox = base.Toolbox()
 

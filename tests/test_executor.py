@@ -34,7 +34,7 @@ test_input_dict = {
             "keep_files": True,
         },
     },
-    "constraints": {"keff": {"operator": ">", "constrained_val": 1}},
+    "constraints": {"keff": {"operator": [">"], "constrained_val": [1]}},
     "algorithm": {
         "objective": ["max", "min"],
         "optimized_variable": ["keff", "packing_fraction"],

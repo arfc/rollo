@@ -19,33 +19,38 @@ class Constraints(object):
         self.toolbox = toolbox
 
     def output_dict_numbered(self, output_dict):
-        """Returns dictionary of output variables and their corresponding index"""
+        """Returns dictionary of output variables and their corresponding index
+
+        Parameters
+        ----------
+        output_dict : OrderedDict
+            Ordered dict of output variables as keys and solvers as values
+
+        Returns
+        -------
+        dict
+            output parameter name as key and ordered position as value
+
+        """
+
         numbered_oup_dict = {}
         for i, key in enumerate(output_dict):
             numbered_oup_dict[key] = i
         return numbered_oup_dict
 
     def constraints_list(self, input_constraints):
+        """Returns list of constraints information
+        """
+
         constraints_list = []
         for c in input_constraints:
-            if type(input_constraints[c]["operator"]) is list:
-                for i in range(len(input_constraints[c]["operator"])):
-                    constraints_list.append(
-                        [
-                            c,
-                            {
-                                "op": input_constraints[c]["operator"][i],
-                                "val": input_constraints[c]["constrained_val"][i],
-                            },
-                        ]
-                    )
-            else:
+            for i in range(len(input_constraints[c]["operator"])):
                 constraints_list.append(
                     [
                         c,
                         {
-                            "op": input_constraints[c]["operator"],
-                            "val": input_constraints[c]["constrained_val"],
+                            "op": input_constraints[c]["operator"][i],
+                            "val": input_constraints[c]["constrained_val"][i],
                         },
                     ]
                 )
