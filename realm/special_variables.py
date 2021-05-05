@@ -10,11 +10,33 @@ class SpecialVariables:
         return
 
     def polynomial_triso_num(self, poly_dict):
+        """Returns number of variables
+
+        Returns
+        -------
+        int
+            number of control variables in polynomial_triso special variable
+        """
+
         return poly_dict["order"] + 1
 
     def polynomial_triso_values(self, poly_dict, var_dict):
-        """Returns a list of polynomial coefficients"""
-        """This function returns polynomial values"""
+        """Returns a list of polynomial coefficients
+
+        Parameters
+        ----------
+        poly_dict : dict
+            polynomial_triso sub-dictionary from input file
+        var_dict : dict
+            control variable sub-dictionary from input file
+
+        Returns
+        -------
+        list
+            list of polynomial coefficients
+
+        """
+
         total_pf = var_dict["packing_fraction"]
         dz = poly_dict["slices"]
         vol_total = poly_dict["volume"]
