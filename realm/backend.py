@@ -27,23 +27,34 @@ class BackEnd(object):
         self.initialize_stats()
 
     def initialize_new_backend(self):
+        """Initializes brand new backend object"""
+
         self.results["input_file"] = self.input_file
         self.results["start_gen"] = 0
         self.results["halloffame"] = tools.HallOfFame(maxsize=1)
         self.results["logbook"] = tools.Logbook()
-        self.results["logbook"].header = "time", "gen", "evals", "oup", "ind"
-        self.results["logbook"].chapters["ind"].header = "avg", "min", "max"
-        self.results["logbook"].chapters["oup"].header = "avg", "std", "min", "max"
+        self.results["logbook"].header = "time", "gen", "evals", "output", "individual"
+        self.results["logbook"].chapters["individual"].header = "avg", "min", "max"
+        self.results["logbook"].chapters["output"].header = "avg", "std", "min", "max"
         self.results["all"] = {}
         self.results["all"]["ind_naming"] = self.ind_naming()
         self.results["all"]["oup_naming"] = self.output_naming()
         self.results["all"]["populations"] = []
         self.results["all"]["outputs"] = []
         self.checkpoint_file = "checkpoint.pkl"
-
         return
 
     def ind_naming(self):
+        """Returns a dict with control variable name as key and their ordered
+        position in Ind as value
+
+        Returns
+        -------
+        dict
+            control variable name as key and ordered position in Ind as value
+
+        """
+
         names = []
         for ind in self.control_dict:
             if self.control_dict[ind][1] > 1:
@@ -57,6 +68,15 @@ class BackEnd(object):
         return names_dict
 
     def output_naming(self):
+        """Returns a dict with output parameter name as key and their ordered
+        position in Ind as value
+
+        Returns
+        -------
+        dict
+            control variable name as key and ordered position in Ind as value
+
+        """
         oup_dict = {}
         for i, oup in enumerate(self.output_dict):
             oup_dict[oup] = i
