@@ -12,9 +12,8 @@ try:
     from mpi4py.futures import MPICommExecutor
 except:
     warnings.warn(
-        "Failed to import mpi4py. (Only important for parallel method: mpi_evals"
+        "Failed to import mpi4py. (Only important for parallel method: mpi_evals)"
     )
-## GIVE CREDIT TO DEAP NOTEBOOK
 
 
 class Algorithm(object):
@@ -60,13 +59,16 @@ class Algorithm(object):
         self.parallel_method = parallel_method
 
     def generate(self):
-        """Executes the genetic algorithm and outputs the summarized
-        results into an output file.
-        RMB: fitness[0] must be what we are minimizing/maximizing
-        This is only for single variable optimization, need to edit it for
-        MOOP
+        """Executes the genetic algorithm and outputs the summarized results
+        into an output file
+
+        Returns
+        -------
+        list
+            list of deap.creator.Ind for final generation
 
         """
+
         pop = self.toolbox.population(n=self.toolbox.pop_size)
         if self.parallel_method == "multiprocessing":
             try:
@@ -110,8 +112,20 @@ class Algorithm(object):
         return pop
 
     def initialize_pop(self, pop):
-        """Initialize population for genetic algorithm"""
-        enter_time = time.time()
+        """Initialize population for genetic algorithm
+
+        Parameters
+        ----------
+        pop : list
+            list of deap.creator.Ind for previous generation
+
+        Returns
+        -------
+        list
+            list of deap.creator.Ind with fitnesses evaluated
+
+        """
+
         print("Entering generation 0...")
         for i, ind in enumerate(pop):
             ind.gen = 0
@@ -141,6 +155,21 @@ class Algorithm(object):
         return pop
 
     def apply_algorithm_ngen(self, pop, gen):
+        """Apply genetic algorithm to a population
+
+        Parameters
+        ----------
+        pop : list
+            list of deap.creator.Ind for previous generation
+        gen: int
+            generation number
+
+        Returns
+        -------
+        list
+            list of deap.creator.Ind for new generation
+
+        """
         print("Entering generation " + str(gen) + "...")
         pop = self.apply_selection_operator(pop)
         pop = self.apply_mating_operator(pop)
@@ -174,6 +203,20 @@ class Algorithm(object):
         return pop
 
     def apply_selection_operator(self, pop):
+        """Applies selection operator to population
+
+        Parameters
+        ----------
+        pop : list
+            list of deap.creator.Ind for that generation
+
+        Returns
+        -------
+        list
+            new list of deap.creator.Ind after selection operator application
+
+        """
+
         pre_pop = self.toolbox.select(pop)
         select_pop = [self.toolbox.clone(ind) for ind in pre_pop]
         # extend pop length to pop_size
@@ -182,6 +225,20 @@ class Algorithm(object):
         return select_pop
 
     def apply_mating_operator(self, pop):
+        """Applies mating operator to population
+
+        Parameters
+        ----------
+        pop : list
+            list of deap.creator.Ind for that generation
+
+        Returns
+        -------
+        list
+            new list of deap.creator.Ind after mating operator application
+
+        """
+
         final_pop = []
         for child1, child2 in zip(pop[::2], pop[1::2]):
             new_child1 = self.toolbox.clone(child1)
@@ -207,6 +264,20 @@ class Algorithm(object):
         return final_pop
 
     def apply_mutation_operator(self, pop):
+        """Applies mutation operator to population
+
+        Parameters
+        ----------
+        pop : list
+            list of deap.creator.Ind for that generation
+
+        Returns
+        -------
+        list
+            new list of deap.creator.Ind after mutation operator application
+
+        """
+
         final_pop = []
         for mutant in pop:
             new_mutant = self.toolbox.clone(mutant)

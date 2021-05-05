@@ -1,4 +1,3 @@
-from collections import defaultdict
 import operator
 import warnings
 import random
