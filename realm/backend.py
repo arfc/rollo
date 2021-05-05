@@ -33,9 +33,9 @@ class BackEnd(object):
         self.results["start_gen"] = 0
         self.results["halloffame"] = tools.HallOfFame(maxsize=1)
         self.results["logbook"] = tools.Logbook()
-        self.results["logbook"].header = "time", "gen", "evals", "output", "individual"
-        self.results["logbook"].chapters["individual"].header = "avg", "min", "max"
-        self.results["logbook"].chapters["output"].header = "avg", "std", "min", "max"
+        self.results["logbook"].header = "time", "gen", "evals", "oup", "ind"
+        self.results["logbook"].chapters["ind"].header = "avg", "min", "max"
+        self.results["logbook"].chapters["oup"].header = "avg", "std", "min", "max"
         self.results["all"] = {}
         self.results["all"]["ind_naming"] = self.ind_naming()
         self.results["all"]["oup_naming"] = self.output_naming()
@@ -69,12 +69,12 @@ class BackEnd(object):
 
     def output_naming(self):
         """Returns a dict with output parameter name as key and their ordered
-        position in Ind as value
+        position as value
 
         Returns
         -------
         dict
-            control variable name as key and ordered position in Ind as value
+            output parameter name as key and ordered position as value
 
         """
         oup_dict = {}
@@ -83,6 +83,8 @@ class BackEnd(object):
         return oup_dict
 
     def initialize_checkpoint_backend(self):
+        """Initialize backend when checkpoint is used"""
+
         creator = self.creator
         with open(self.checkpoint_file, "rb") as cp_file:
             cp = pickle.load(cp_file)
@@ -95,6 +97,7 @@ class BackEnd(object):
         return
 
     def initialize_stats(self):
+        """Initialize DEAP statistics"""
         stats_ind = tools.Statistics(key=lambda ind: ind)
         stats_ind.register("avg", numpy.mean, axis=0)
         stats_ind.register("std", numpy.std, axis=0)
@@ -106,8 +109,24 @@ class BackEnd(object):
         stats_oup.register("min", numpy.min, axis=0)
         stats_oup.register("max", numpy.max, axis=0)
         self.mstats = tools.MultiStatistics(ind=stats_ind, oup=stats_oup)
+        return
 
     def update_backend(self, pop, gen, invalid_ind, rndstate):
+        """Updates backend. Called after every generation
+
+        Parameters
+        ----------
+        pop : list
+            list of deap.creator.Ind for that generation
+        gen : int
+            generation number
+        invalid_ind : list
+            list of deap.creator.Ind whose fitnesses had to be evaluated
+        rndstate : tuple
+            current state of the random number generator
+
+        """
+
         self.results["halloffame"].update(pop)
         record = self.mstats.compile(pop)
         self.results["logbook"].record(
@@ -149,3 +168,4 @@ class BackEnd(object):
         )
         with open(self.checkpoint_file, "wb") as cp_file:
             pickle.dump(cp, cp_file)
+        return
