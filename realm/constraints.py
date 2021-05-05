@@ -40,6 +40,17 @@ class Constraints(object):
 
     def constraints_list(self, input_constraints):
         """Returns list of constraints information
+
+        Parameters
+        ----------
+        input_constraints : dict
+            constraints sub-dictionary from input file
+
+        Returns
+        -------
+        constraints_list : list
+            list of constraints information
+
         """
 
         constraints_list = []
@@ -57,6 +68,21 @@ class Constraints(object):
         return constraints_list
 
     def apply_constraints(self, pop):
+        """Removes individuals in population that fail to meet constraints
+
+        Parameters
+        ----------
+        pop : list
+            list of deap.creator.Ind for that generation
+
+        Returns
+        -------
+        list
+            list of deap.creator.Ind for that generation with individuals that
+            fail to meet constraints removed
+
+        """
+
         new_pop = []
         for ind in pop:
             not_constrained = True
