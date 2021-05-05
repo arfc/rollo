@@ -28,8 +28,10 @@ class Evaluation:
         """
 
         self.input_scripts[solver_name] = input_script
-        if output_script:
+        try:
             self.output_scripts[solver_name] = output_script
+        except:
+            pass
         return
 
     def eval_fn_generator(self, control_dict, output_dict, input_evaluators):
@@ -61,6 +63,8 @@ class Evaluation:
             Parameters
             ----------
             ind : deap.creator.Ind
+                Created in `realm.toolbox_generator.ToolboxGenerator`. It is
+                a list with special attributes.
 
             Returns
             -------
@@ -104,21 +108,24 @@ class Evaluation:
         Parameters
         ----------
         output_vals : list
-
+            empty list of the correct size
         solver : str
             name of solver
         output_dict : OrderedDict
             Ordered dict of output variables as keys and solvers as values
         control_vars : dict
-            maps the control_dict's variable names to values from ind list
+            maps the control_dict's variable names to values from ind list to
+            order the output_vals correctly
         path : str
             path name
 
         Returns
         -------
-        output_vals :
+        output_vals : list
+            output values requested by realm input file in correct order
 
         """
+
         if self.output_scripts[solver]:
             # copy rendered output script into a new file in the particular solver's run
             shutil.copyfile(
@@ -149,13 +156,46 @@ class Evaluation:
         return output_vals
 
     def system_call(self, command):
+        """Runs evaluation software output file
+
+        Parameters
+        ----------
+        command : str
+            command to run in the command line
+
+        Returns
+        -------
+        str
+            printed output from running evaluation software output file
+
+        """
+
         p = subprocess.Popen([command], stdout=subprocess.PIPE, shell=True)
         return p.stdout.read()
 
     def name_ind(self, ind, control_dict, input_evaluators):
         """Returns a dictionary that maps the control_dict's variable names to
         values from ind list
+
+        Parameters
+        ----------
+        ind : deap.creator.Ind
+            Created in `realm.toolbox_generator.ToolboxGenerator`. It is
+            a list with special attributes.
+        control_dict : OrderedDict
+            Ordered dict of control variables as keys and a list of their
+            solver and number of variables as each value
+        input_evaluators : dict
+            evaluators sub-dictionary from input file
+
+        Returns
+        -------
+        control_vars : dict
+            maps the control_dict's variable names to values from ind list to
+            order the output_vals correctly
+
         """
+
         control_vars = {}
         for solver in input_evaluators:
             control_vars[solver] = {}
@@ -170,10 +210,24 @@ class Evaluation:
         return control_vars
 
     def render_jinja_template_python(self, script, control_vars_solver):
-        """This function renders a jinja2 templated python file
-        This will be used by solver's with a python interface such as OpenMC
-        This returns a the templated python script
+        """Renders a jinja2 templated python file and returns a templated python
+        script. This will be used by solver's with a python interface such as
+        OpenMC.
+
+        Parameters
+        ----------
+        script : str
+            name of evaluator template script
+        control_vars_solver : str
+            name of evaluation solver software
+
+        Returns
+        -------
+        rendered_template : str
+            rendered evaluator template script
+
         """
+
         env = nativetypes.NativeEnvironment()
         with open(script) as s:
             imported_script = s.read()
@@ -186,13 +240,24 @@ class Evaluation:
         return rendered_template
 
     def render_jinja_template(self):
-        """This function renders a jinja2 templated input file
-        This will be used by solver's with a text based interface such as Moltres
+        """Renders a jinja2 templated input file. This will be used by solver's
+        with a text based interface such as Moltres
+
+        ### TO BE POPULATED
         """
+
         return
 
     def openmc_run(self, rendered_openmc_script):
-        """This function runs the rendered openmc script"""
+        """Runs the rendered openmc script
+
+        Parameters
+        ----------
+        rendered_openmc_script : str
+            rendered OpenMC evaluator template script
+
+        """
+
         f = open("openmc_input.py", "w+")
         f.write(rendered_openmc_script)
         f.close()
@@ -201,5 +266,9 @@ class Evaluation:
         return
 
     def moltres_run(self, rendered_moltres_script):
-        """This function runs the rendered moltres input file"""
+        """Runs the rendered moltres input file
+
+        ### TO BE POPULATED
+        """
+
         return
