@@ -1,6 +1,6 @@
 import pytest
 import os, shutil
-from realm.evaluation import Evaluation
+from rollo.evaluation import Evaluation
 from collections import OrderedDict
 from deap import base, creator, tools, algorithms
 

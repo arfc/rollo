@@ -1,9 +1,9 @@
 import pytest, os, shutil, random
-from realm.executor import Executor
+from rollo.executor import Executor
 from collections import OrderedDict
 from deap import base, creator, tools, algorithms
-from realm.special_variables import SpecialVariables
-from realm.constraints import Constraints
+from rollo.special_variables import SpecialVariables
+from rollo.constraints import Constraints
 
 test_input_dict = {
     "control_variables": {

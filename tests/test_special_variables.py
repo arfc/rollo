@@ -1,6 +1,6 @@
 import pytest, random
 import numpy as np
-from realm.special_variables import SpecialVariables
+from rollo.special_variables import SpecialVariables
 from deap import base, creator, tools, algorithms
 
 poly_dict = {

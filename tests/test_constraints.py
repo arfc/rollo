@@ -1,5 +1,5 @@
 import pytest
-from realm.constraints import Constraints
+from rollo.constraints import Constraints
 from deap import base, creator, tools, algorithms
 from collections import OrderedDict
 

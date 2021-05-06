@@ -1,5 +1,5 @@
-from realm.algorithm import Algorithm
-from realm.constraints import Constraints
+from rollo.algorithm import Algorithm
+from rollo.constraints import Constraints
 from deap import base, creator, tools, algorithms
 import random, os
 from collections import OrderedDict

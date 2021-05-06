@@ -1,7 +1,7 @@
 import pytest
 import os
 import openmc
-from realm.openmc_evaluation import OpenMCEvaluation
+from rollo.openmc_evaluation import OpenMCEvaluation
 
 
 def test_evaluate_keff():
