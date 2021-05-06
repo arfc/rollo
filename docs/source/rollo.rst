@@ -1,85 +1,85 @@
-realm package
+rollo package
 =============
 
 Submodules
 ----------
 
-realm.algorithm module
+rollo.algorithm module
 ----------------------
 
-.. automodule:: realm.algorithm
+.. automodule:: rollo.algorithm
    :members:
    :undoc-members:
    :show-inheritance:
 
-realm.backend module
+rollo.backend module
 --------------------
 
-.. automodule:: realm.backend
+.. automodule:: rollo.backend
    :members:
    :undoc-members:
    :show-inheritance:
 
-realm.constraints module
+rollo.constraints module
 ------------------------
 
-.. automodule:: realm.constraints
+.. automodule:: rollo.constraints
    :members:
    :undoc-members:
    :show-inheritance:
 
-realm.deap\_operators module
-----------------------------
-
-.. automodule:: realm.deap_operators
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-realm.evaluation module
+rollo.evaluation module
 -----------------------
 
-.. automodule:: realm.evaluation
+.. automodule:: rollo.evaluation
    :members:
    :undoc-members:
    :show-inheritance:
 
-realm.executor module
+rollo.executor module
 ---------------------
 
-.. automodule:: realm.executor
+.. automodule:: rollo.executor
    :members:
    :undoc-members:
    :show-inheritance:
 
-realm.input\_validation module
+rollo.input\_validation module
 ------------------------------
 
-.. automodule:: realm.input_validation
+.. automodule:: rollo.input_validation
    :members:
    :undoc-members:
    :show-inheritance:
 
-realm.moltres\_evaluation module
+rollo.moltres\_evaluation module
 --------------------------------
 
-.. automodule:: realm.moltres_evaluation
+.. automodule:: rollo.moltres_evaluation
    :members:
    :undoc-members:
    :show-inheritance:
 
-realm.openmc\_evaluation module
+rollo.openmc\_evaluation module
 -------------------------------
 
-.. automodule:: realm.openmc_evaluation
+.. automodule:: rollo.openmc_evaluation
    :members:
    :undoc-members:
    :show-inheritance:
 
-realm.special\_variables module
+rollo.special\_variables module
 -------------------------------
 
-.. automodule:: realm.special_variables
+.. automodule:: rollo.special_variables
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rollo.toolbox\_generator module
+-------------------------------
+
+.. automodule:: rollo.toolbox_generator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -87,7 +87,7 @@ realm.special\_variables module
 Module contents
 ---------------
 
-.. automodule:: realm
+.. automodule:: rollo
    :members:
    :undoc-members:
    :show-inheritance:

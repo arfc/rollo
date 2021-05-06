@@ -13,11 +13,12 @@
 import os
 import sys
 import sphinx_rtd_theme
-sys.path.insert(0, os.path.abspath("../../realm"))
+
+sys.path.insert(0, os.path.abspath("../../rollo"))
 
 # -- Project information -----------------------------------------------------
 
-project = "REALM"
+project = "rollo"
 copyright = "2021, Gwendolyn J.Y. Chee"
 author = "Gwendolyn J.Y. Chee"
 

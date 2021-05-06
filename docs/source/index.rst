@@ -1,4 +1,4 @@
-Welcome to REALM's documentation!
+Welcome to rollo's documentation!
 =================================
 
 .. toctree::
