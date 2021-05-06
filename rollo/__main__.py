@@ -1,12 +1,12 @@
 import sys, getopt
 
-sys.path.insert(1, "realm/")
-from realm import executor
+sys.path.insert(1, "rollo/")
+from rollo import executor
 from deap import creator, base
 
 if __name__ == "__main__":
     argv = sys.argv[1:]
-    msg = "python realm -i <inputfile> -c <checkpoint file> "
+    msg = "python rollo -i <inputfile> -c <checkpoint file> "
     try:
         opts, args = getopt.getopt(argv, "i:c:")
         opts_dict = {}
@@ -21,4 +21,4 @@ if __name__ == "__main__":
                 new_run = executor.Executor(input_file=opts_dict["-i"])
             new_run.execute()
     except getopt.GetoptError:
-        raise Exception("To run realm: " + msg)
+        raise Exception("To run rollo: " + msg)
