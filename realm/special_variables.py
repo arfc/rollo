@@ -3,6 +3,15 @@ import numpy as np
 
 
 class SpecialVariables:
+    """A class to hold special developer-defined variables
+
+    Attributes
+    ----------
+    special_variables : list
+        names of special variables
+
+    """
+
     def __init__(self):
         # developer's should add to this list when defining a new special
         # variable

@@ -6,6 +6,24 @@ from realm.moltres_evaluation import MoltresEvaluation
 
 
 class Evaluation:
+    """Holds functions that generate and execute the evaluation solver's scripts.
+
+    Attributes
+    ----------
+    supported_solvers : list of str
+        list of supported evaluation software
+    input_scripts : dict
+        key is evaluation software name, value is that evaluation software's
+        template input script name
+    output_scripts : dict
+        key is evaluation software name, value is that evaluation software's
+        template output script name
+    eval_dict : dict
+        key is evaluation software name, value is a class containing the
+        functions to evaluate its output files
+
+    """
+
     def __init__(self):
         self.supported_solvers = ["openmc", "moltres"]
         self.input_scripts = {}

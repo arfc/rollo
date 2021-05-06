@@ -1,6 +1,5 @@
 from .backend import BackEnd
 import random
-import time
 import warnings
 import sys
 
@@ -23,14 +22,36 @@ class Algorithm(object):
 
     Parameters
     ----------
-    deap_toolbox : deap.base.Toolbox
-        Deap toolbox populated with genetic algorithm parameters for this
-        simulation.
-    constraint_obj : openmc.Constraints
+    deap_toolbox : deap.base.Toolbox object
+        DEAP toolbox populated with user-defined genetic algorithm parameters
+    constraint_obj : realm.constraints.Constraints
+        Holds information about constraints for the problem and functions to
+        apply the constraints
     checkpoint_file : str
-    deap_creator : deap.creator
-    control_dict : dict
-    output_dict : dict
+        Name of checkpoint file
+    deap_creator : deap.creator object
+        DEAP meta-factory allowing to create classes that will fulfill the
+        needs of the evolutionary algorithms
+    control_dict : OrderedDict
+        Ordered dict of control variables as keys and a list of their
+        solver and number of variables as each value
+    output_dict : OrderedDict
+        Ordered dict of output variables as keys and solvers as values
+
+    Attributes
+    ----------
+    toolbox : deap.base.Toolbox object
+        DEAP toolbox populated with user-defined genetic algorithm parameters
+    constraint_obj : realm.constraints.Constraints
+        Holds information about constraints for the problem and functions to
+        apply the constraints
+    cp_file : str
+        Name of checkpoint file
+    backend : realm.backend.Backend
+        Contains and manipulates the output backend
+    parallel_method : str
+        parallelization method (none, multiprocessing, mpi_evals)
+
     """
 
     def __init__(

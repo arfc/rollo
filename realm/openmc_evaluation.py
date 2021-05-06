@@ -3,9 +3,15 @@ import openmc
 
 
 class OpenMCEvaluation:
-    """This class evaluates openmc output files.
-    - To add new openmc outputs, create a function called "output_***" and
-    input *** name as a str into the openmc_output list.
+    """This class holds functions to evaluate openmc output files.
+    - To add new openmc outputs, create a function called "evaluate_***" and
+    input *** name as a str into the pre_defined_output list.
+
+    Attributes
+    ----------
+    pre_defined_outputs : list
+        list of variables names with evaluation functions in this class
+
     """
 
     def __init__(self):

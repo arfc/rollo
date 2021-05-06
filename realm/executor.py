@@ -20,6 +20,13 @@ class Executor(object):
     checkpoint_file : str, optional
         Name of checkpoint file
 
+    Attributes
+    ----------
+    input_file : str
+        Name of input file
+    checkpoint_file : str
+        Name of checkpoint file
+
     """
 
     def __init__(self, input_file, checkpoint_file=None):

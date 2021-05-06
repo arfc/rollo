@@ -3,8 +3,14 @@ from realm.special_variables import SpecialVariables
 
 
 class InputValidation:
-    """This class does the initial validation of the *.rlm input file and
-    and solver's templated input scripts
+    """This class does the initial validation of the json input file and
+    and evaluation solver's templated input scripts
+
+    Attributes
+    ----------
+    input : dict
+        realm json input file as a dict
+
     """
 
     def __init__(self, input_dict):

@@ -4,6 +4,31 @@ import random
 
 
 class Constraints(object):
+    """Holds information about constraints for the problem and functions
+    to apply the constraints
+
+    Parameters
+    ----------
+    output_dict : OrderedDict
+        Ordered dict of output variables as keys and solvers as values
+    input_constraints : dict
+        constraints sub-dictionary from input file
+    toolbox : deap.base.Toolbox object
+        DEAP toolbox populated with user-defined genetic algorithm parameters
+
+    Attributes
+    ----------
+    constraints : list
+        list of constraints information
+    numbered_oup_dict : dict
+        output parameter name as key and ordered position as value
+    ops: dict
+        dict of accepted operators
+    toolbox : deap.base.Toolbox object
+        DEAP toolbox populated with user-defined genetic algorithm parameters
+
+    """
+
     def __init__(self, output_dict, input_constraints, toolbox):
         self.constraints = self.constraints_list(input_constraints)
         self.numbered_oup_dict = self.output_dict_numbered(output_dict)
