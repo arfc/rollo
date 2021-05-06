@@ -1,5 +1,5 @@
 from jsonschema import validate
-from realm.special_variables import SpecialVariables
+from rollo.special_variables import SpecialVariables
 
 
 class InputValidation:
@@ -9,7 +9,7 @@ class InputValidation:
     Attributes
     ----------
     input : dict
-        realm json input file as a dict
+        rollo json input file as a dict
 
     """
 
@@ -84,7 +84,7 @@ class InputValidation:
 
     def validate(self):
         """Validates the input dictionary and throws errors if the input file
-        does not meet realm input file rules.
+        does not meet rollo input file rules.
 
         """
 

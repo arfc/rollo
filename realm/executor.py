@@ -1,17 +1,17 @@
-import realm
-from realm.input_validation import InputValidation
-from realm.special_variables import SpecialVariables
-from realm.algorithm import Algorithm
-from realm.constraints import Constraints
-from realm.toolbox_generator import ToolboxGenerator
+import rollo
+from rollo.input_validation import InputValidation
+from rollo.special_variables import SpecialVariables
+from rollo.algorithm import Algorithm
+from rollo.constraints import Constraints
+from rollo.toolbox_generator import ToolboxGenerator
 import json, time
 from collections import OrderedDict
 
 
 class Executor(object):
-    """Executes REALM simulation from start to finish.
+    """Executes rollo simulation from start to finish.
 
-    Instances of this class can be used to perform a REALM run.
+    Instances of this class can be used to perform a rollo run.
 
     Parameters
     ----------
@@ -34,7 +34,7 @@ class Executor(object):
         self.checkpoint_file = checkpoint_file
 
     def execute(self):
-        """Executes realm simulation to generate reactor designs. \n
+        """Executes rollo simulation to generate reactor designs. \n
         1) Read and validate input file
         2) Initialize evaluator
         3) Initialize DEAP toolbox
@@ -170,7 +170,7 @@ class Executor(object):
 
         """
         input_evaluators = input_dict["evaluators"]
-        evaluator = realm.Evaluation()
+        evaluator = rollo.Evaluation()
         for solver in input_evaluators:
             solver_dict = input_evaluators[solver]
             try:
@@ -237,7 +237,7 @@ class Executor(object):
 
         Returns
         -------
-        constraints_obj : realm.Constraints object
+        constraints_obj : rollo.Constraints object
             Constraints object loaded with constraint information from the
             input file
 

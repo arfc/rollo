@@ -1,12 +1,12 @@
-from realm.algorithm import *
-from realm.backend import *
-from realm.constraints import *
-from realm.evaluation import *
-from realm.executor import *
-from realm.input_validation import *
-from realm.moltres_evaluation import *
-from realm.openmc_evaluation import *
-from realm.special_variables import *
-from realm.toolbox_generator import *
+from rollo.algorithm import *
+from rollo.backend import *
+from rollo.constraints import *
+from rollo.evaluation import *
+from rollo.executor import *
+from rollo.input_validation import *
+from rollo.moltres_evaluation import *
+from rollo.openmc_evaluation import *
+from rollo.special_variables import *
+from rollo.toolbox_generator import *
 
 __version__ = "0.0.1-dev"

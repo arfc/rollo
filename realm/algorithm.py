@@ -24,7 +24,7 @@ class Algorithm(object):
     ----------
     deap_toolbox : deap.base.Toolbox object
         DEAP toolbox populated with user-defined genetic algorithm parameters
-    constraint_obj : realm.constraints.Constraints
+    constraint_obj : rollo.constraints.Constraints
         Holds information about constraints for the problem and functions to
         apply the constraints
     checkpoint_file : str
@@ -42,12 +42,12 @@ class Algorithm(object):
     ----------
     toolbox : deap.base.Toolbox object
         DEAP toolbox populated with user-defined genetic algorithm parameters
-    constraint_obj : realm.constraints.Constraints
+    constraint_obj : rollo.constraints.Constraints
         Holds information about constraints for the problem and functions to
         apply the constraints
     cp_file : str
         Name of checkpoint file
-    backend : realm.backend.Backend
+    backend : rollo.backend.Backend
         Contains and manipulates the output backend
     parallel_method : str
         parallelization method (none, multiprocessing, mpi_evals)
@@ -99,7 +99,7 @@ class Algorithm(object):
                 self.toolbox.register("map", pool.map)
             except:
                 warnings.warn(
-                    "multiprocessing_on_dill failed to import, realm will run serially."
+                    "multiprocessing_on_dill failed to import, rollo will run serially."
                 )
                 pass
         elif self.parallel_method == "mpi_evals":
@@ -124,7 +124,7 @@ class Algorithm(object):
         for gen in range(self.backend.results["start_gen"] + 1, self.toolbox.ngen):
             pop = self.apply_algorithm_ngen(pop, gen)
             print(self.backend.results["logbook"])
-        print("REALM Simulation Completed!")
+        print("rollo Simulation Completed!")
         if self.parallel_method == "mpi_evals":
             try:
                 MPI.COMM_WORLD.bcast(False)
@@ -160,7 +160,7 @@ class Algorithm(object):
                 with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
                     fitnesses = executor.map(self.toolbox.evaluate, list(pop))
             except:
-                warnings.warn("MPI Failed, realm will run serially.")
+                warnings.warn("MPI Failed, rollo will run serially.")
                 fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
         else:
             fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
@@ -208,7 +208,7 @@ class Algorithm(object):
                 with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
                     fitnesses = executor.map(self.toolbox.evaluate, list(invalids))
             except:
-                warnings.warn("MPI Failed, realm will run serially.")
+                warnings.warn("MPI Failed, rollo will run serially.")
                 fitnesses = self.toolbox.map(self.toolbox.evaluate, list(invalids))
         else:
             fitnesses = self.toolbox.map(self.toolbox.evaluate, list(invalids))

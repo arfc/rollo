@@ -1,8 +1,8 @@
 import os, subprocess, ast, shutil
 from jinja2 import nativetypes
 import subprocess, time
-from realm.openmc_evaluation import OpenMCEvaluation
-from realm.moltres_evaluation import MoltresEvaluation
+from rollo.openmc_evaluation import OpenMCEvaluation
+from rollo.moltres_evaluation import MoltresEvaluation
 
 
 class Evaluation:
@@ -81,7 +81,7 @@ class Evaluation:
             Parameters
             ----------
             ind : deap.creator.Ind
-                Created in `realm.toolbox_generator.ToolboxGenerator`. It is
+                Created in `rollo.toolbox_generator.ToolboxGenerator`. It is
                 a list with special attributes.
 
             Returns
@@ -140,7 +140,7 @@ class Evaluation:
         Returns
         -------
         output_vals : list
-            output values requested by realm input file in correct order
+            output values requested by rollo input file in correct order
 
         """
 
@@ -198,7 +198,7 @@ class Evaluation:
         Parameters
         ----------
         ind : deap.creator.Ind
-            Created in `realm.toolbox_generator.ToolboxGenerator`. It is
+            Created in `rollo.toolbox_generator.ToolboxGenerator`. It is
             a list with special attributes.
         control_dict : OrderedDict
             Ordered dict of control variables as keys and a list of their

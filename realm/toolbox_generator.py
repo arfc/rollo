@@ -1,5 +1,5 @@
 from deap import base, creator, tools, algorithms
-from realm.special_variables import SpecialVariables
+from rollo.special_variables import SpecialVariables
 import random
 
 
@@ -85,7 +85,7 @@ class ToolboxGenerator(object):
         Returns
         -------
         deap.creator.Ind
-            Created in `realm.toolbox_generator.ToolboxGenerator`. It is
+            Created in `rollo.toolbox_generator.ToolboxGenerator`. It is
             a list with special attributes.
 
         """
