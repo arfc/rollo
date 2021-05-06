@@ -1,8 +1,9 @@
 import openmc
 import numpy as np
 from numpy import sin, cos, tan, pi
-import sys 
-sys.path.insert(1, '../')
+import sys
+
+sys.path.insert(1, "../")
 from constants import *
 
 # Templating
@@ -16,17 +17,17 @@ vol_slice = 2.31 * 2.55 * T_pitch * 20
 x_left = +openmc.XPlane(x0=0, boundary_type="periodic")
 x_right = -openmc.XPlane(x0=27.1, boundary_type="periodic")
 y_top = -openmc.YPlane(y0=3.25, boundary_type="periodic")
-y_bot =  +openmc.YPlane(y0=0, boundary_type="periodic")
+y_bot = +openmc.YPlane(y0=0, boundary_type="periodic")
 y_top.periodic_surface = y_bot
 x_left.periodic_surface = x_right
-z_top = -openmc.ZPlane(z0=T_pitch*20, boundary_type="reflective")
+z_top = -openmc.ZPlane(z0=T_pitch * 20, boundary_type="reflective")
 z_bot = +openmc.ZPlane(z0=0, boundary_type="reflective")
 bounds = openmc.Cell(fill=flibe)
 bounds.region = x_left & x_right & y_top & y_bot & z_top & z_bot
 
 plank_x_left = +openmc.XPlane(x0=2)
-plank_x_right = -openmc.XPlane(x0=2+23.1)
-plank_y_top = -openmc.YPlane(y0=0.35+2.55)
+plank_x_right = -openmc.XPlane(x0=2 + 23.1)
+plank_y_top = -openmc.YPlane(y0=0.35 + 2.55)
 plank_y_bot = +openmc.YPlane(y0=0.35)
 plank_region = plank_x_left & plank_x_right & plank_y_top & plank_y_bot & z_top & z_bot
 bounds.region &= ~plank_region
@@ -41,7 +42,7 @@ graphite2 = openmc.Cell(fill=graphite)
 graphite2.region = graphite2_x_left & x_right & y_top & y_bot & z_top & z_bot
 bounds.region &= ~graphite2.region
 
-boundaries = np.arange(2,27.1,2.31)
+boundaries = np.arange(2, 27.1, 2.31)
 prism_1 = create_prism(boundaries[0], boundaries[1], False, False)
 prism_2 = create_prism(boundaries[1], boundaries[2], False, False)
 prism_3 = create_prism(boundaries[2], boundaries[3], False, False)
@@ -56,12 +57,12 @@ prism_10 = create_prism(boundaries[9], boundaries[10], False, False)
 # triso PF distribution
 vol_triso = 4 / 3 * pi * T_r5 ** 3
 no_trisos = total_pf * vol_total / vol_triso
-midpoints = [] 
-for x in range(len(boundaries)-1):
-    midpoints.append((boundaries[x]+boundaries[x+1])/2)
+midpoints = []
+for x in range(len(boundaries) - 1):
+    midpoints.append((boundaries[x] + boundaries[x + 1]) / 2)
 midpoints = np.array(midpoints)
 sine_val = sine_a * sin(sine_b * midpoints + sine_c) + 2
-sine_val = np.where(sine_val<0, 0, sine_val)
+sine_val = np.where(sine_val < 0, 0, sine_val)
 triso_z = sine_val / sum(sine_val) * no_trisos
 pf_z = triso_z * vol_triso / vol_slice
 
@@ -78,7 +79,7 @@ prism_cell_10 = create_lattice(prism_10, pf_z[9])
 
 univ = openmc.Universe(
     cells=[
-        bounds, 
+        bounds,
         graphite1,
         graphite2,
         prism_cell_1,
@@ -96,7 +97,7 @@ univ = openmc.Universe(
 geom = openmc.Geometry(univ)
 
 # settings
-point = openmc.stats.Point((13.5, 1.7, T_pitch*9.5))
+point = openmc.stats.Point((13.5, 1.7, T_pitch * 9.5))
 src = openmc.Source(space=point)
 settings = openmc.Settings()
 settings.source = src
@@ -107,7 +108,7 @@ settings.temperature = {"multipole": True, "method": "interpolation"}
 
 plot = openmc.Plot()
 plot.basis = "xy"
-plot.origin = (13.5, 1.7, T_pitch*9.5)
+plot.origin = (13.5, 1.7, T_pitch * 9.5)
 plot.width = (30, 4)
 plot.pixels = (1000, 200)
 colors = {
@@ -115,7 +116,7 @@ colors = {
     por_c: "black",
     si_c: "orange",
     graphite: "grey",
-    flibe: "blue",  
+    flibe: "blue",
     lm_graphite: "red",
 }
 plot.color_by = "material"
@@ -123,9 +124,10 @@ plot.colors = colors
 plots = openmc.Plots()
 plots.append(plot)
 
-# export 
+# export
 mats.export_to_xml()
 geom.export_to_xml()
 settings.export_to_xml()
 plots.export_to_xml()
-openmc.run(openmc_exec="openmc-ccm-nompi",threads=16)
+openmc.run()
+# openmc.run(openmc_exec="openmc-ccm-nompi",threads=16)

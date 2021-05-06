@@ -14,14 +14,14 @@
     },
     "constraints": {"keff": {"operator": [">="], "constrained_val": [1.0]}},
     "algorithm": {
-        "parallel": "mpi_evals",
+        "parallel": "multiprocessing",
         "objective": ["max"],
         "optimized_variable": ["keff"],
-        "pop_size": 20,
+        "pop_size": 4,
         "generations": 10,
         "mutation_probability": 0.2374127402121101,
         "mating_probability": 0.4699131568275016,
-        "selection_operator": {"operator": "selTournament", "k": 15, "tournsize": 5},
+        "selection_operator": {"operator": "selTournament", "k": 1, "tournsize": 5},
         "mutation_operator": {
             "operator": "mutPolynomialBounded",
             "eta": 0.2374127402121101,
