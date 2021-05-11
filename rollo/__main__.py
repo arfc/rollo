@@ -2,9 +2,9 @@ import sys, getopt
 
 sys.path.insert(1, "rollo/")
 from rollo import executor
-from deap import creator, base
 
-if __name__ == "__main__":
+
+def main():
     argv = sys.argv[1:]
     msg = "python rollo -i <inputfile> -c <checkpoint file> "
     try:
@@ -22,3 +22,7 @@ if __name__ == "__main__":
             new_run.execute()
     except getopt.GetoptError:
         raise Exception("To run rollo: " + msg)
+
+
+if __name__ == "__main__":
+    main()
