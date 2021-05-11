@@ -1,6 +1,4 @@
-import operator
-import warnings
-import random
+import operator, warnings, random
 
 
 class Constraints(object):

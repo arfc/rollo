@@ -20,6 +20,8 @@ def main():
             else:
                 new_run = executor.Executor(input_file=opts_dict["-i"])
             new_run.execute()
+        if len(opts) == 0:
+            raise Exception("To run rollo: " + msg)
     except getopt.GetoptError:
         raise Exception("To run rollo: " + msg)
 

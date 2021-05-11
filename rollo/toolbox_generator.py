@@ -1,4 +1,4 @@
-from deap import base, creator, tools, algorithms
+from deap import base, creator, tools
 from rollo.special_variables import SpecialVariables
 import random
 

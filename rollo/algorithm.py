@@ -1,7 +1,5 @@
 from .backend import BackEnd
-import random
-import warnings
-import sys
+import random, warnings, sys
 
 try:
     from mpi4py import MPI

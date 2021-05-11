@@ -1,8 +1,5 @@
-from collections import defaultdict
-import pandas as pd
-from deap import base, creator, tools, algorithms
-import pickle
-import numpy, time
+from deap import tools
+import pickle, numpy, time
 
 
 class BackEnd(object):
