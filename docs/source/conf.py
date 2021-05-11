@@ -23,7 +23,7 @@ copyright = "2021, Gwendolyn J.Y. Chee"
 author = "Gwendolyn J.Y. Chee"
 
 # The full version, including alpha/beta/rc tags
-release = "v1.0"
+release = "v0.0.1"
 
 
 # -- General configuration ---------------------------------------------------
