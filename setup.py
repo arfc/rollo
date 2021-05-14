@@ -19,4 +19,12 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires=">=3.6",
+    install_requires=[
+        "deap",
+        "numpy",
+        "openmc",
+        "jsonschema",
+        "jinja2",
+    ],
+    entry_points={"console_scripts": ["arfc=rollo.__main__:main"]},
 )

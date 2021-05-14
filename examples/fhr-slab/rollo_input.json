@@ -21,7 +21,7 @@
         "generations": 10,
         "mutation_probability": 0.2374127402121101,
         "mating_probability": 0.4699131568275016,
-        "selection_operator": {"operator": "selTournament", "k": 1, "tournsize": 5},
+        "selection_operator": {"operator": "selTournament", "inds": 1, "tournsize": 5},
         "mutation_operator": {
             "operator": "mutPolynomialBounded",
             "eta": 0.2374127402121101,
