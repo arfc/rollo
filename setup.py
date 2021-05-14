@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="rollo",
-    version="0.0.1",
+    version="1.0",
     author="Gwendolyn J.Y. Chee",
     author_email="gwendolynchee95@gmail.com",
     description="Reactor Evolutionary Algorithm Optimizer",
