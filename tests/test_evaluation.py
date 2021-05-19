@@ -1,5 +1,6 @@
 import pytest
-import os, shutil
+import os
+import shutil
 from rollo.evaluation import Evaluation
 from collections import OrderedDict
 from deap import base, creator

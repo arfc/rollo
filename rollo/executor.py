@@ -4,7 +4,8 @@ from rollo.special_variables import SpecialVariables
 from rollo.algorithm import Algorithm
 from rollo.constraints import Constraints
 from rollo.toolbox_generator import ToolboxGenerator
-import json, time
+import json
+import time
 from collections import OrderedDict
 
 

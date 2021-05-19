@@ -1,6 +1,7 @@
 from rollo.backend import BackEnd
 from deap import base, creator, tools
-import os, random
+import os
+import random
 from collections import OrderedDict
 
 creator.create(

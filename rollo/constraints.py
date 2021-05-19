@@ -1,4 +1,6 @@
-import operator, warnings, random
+import operator
+import warnings
+import random
 
 
 class Constraints(object):
@@ -120,9 +122,9 @@ class Constraints(object):
         while len(final_pop) < len(pop):
             final_pop.append(self.toolbox.clone(random.choice(new_pop)))
         warnings.warn(
-            str(len(pop) - len(new_pop))
-            + " out of "
-            + str(len(pop))
-            + " inds were constrained"
+            str(len(pop) - len(new_pop)) +
+            " out of " +
+            str(len(pop)) +
+            " inds were constrained"
         )
         return final_pop

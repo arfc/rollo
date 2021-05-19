@@ -1,4 +1,5 @@
-import glob, openmc
+import glob
+import openmc
 
 
 class OpenMCEvaluation:

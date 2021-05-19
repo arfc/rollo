@@ -214,8 +214,8 @@ class InputValidation:
         # k value cannot be larger than pop size
         if input_algorithm["selection_operator"]["operator"] == "selTournament":
             if (
-                input_algorithm["selection_operator"]["inds"]
-                > input_algorithm["pop_size"]
+                input_algorithm["selection_operator"]["inds"] >
+                input_algorithm["pop_size"]
             ):
                 raise Exception("Population size must be larger than inds.")
         return
@@ -254,9 +254,9 @@ class InputValidation:
                 op_op = op["operator"]
             except KeyError:
                 print(
-                    "<Input Validation Error> You must define an operator for the "
-                    + operator_type
-                    + "_operator"
+                    "<Input Validation Error> You must define an operator for the " +
+                    operator_type +
+                    "_operator"
                 )
                 raise
             else:
@@ -458,11 +458,11 @@ class InputValidation:
                     a = input_evaluators[evaluator]["output_script"]
                 except KeyError:
                     print(
-                        "<Input Validation Error> You must define an output_script for evaluator: "
-                        + evaluator
-                        + " since the outputs: "
-                        + str(which_strings)
-                        + " are not inputs or pre-defined outputs."
+                        "<Input Validation Error> You must define an output_script for evaluator: " +
+                        evaluator +
+                        " since the outputs: " +
+                        str(which_strings) +
+                        " are not inputs or pre-defined outputs."
                     )
                     raise
         return
@@ -508,12 +508,12 @@ class InputValidation:
 
         """
         assert variable in accepted_variables, (
-            "<Input Validation Error> variable: "
-            + name
-            + ", only accepts: "
-            + str(accepted_variables)
-            + " not variable: "
-            + variable
+            "<Input Validation Error> variable: " +
+            name +
+            ", only accepts: " +
+            str(accepted_variables) +
+            " not variable: " +
+            variable
         )
         return
 
@@ -541,19 +541,19 @@ class InputValidation:
                 a = dict_to_validate[key]
             for key in dict_to_validate:
                 assert key in combined_key_names, (
-                    "<Input Validation Error> Only "
-                    + str(combined_key_names)
-                    + " are accepted for "
-                    + variable_type
-                    + ", not variable: "
-                    + key
+                    "<Input Validation Error> Only " +
+                    str(combined_key_names) +
+                    " are accepted for " +
+                    variable_type +
+                    ", not variable: " +
+                    key
                 )
         except KeyError:
             print(
-                "<Input Validation Error> "
-                + str(key_names)
-                + " variables must be defined for "
-                + variable_type
+                "<Input Validation Error> " +
+                str(key_names) +
+                " variables must be defined for " +
+                variable_type
             )
             raise
         except AssertionError as error:

@@ -71,12 +71,12 @@ mats.export_to_xml()
 outer = openmc.Cell(fill=graphite)
 z_height = 25
 outer.region = (
-    +openmc.XPlane(x0=0, boundary_type="reflective")
-    & -openmc.XPlane(x0=0.4, boundary_type="reflective")
-    & +openmc.YPlane(y0=0, boundary_type="reflective")
-    & -openmc.YPlane(y0=0.4, boundary_type="reflective")
-    & +openmc.ZPlane(z0=0, boundary_type="reflective")
-    & -openmc.ZPlane(z0=0.2 + z_height, boundary_type="reflective")
+    +openmc.XPlane(x0=0, boundary_type="reflective") &
+    -openmc.XPlane(x0=0.4, boundary_type="reflective") &
+    +openmc.YPlane(y0=0, boundary_type="reflective") &
+    -openmc.YPlane(y0=0.4, boundary_type="reflective") &
+    +openmc.ZPlane(z0=0, boundary_type="reflective") &
+    -openmc.ZPlane(z0=0.2 + z_height, boundary_type="reflective")
 )
 
 # triso PF distribution
@@ -86,10 +86,10 @@ total_trisos = round(total_pf * total_core_vol / vol_triso)
 dz = 10
 z_vals = np.arange(1, dz + 1)
 z = (
-    poly_coeff[0] * z_vals ** 3
-    + poly_coeff[1] * z_vals ** 2
-    + poly_coeff[2] * z_vals
-    + poly_coeff[3]
+    poly_coeff[0] * z_vals ** 3 +
+    poly_coeff[1] * z_vals ** 2 +
+    poly_coeff[2] * z_vals +
+    poly_coeff[3]
 )
 z_trisos = z / (sum(z)) * total_trisos
 pf_z = z_trisos * vol_triso / (total_core_vol / dz)
@@ -98,12 +98,12 @@ z_thick = z_height / dz
 # core
 all_prism_univ = openmc.Universe()
 small_prism = (
-    +openmc.XPlane(x0=0.1)
-    & -openmc.XPlane(x0=0.3)
-    & +openmc.YPlane(y0=0.1)
-    & -openmc.YPlane(y0=0.3)
-    & +openmc.ZPlane(z0=0.1)
-    & -openmc.ZPlane(z0=0.1 + z_thick)
+    +openmc.XPlane(x0=0.1) &
+    -openmc.XPlane(x0=0.3) &
+    +openmc.YPlane(y0=0.1) &
+    -openmc.YPlane(y0=0.3) &
+    +openmc.ZPlane(z0=0.1) &
+    -openmc.ZPlane(z0=0.1 + z_thick)
 )
 all_prism_regions = small_prism
 for i in range(dz):
