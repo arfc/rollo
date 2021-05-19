@@ -81,12 +81,12 @@ def create_prism(left, right, left_refl, right_refl):
     else:
         xplane_right = -openmc.XPlane(x0=right)
     prism = (
-        xplane_left
-        & xplane_right
-        & +openmc.YPlane(y0=0.35)
-        & -openmc.YPlane(y0=0.35 + 2.55)
-        & +openmc.ZPlane(z0=0, boundary_type="reflective")
-        & -openmc.ZPlane(z0=T_pitch * 20, boundary_type="reflective")
+        xplane_left &
+        xplane_right &
+        +openmc.YPlane(y0=0.35) &
+        -openmc.YPlane(y0=0.35 + 2.55) &
+        +openmc.ZPlane(z0=0, boundary_type="reflective") &
+        -openmc.ZPlane(z0=T_pitch * 20, boundary_type="reflective")
     )
     return prism
 
@@ -95,12 +95,12 @@ def create_prism_vertical(bot, top):
     yplane_bot = +openmc.YPlane(y0=bot)
     yplane_top = -openmc.YPlane(y0=top)
     prism = (
-        +openmc.XPlane(x0=2)
-        & -openmc.XPlane(x0=2 + 23.1)
-        & yplane_bot
-        & yplane_top
-        & +openmc.ZPlane(z0=0, boundary_type="reflective")
-        & -openmc.ZPlane(z0=T_pitch * 20, boundary_type="reflective")
+        +openmc.XPlane(x0=2) &
+        -openmc.XPlane(x0=2 + 23.1) &
+        yplane_bot &
+        yplane_top &
+        +openmc.ZPlane(z0=0, boundary_type="reflective") &
+        -openmc.ZPlane(z0=T_pitch * 20, boundary_type="reflective")
     )
     return prism
 
