@@ -1,4 +1,3 @@
-from constants import *
 import openmc
 import numpy as np
 from numpy import sin, cos, tan, pi
