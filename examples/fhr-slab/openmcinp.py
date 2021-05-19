@@ -2,6 +2,7 @@ import openmc
 import numpy as np
 from numpy import sin, cos, tan, pi
 import sys
+from constants import *
 
 sys.path.insert(1, "../")
 
