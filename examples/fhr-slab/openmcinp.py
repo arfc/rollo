@@ -4,6 +4,7 @@ from numpy import sin, cos, tan, pi
 import sys
 
 sys.path.insert(1, "../")
+from constants import *
 
 # Templating
 total_pf = 0.0979
