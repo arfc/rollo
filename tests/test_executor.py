@@ -1,8 +1,7 @@
-import pytest, os, shutil, random
+import pytest, os, shutil
 from rollo.executor import Executor
 from collections import OrderedDict
-from deap import base, creator, tools, algorithms
-from rollo.special_variables import SpecialVariables
+from deap import base, creator
 from rollo.constraints import Constraints
 
 test_input_dict = {
@@ -42,7 +41,7 @@ test_input_dict = {
         "generations": 10,
         "mutation_probability": 0.5,
         "mating_probability": 0.5,
-        "selection_operator": {"operator": "selBest", "k": 1},
+        "selection_operator": {"operator": "selBest", "inds": 1},
         "mutation_operator": {
             "operator": "mutGaussian",
             "indpb": 0.5,

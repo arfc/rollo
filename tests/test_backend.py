@@ -1,5 +1,5 @@
 from rollo.backend import BackEnd
-from deap import base, creator, tools, algorithms
+from deap import base, creator, tools
 import os, random
 from collections import OrderedDict
 

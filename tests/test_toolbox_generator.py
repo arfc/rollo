@@ -1,5 +1,5 @@
 from rollo.toolbox_generator import ToolboxGenerator
-from deap import base, creator, tools, algorithms
+from deap import base, creator, tools
 import random, copy
 from collections import OrderedDict
 

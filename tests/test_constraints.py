@@ -1,6 +1,6 @@
 import pytest
 from rollo.constraints import Constraints
-from deap import base, creator, tools, algorithms
+from deap import base, creator
 from collections import OrderedDict
 
 test_output_dict = OrderedDict(

@@ -1,6 +1,5 @@
 import pytest
 import os
-import openmc
 from rollo.openmc_evaluation import OpenMCEvaluation
 
 

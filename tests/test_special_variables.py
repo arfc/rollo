@@ -1,7 +1,6 @@
-import pytest, random
+import pytest
 import numpy as np
 from rollo.special_variables import SpecialVariables
-from deap import base, creator, tools, algorithms
 
 poly_dict = {
     "name": "triso",

@@ -1,6 +1,6 @@
 from rollo.algorithm import Algorithm
 from rollo.constraints import Constraints
-from deap import base, creator, tools, algorithms
+from deap import base, creator, tools
 import random, os
 from collections import OrderedDict
 
