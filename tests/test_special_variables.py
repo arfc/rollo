@@ -39,10 +39,10 @@ def test_polynomial_triso_values():
     for i in range(100):
         poly = sv.polynomial_triso_values(poly_dict, var_dict)
         poly_val = (
-            poly[0] * dz_vals ** 3
-            + poly[1] * dz_vals ** 2
-            + poly[2] * dz_vals
-            + poly[3]
+            poly[0] * dz_vals ** 3 +
+            poly[1] * dz_vals ** 2 +
+            poly[2] * dz_vals +
+            poly[3]
         )
         pf_z = poly_val / sum(poly_val) * no_trisos * vol_triso / poly_dict["volume"]
         assert len([i for i in pf_z if i > 0.25]) == 0
