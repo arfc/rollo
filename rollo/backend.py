@@ -1,5 +1,7 @@
 from deap import tools
-import pickle, numpy, time
+import pickle
+import numpy
+import time
 
 
 class BackEnd(object):
