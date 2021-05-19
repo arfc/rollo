@@ -1,4 +1,8 @@
-import os, subprocess, ast, shutil, time
+import os
+import subprocess
+import ast
+import shutil
+import time
 from jinja2 import nativetypes
 from rollo.openmc_evaluation import OpenMCEvaluation
 from rollo.moltres_evaluation import MoltresEvaluation
