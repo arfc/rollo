@@ -39,7 +39,7 @@ test_input_dict = {
         "generations": 10,
         "mutation_probability": 0.5,
         "mating_probability": 0.5,
-        "selection_operator": {"operator": "selBest", "k": 1},
+        "selection_operator": {"operator": "selBest", "inds": 1},
         "mutation_operator": {
             "operator": "mutGaussian",
             "indpb": 0.5,
@@ -125,9 +125,9 @@ def test_min_max_list():
 def test_add_selection_operators():
     tg = ToolboxGenerator()
     selection_dict_list = [
-        {"operator": "selTournament", "k": 5, "tournsize": 2},
-        {"operator": "selNSGA2", "k": 5},
-        {"operator": "selBest", "k": 5},
+        {"operator": "selTournament", "inds": 5, "tournsize": 2},
+        {"operator": "selNSGA2", "inds": 5},
+        {"operator": "selBest", "inds": 5},
     ]
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
