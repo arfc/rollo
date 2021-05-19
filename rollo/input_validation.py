@@ -16,8 +16,9 @@ class InputValidation:
     def __init__(self, input_dict):
         self.input = input_dict
 
-    def add_defaults(self, input_dict):
-        """Adds default inputs if they are missing from the input_dict
+    def add_all_defaults(self, input_dict):
+        """ Goes through the entire input_dict and adds default inputs if they 
+        are missing from the input_dict
 
         Parameters
         ----------
@@ -57,8 +58,8 @@ class InputValidation:
         return reloaded_input_dict
 
     def default_check(self, input_dict, variable, default_val):
-        """Checks if a variable is missing from a dict, and adds a default
-        value if it is
+        """Checks if a single variable is missing from a dict, and adds a 
+        default value if it is
 
         Parameters
         ----------
@@ -221,7 +222,7 @@ class InputValidation:
         return
 
     def validate_algorithm_operators(self, operator_type, input_algorithm):
-        """Validates the DEAP operators
+        """Validates the genetic algorithm operators
 
         Parameters
         ----------

@@ -16,6 +16,10 @@ Command line flags:
 | -i | name of input file | Yes |
 | -c| name of checkpoint file | No |
 
+The checkpoint file holds the results from the ROLLO simulation and also acts 
+as a restart file. Thus, if a ROLLO simulation ends prematurely, the checkpoint 
+file can be used to restart the code from the most recent population and 
+continue the simulation.
 
 ## To build documentation 
 `cd docs` 
