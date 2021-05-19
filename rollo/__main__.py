@@ -1,7 +1,8 @@
-import sys, getopt
+from rollo import executor
+import sys
+import getopt
 
 sys.path.insert(1, "rollo/")
-from rollo import executor
 
 
 def main():
