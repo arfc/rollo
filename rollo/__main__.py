@@ -2,8 +2,6 @@ from rollo import executor
 import sys
 import getopt
 
-sys.path.insert(1, "rollo/")
-
 
 def main():
     argv = sys.argv[1:]
