@@ -1,4 +1,6 @@
-import pytest, os, shutil
+import pytest
+import os
+import shutil
 from rollo.executor import Executor
 from collections import OrderedDict
 from deap import base, creator
