@@ -2,7 +2,6 @@ language: python
 
 script:
   # Use Sphinx to make the html docs
-  - git switch docs
   - cd docs 
   - make html
   # Tell GitHub not to use jekyll to compile the docs
