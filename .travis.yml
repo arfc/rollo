@@ -5,17 +5,20 @@ install:
 
 script:
   # Use Sphinx to make the html docs
-  - make docs/html
+  - make -C docs/ html
   # Tell GitHub not to use jekyll to compile the docs
-  - touch _build/html/.nojekyll
+  - touch docs/build/html/.nojekyll
 
 # Tell Travis CI to copy the documentation to the gh-pages branch of
 # your GitHub repository.
 deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN  # Set in travis-ci.org dashboard, marked secure
-  keep-history: true
-  on:
-    branch: docs
-  local_dir: _build/html/
+  - provider: pypi
+    user: "__token__"
+    password: $PYPI_TOKEN
+    skip_existing: true
+  - provider: pages:git
+    verbose: true
+    token: $GITHUB_TOKEN
+    edge: true
+    local_dir: ./docs/build/html/
+    keep_history: true
