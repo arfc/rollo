@@ -39,9 +39,13 @@ deploy:
     user: "__token__"
     password: $PYPI_TOKEN
     skip_existing: true
+    on:
+      branch: docs
   - provider: pages:git
     verbose: true
     token: $GITHUB_TOKEN
     edge: true
     local_dir: ./docs/build/html/
     keep_history: true
+    on:
+      branch: docs
