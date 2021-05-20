@@ -35,8 +35,7 @@ extensions = [
     "sphinx_rtd_theme",
     "sphinx.ext.autodoc",
     "sphinx.ext.coverage",
-    "sphinx.ext.napoleon",
-    "sphinx.ext.githubpages"
+    "sphinx.ext.napoleon"
 ]
 
 
