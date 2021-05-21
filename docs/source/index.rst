@@ -1,17 +1,15 @@
-Welcome to rollo's documentation!
+ROLLO (Reactor evOLutionary aLgorithm Optimizer)
 =================================
 
+**ROLLO** is a Python package that applies evolutionary algorithm techniques to 
+optimize nuclear reactor design.
+
+   --------
+   Contents
+   --------
+
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   modules
+   :maxdepth: 1
+   :caption: Contents
 
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
