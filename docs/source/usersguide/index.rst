@@ -47,7 +47,7 @@ For each input file, the user must define four sections: `control_variables`,
 ^^^^^^^^^^^^^^^^^
 Control Variables
 ^^^^^^^^^^^^^^^^^
-Control Variables are parameters the genetic algorithm will vary. For each control variable, the user must specify its minimum and maximum values. The `control_variables` of the **ROLLO** input file should look something like this
+Control variables are parameters the genetic algorithm will vary. For each control variable, the user must specify its minimum and maximum values. The `control_variables` section of the **ROLLO** input file should look something like this: 
 
 .. code-block:: JSON
 
@@ -55,4 +55,13 @@ Control Variables are parameters the genetic algorithm will vary. For each contr
     "variable1": {"min": 0.0, "max": 10.0}, 
     "variable2": {"min": -1.0, "max": 0.0} 
   }
+
+This demonstrates that control variables, ``variable1`` and ``variable2``, will be varied from
+0 to 10 and -1 to 0, respectively.
+
+^^^^^^^^^^
+Evaluators
+^^^^^^^^^^
+Evaluators are the nuclear software **ROLLO** utilizes to calculate objective functions. Presently, only `OpenMC <https://openmc.org/>`_ and `Moltres <https://github.com/arfc/moltres/>`_ evaluators are available in ROLLO. In a single ROLLO input file, a user may define any number of evaluators.
+
 
