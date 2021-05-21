@@ -18,4 +18,4 @@ thermal-hydraulics software, `OpenMC <https://openmc.org/>`_ and
    :maxdepth: 1
 
    install
-
+   examples/index
