@@ -13,7 +13,7 @@ It essentially couples an evolutionary algorithm driver with nuclear software.
 
 2) `Moltres <https://github.com/arfc/moltres/>`_.
 
-**ROLLO** is developed by members of the `Advanced Reactor and Fuel Cycles Group <http://arfc.github.io/>`_ at the `University of Illinois at Urbana=Champaign <https://illinois.edu/>`_.
+**ROLLO** is developed by members of the `Advanced Reactor and Fuel Cycles Group <http://arfc.github.io/>`_ at the `University of Illinois Urbana-Champaign <https://illinois.edu/>`_.
 
 .. only:: html
 
