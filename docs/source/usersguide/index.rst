@@ -17,7 +17,7 @@ To run a **ROLLO** simulation, you put this into the command line:
   python -m rollo -i <input file> -c <checkpoint file>
   
 .. list-table::
-   :widths: 25 25 50
+   :widths: 10 25 15
    :header-rows: 1
 
    * - Flag
@@ -35,4 +35,12 @@ as a restart file. Thus, if a ROLLO simulation ends prematurely, the checkpoint
 file can be used to restart the code from the most recent population and 
 continue the simulation. The checkpoint file will be described further in the 
 ## INSERT SECTION ##
+
+-----------------------------
+Setting up a ROLLO Input File
+-----------------------------
+
+The **ROLLO** input file is in `JSON <https://www.json.org/json-en.html>`_ format.
+For each input file, the user must define four sections: ``control_variables``, 
+``evaluators``, ``constraints``, and ``algorithm``. 
 
