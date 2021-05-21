@@ -31,7 +31,7 @@ class Evaluation:
         self.supported_solvers = ["openmc", "moltres"]
         self.input_scripts = {}
         self.output_scripts = {}
-        # developer should add to here when adding a new solver
+        # Developers can add new solvers to self.eval_dict below
         self.eval_dict = {"openmc": OpenMCEvaluation(), "moltres": MoltresEvaluation()}
 
     def add_evaluator(self, solver_name, input_script, output_script):
