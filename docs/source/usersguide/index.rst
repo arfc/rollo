@@ -67,7 +67,7 @@ Evaluators are the nuclear software **ROLLO** utilizes to calculate objective fu
 For each evaluator, there are mandatory and optional input parameters. These input parameters are outlined in the following table: 
 
 .. list-table::
-   :widths: 25 25 15
+   :widths: 25 25 15 15
    :header-rows: 1
 
    * - Input Parameter
@@ -82,4 +82,17 @@ For each evaluator, there are mandatory and optional input parameters. These inp
      - list of str
      - control variables to be placed into the input file template
      - yes
+    * - ``outputs``
+     - list of str
+     - output variables that the evaluator will return to the genetic algorithm
+     - yes
+     * - ``output_script``
+     - str
+     - output variables that the evaluator will return to the genetic algorithm
+     - no
+     * - ``keep_files``
+     - bool
+     - directs ROLLO to save or not save each evaluations templated input file and output files.
+     - no
+
 
