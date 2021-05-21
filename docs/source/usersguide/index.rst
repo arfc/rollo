@@ -47,6 +47,12 @@ For each input file, the user must define four sections: `control_variables`,
 ^^^^^^^^^^^^^^^^^
 Control Variables
 ^^^^^^^^^^^^^^^^^
-Control Variables are parameters the genetic algorithm will vary. For each control variable,
-the user must specify its minimum and maximum values. The Control Variable 
+Control Variables are parameters the genetic algorithm will vary. For each control variable, the user must specify its minimum and maximum values. The `control_variables` of the **ROLLO** input file should look something like this
+
+.. code-block:: JSON
+
+  "control_variables": { 
+    "variable1": {"min": 0.0, "max": 10.0}, 
+    "variable2": {"min": -1.0, "max": 0.0} 
+  }
 
