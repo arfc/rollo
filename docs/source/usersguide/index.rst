@@ -56,8 +56,7 @@ Control variables are parameters the genetic algorithm will vary. For each contr
     "variable2": {"min": -1.0, "max": 0.0} 
   }
 
-This demonstrates that control variables, ``variable1`` and ``variable2``, will be varied from
-0 to 10 and -1 to 0, respectively.
+This demonstrates that control variables, ``variable1`` and ``variable2``, will be varied from 0 to 10 and -1 to 0, respectively.
 
 ^^^^^^^^^^
 Evaluators
@@ -67,7 +66,7 @@ Evaluators are the nuclear software **ROLLO** utilizes to calculate objective fu
 For each evaluator, there are mandatory and optional input parameters. These input parameters are outlined in the following table: 
 
 .. list-table::
-   :widths: 25 25 15 15
+   :widths: 25 25 25 25
    :header-rows: 1
 
    * - Input Parameter
@@ -82,17 +81,28 @@ For each evaluator, there are mandatory and optional input parameters. These inp
      - list of str
      - control variables to be placed into the input file template
      - yes
-    * - ``outputs``
+   * - ``outputs``
      - list of str
      - output variables that the evaluator will return to the genetic algorithm
      - yes
-     * - ``output_script``
+   * - ``output_script``
      - str
      - output variables that the evaluator will return to the genetic algorithm
      - no
-     * - ``keep_files``
+   * - ``keep_files``
      - bool
      - directs ROLLO to save or not save each evaluations templated input file and output files.
      - no
+     
+The `evaluators` section of the **ROLLO** input file should look something like this: 
 
+.. code-block:: JSON
 
+  "evaluators": {
+    "openmc": { 
+      "input_script": "openmc_inp.py",
+      "output_script": "openmc_output.py",
+      "inputs": ["variable1", "variable2"],
+      "outputs": ["output1", "output2"]
+      }
+    } 
