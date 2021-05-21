@@ -27,6 +27,6 @@ It essentially couples an evolutionary algorithm driver with nuclear software.
    install
    examples/index
    usersguide/index
-   devguide/inedx
-   pythonapi/index
+   rollo
+   devguide/index
    license
