@@ -64,4 +64,22 @@ Evaluators
 ^^^^^^^^^^
 Evaluators are the nuclear software **ROLLO** utilizes to calculate objective functions. Presently, only `OpenMC <https://openmc.org/>`_ and `Moltres <https://github.com/arfc/moltres/>`_ evaluators are available in ROLLO. In a single ROLLO input file, a user may define any number of evaluators.
 
+For each evaluator, there are mandatory and optional input parameters. These input parameters are outlined in the following table: 
+
+.. list-table::
+   :widths: 25 25 15
+   :header-rows: 1
+
+   * - Input Parameter
+     - Type
+     - Description
+     - Mandatory?
+   * - ``input_script``
+     - str
+     - input file template's name for the evaluator software
+     - yes
+   * - ``inputs``
+     - list of str
+     - control variables to be placed into the input file template
+     - yes
 
