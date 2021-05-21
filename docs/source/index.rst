@@ -17,5 +17,5 @@ thermal-hydraulics software, `OpenMC <https://openmc.org/>`_ and
 .. toctree::
    :maxdepth: 1
 
-   rollo
+   install
 
