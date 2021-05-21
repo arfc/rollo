@@ -96,7 +96,7 @@ class Executor(object):
         return data
 
     def organize_input_output(self, input_dict):
-        """Numbers the control variables and output variables
+        """Labels the control variables and output variables with numbers
         to keep consistency between evaluation, constraints, and algorithm
         classes
 
@@ -109,7 +109,7 @@ class Executor(object):
         -------
         control_vars : OrderedDict
             Ordered dict of control variables as keys and a list of their
-            solver and number of variables as each value
+            solver and count of variables as each value
         output_vars : OrderedDict
             Ordered dict of output variables as keys and solvers as values
 

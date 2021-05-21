@@ -4,8 +4,9 @@ import openmc
 
 class OpenMCEvaluation:
     """This class holds functions to evaluate openmc output files.
-    - To add new openmc outputs, create a function called "evaluate_###" and
-    input ### name as a str into the pre_defined_output list.
+    - To add new openmc output variable evaluation functions, create a function 
+    called "evaluate_###". ### names the openmc output variable. Also, add ### 
+    name as a str into the pre_defined_output list.
 
     Attributes
     ----------
