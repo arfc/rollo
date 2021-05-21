@@ -41,6 +41,12 @@ Setting up a ROLLO Input File
 -----------------------------
 
 The **ROLLO** input file is in `JSON <https://www.json.org/json-en.html>`_ format.
-For each input file, the user must define four sections: ``control_variables``, 
-``evaluators``, ``constraints``, and ``algorithm``. 
+For each input file, the user must define four sections: `control_variables`, 
+`evaluators`, `constraints`, and `algorithm`. 
+
+^^^^^^^^^^^^^^^^^
+Control Variables
+^^^^^^^^^^^^^^^^^
+Control Variables are parameters the genetic algorithm will vary. For each control variable,
+the user must specify its minimum and maximum values. The Control Variable 
 
