@@ -11,7 +11,7 @@ try:
     from mpi4py.futures import MPICommExecutor
 except:
     warnings.warn(
-        "Failed to import mpi4py. (Only important for parallel method: mpi_evals)"
+        "Failed to import mpi4py. (Only necessary for parallel method: mpi_evals). Please ignore this warning if you are using other parallel methods such as multiprocessing and none."
     )
 
 
