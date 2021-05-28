@@ -11,14 +11,19 @@ try:
     from mpi4py.futures import MPICommExecutor
 except:
     warnings.warn(
-        "Failed to import mpi4py. (Only necessary for parallel method: mpi_evals). Please ignore this warning if you are using other parallel methods such as multiprocessing and none."
+        "Failed to import mpi4py. (Only necessary for parallel method: mpi_evals). \
+        Please ignore this warning if you are using other parallel methods such \
+        as multiprocessing and none."
     )
 
 
 class Algorithm(object):
-    """Builds and runs Genetic Algorithms.
-
-    This class holds functions to generate a generic genetic algorithm.
+    """The Algorithm class contains methods to initialize and execute the genetic
+    algorithm. It executes a general genetic algorithm framework that uses the
+    hyperparameters defined in the deap_toolbox, applies constraints defined 
+    in the constraints_obj, evaluates fitness values using the evaluation 
+    function produced by Evaluation contained in the deap_toolbox, and saves 
+    all the results with BackEnd.
 
     Parameters
     ----------

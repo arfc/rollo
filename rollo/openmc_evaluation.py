@@ -3,7 +3,9 @@ import openmc
 
 
 class OpenMCEvaluation:
-    """This class holds functions to evaluate openmc output files.
+    """The OpenMCEvaluation class contains ROLLO built-in methods for evaluating
+    OpenMC output files. Developers can update this file with methods to 
+    evaluate frequently used OpenMC outputs.
     - To add new openmc output variable evaluation functions, create a function 
     called "evaluate_###". ### names the openmc output variable. Also, add ### 
     name as a str into the pre_defined_output list.

@@ -3,8 +3,10 @@ from rollo.special_variables import SpecialVariables
 
 
 class InputValidation:
-    """This class does the initial validation of the json input file and
-    and evaluation solver's templated input scripts
+    """The InputValidation class contains methods to read and validate the JSON
+    ROLLO input file to ensure the user defined all key parameters. If the user 
+    did not, ROLLO raises an exception to tell the user which parameters are 
+    missing.
 
     Attributes
     ----------

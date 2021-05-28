@@ -14,6 +14,14 @@ class Executor(object):
 
     Instances of this class can be used to perform a rollo run.
 
+    The Executor class drives the ROLLO code execution with the following
+    steps in the execute method:
+    1) User input file validation with InputValidation
+    2) Evaluation function generation with Evaluation class
+    3) DEAP toolbox initialization with ToolboxGenerator class
+    4) Constraint initialization with Constraints class
+    5) Genetic algorithm execution with Algorithm class
+
     Parameters
     ----------
     input_file : str

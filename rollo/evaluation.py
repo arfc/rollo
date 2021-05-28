@@ -11,6 +11,12 @@ from rollo.moltres_evaluation import MoltresEvaluation
 class Evaluation:
     """Holds functions that generate and execute the evaluation solver's scripts.
 
+    DEAP's (evolutionary algorithm package) fitness evaluator requires an 
+    evaluation function to evaluate each individual's fitness values. The 
+    Evaluation class contains a method that creates an evaluation function that 
+    runs the nuclear software and returns the required fitness values, defined 
+    in the input file.
+
     Attributes
     ----------
     supported_solvers : list of str

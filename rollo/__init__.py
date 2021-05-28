@@ -9,4 +9,4 @@ from rollo.openmc_evaluation import *
 from rollo.special_variables import *
 from rollo.toolbox_generator import *
 
-__version__ = "1.0"
+__version__ = "0.1.1"
