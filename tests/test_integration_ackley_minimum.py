@@ -1,7 +1,7 @@
 """Integration Test to validate the Evolutionary Algorithm.
-The Ackley function is one of the well-known benchmarks used for evolutionary 
-or metaheuristic optimization. 
-The minimum value is 0 at (0,0). 
+The Ackley function is one of the well-known benchmarks used for evolutionary
+or metaheuristic optimization.
+The minimum value is 0 at (0,0).
 """
 
 
