@@ -12,10 +12,10 @@
     },
     "constraints": {"keff": {"operator": [">="], "constrained_val": [1.0]}},
     "algorithm": {
-        "parallel": "mpi_evals",
+        "parallel": "multiprocessing",
         "objective": ["min"],
         "optimized_variable": ["radius"],
-        "pop_size": 50,
+        "pop_size": 10,
         "generations": 10,
         "mutation_probability": 0.23,
         "mating_probability": 0.46,
