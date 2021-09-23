@@ -1,13 +1,13 @@
 {
     "control_variables": {
-        "radius": {"min": 0.0, "max": 20.0}
+        "radius": {"min": 2.0, "max": 6.0}
     },
     "evaluators": {
         "openmc": {
             "input_script": "critical_sphere.py",
             "inputs": ["radius"],
             "outputs": ["keff", "radius"],
-            "keep_files": true
+            "keep_files": false
         }
     },
     "constraints": {"keff": {"operator": [">="], "constrained_val": [1.0]}},
