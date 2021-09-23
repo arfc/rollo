@@ -3,7 +3,7 @@ import numpy as np
 
 pu = openmc.Material()
 pu.set_density("g/cm3", 19.84)
-pu.add_nuclide("Pu238", 1)
+pu.add_nuclide("Pu239", 1)
 mats = openmc.Materials([pu])
 
 radius = {{radius}}
