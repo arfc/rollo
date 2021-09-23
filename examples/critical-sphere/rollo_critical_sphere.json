@@ -15,11 +15,11 @@
         "parallel": "multiprocessing",
         "objective": ["min"],
         "optimized_variable": ["radius"],
-        "pop_size": 10,
+        "pop_size": 50,
         "generations": 10,
         "mutation_probability": 0.23,
         "mating_probability": 0.46,
-        "selection_operator": {"operator": "selTournament", "inds": 5, "tournsize": 5},
+        "selection_operator": {"operator": "selTournament", "inds": 15, "tournsize": 5},
         "mutation_operator": {
             "operator": "mutPolynomialBounded",
             "eta": 0.23,
