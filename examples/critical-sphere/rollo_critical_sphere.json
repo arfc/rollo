@@ -7,7 +7,7 @@
             "input_script": "critical_sphere.py",
             "inputs": ["radius"],
             "outputs": ["keff", "radius"],
-            "keep_files": false
+            "keep_files": true
         }
     },
     "constraints": {"keff": {"operator": [">="], "constrained_val": [1.0]}},
