@@ -1,6 +1,6 @@
 {
     "control_variables": {
-        "radius": {"min": 2.0, "max": 6.0}
+        "radius": {"min": 1.0, "max": 10.0}
     },
     "evaluators": {
         "openmc": {
