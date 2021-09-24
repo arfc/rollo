@@ -6,7 +6,7 @@ pu.set_density("g/cm3", 19.84)
 pu.add_nuclide("Pu239", 1)
 mats = openmc.Materials([pu])
 
-radius = 4.94 #{{radius}}
+radius = {{radius}}
 
 fuel_sphere = openmc.Sphere(r=radius, boundary_type='vacuum')
 fuel_cell = openmc.Cell(fill=pu, region=-fuel_sphere)
