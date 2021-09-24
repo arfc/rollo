@@ -176,8 +176,8 @@ class Algorithm(object):
                 fitness_vals.append(fitness[i])
             ind.fitness.values = tuple(fitness_vals)
             ind.output = fitness
-        self.backend.update_backend(pop, 0, copy_invalids, random.getstate())
         pop = self.constraint_obj.apply_constraints(pop)
+        self.backend.update_backend(pop, 0, copy_invalids, random.getstate())
         return pop
 
     def apply_algorithm_ngen(self, pop, gen):
@@ -224,8 +224,8 @@ class Algorithm(object):
                 fitness_vals.append(fitness[i])
             ind.fitness.values = tuple(fitness_vals)
             ind.output = fitness
-        self.backend.update_backend(pop, gen, copy_invalids, random.getstate())
         pop = self.constraint_obj.apply_constraints(pop)
+        self.backend.update_backend(pop, gen, copy_invalids, random.getstate())
         return pop
 
     def apply_selection_operator(self, pop):
