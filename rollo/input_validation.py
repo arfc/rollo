@@ -41,18 +41,18 @@ class InputValidation:
             )
         input_algorithm = input_dict["algorithm"]
         input_algorithm = self.default_check(input_algorithm, "objective", "min")
-        input_algorithm = self.default_check(input_algorithm, "pop_size", 100)
+        input_algorithm = self.default_check(input_algorithm, "pop_size", 60)
         input_algorithm = self.default_check(input_algorithm, "generations", 10)
         input_algorithm = self.default_check(
-            input_algorithm, "selection_operator", {"operator": "selBest", "inds": 1}
+            input_algorithm, "selection_operator", {"operator": "selTournament", "inds": 15, 'tournsize': 5}
         )
         input_algorithm = self.default_check(
             input_algorithm,
             "mutation_operator",
-            {"operator": "mutGaussian", "indpb": 0.5, "mu": 0.5, "sigma": 0.5},
+            {"operator": "mutPolynomialBounded", "eta": 0.23, "indpb": 0.23},
         )
         input_algorithm = self.default_check(
-            input_algorithm, "mating_operator", {"operator": "cxOnePoint"}
+            input_algorithm, "mating_operator", {"operator": "cxBlend", "alpha": 0.46}
         )
         reloaded_input_dict = input_dict.copy()
         reloaded_input_dict["evaluators"] = input_evaluators
