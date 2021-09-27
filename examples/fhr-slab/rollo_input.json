@@ -6,7 +6,7 @@
     },
     "evaluators": {
         "openmc": {
-            "input_script": "openmcinp.py",
+            "input_script": "openmc_input.py",
             "inputs": ["sine_a", "sine_b", "sine_c"],
             "outputs": ["keff"],
             "keep_files": false
@@ -20,13 +20,6 @@
         "pop_size": 4,
         "generations": 10,
         "mutation_probability": 0.2374127402121101,
-        "mating_probability": 0.4699131568275016,
-        "selection_operator": {"operator": "selTournament", "inds": 1, "tournsize": 5},
-        "mutation_operator": {
-            "operator": "mutPolynomialBounded",
-            "eta": 0.2374127402121101,
-            "indpb": 0.2374127402121101
-        },
-        "mating_operator": {"operator": "cxBlend", "alpha": 0.4699131568275016}
+        "mating_probability": 0.4699131568275016
     }
 }
