@@ -4,15 +4,14 @@ from rollo.special_variables import SpecialVariables
 
 class InputValidation:
     """The InputValidation class contains methods to read and validate the JSON
-        ROLLO input
-    file to ensure the user defined all key parameters. If the user
-        did not, ROLLO raises an exception to tell the user which parameters are
-        missing.
+    ROLLO input file to ensure the user defined all key parameters. If the
+    user did not, ROLLO raises an exception to tell the user which
+    parameters are missing.
 
-        Attributes
-        ----------
-        input : dict
-            rollo json input file as a dict
+    Attributes
+    ----------
+    input : dict
+        rollo json input file as a dict
 
     """
 
