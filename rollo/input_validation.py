@@ -18,7 +18,7 @@ class InputValidation:
     def __init__(self, input_dict):
         self.input = input_dict
 
-    def add_all_defaults(self, input_dict):
+    def add_all_defaults(self):
         """ Goes through the entire input_dict and adds default inputs if they 
         are missing from the input_dict
 
@@ -33,6 +33,7 @@ class InputValidation:
             input file dict with additional missing default inputs
 
         """
+        input_dict = self.input.copy()
         input_evaluators = {}
         for solver in input_dict["evaluators"]:
             input_evaluators[solver] = input_dict["evaluators"][solver]
@@ -43,6 +44,8 @@ class InputValidation:
         input_algorithm = self.default_check(input_algorithm, "objective", "min")
         input_algorithm = self.default_check(input_algorithm, "pop_size", 60)
         input_algorithm = self.default_check(input_algorithm, "generations", 10)
+        input_algorithm = self.default_check(input_algorithm, 'mutation_probability', 0.23)
+        input_algorithm = self.default_check(input_algorithm, 'mating_probability', 0.47)
         input_algorithm = self.default_check(
             input_algorithm, "selection_operator", {"operator": "selTournament", "inds": 15, 'tournsize': 5}
         )
@@ -57,7 +60,8 @@ class InputValidation:
         reloaded_input_dict = input_dict.copy()
         reloaded_input_dict["evaluators"] = input_evaluators
         reloaded_input_dict["algorithm"] = input_algorithm
-        return reloaded_input_dict
+        self.input = reloaded_input_dict.copy()
+        return 
 
     def default_check(self, input_dict, variable, default_val):
         """Checks if a single variable is missing from a dict, and adds a 
