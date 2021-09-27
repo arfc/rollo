@@ -61,7 +61,9 @@ class InputValidation:
             {"operator": "mutPolynomialBounded", "eta": 0.23, "indpb": 0.23},
         )
         input_algorithm = self.default_check(
-            input_algorithm, "mating_operator", {"operator": "cxBlend", "alpha": 0.46}
+            input_algorithm,
+            "mating_operator",
+            {"operator": "cxBlend", "alpha": 0.46},
         )
         reloaded_input_dict = input_dict.copy()
         reloaded_input_dict["evaluators"] = input_evaluators
@@ -267,7 +269,7 @@ class InputValidation:
                 op_op = op["operator"]
             except KeyError:
                 print(
-                    "<Input Validation Error> You must define an operator for the "
+                    "<Input Validation Error> You must define an operator for "
                     + operator_type
                     + "_operator"
                 )
@@ -471,7 +473,8 @@ class InputValidation:
                     a = input_evaluators[evaluator]["output_script"]
                 except KeyError:
                     print(
-                        "<Input Validation Error> You must define an output_script for evaluator: "
+                        "<Input Validation Error>"
+                        + "You must define an output_script for evaluator: "
                         + evaluator
                         + " since the outputs: "
                         + str(which_strings)
