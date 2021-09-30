@@ -27,4 +27,5 @@ jobs:
         python setup.py install --user 
     - name: Test with pytest
       run: |
+        cd tests
         pytest
