@@ -28,4 +28,4 @@ jobs:
     - name: Test with pytest
       run: |
         cd tests
-        pytest
+        pytest test_algorithm.py
