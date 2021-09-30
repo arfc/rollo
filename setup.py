@@ -22,7 +22,6 @@ setuptools.setup(
     install_requires=[
         "deap",
         "numpy",
-        "openmc",
         "jsonschema",
         "jinja2",
     ],
