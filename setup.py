@@ -24,6 +24,7 @@ setuptools.setup(
         "numpy",
         "jsonschema",
         "jinja2",
+        "pytest",
     ],
     entry_points={"console_scripts": ["arfc=rollo.__main__:main"]},
 )
