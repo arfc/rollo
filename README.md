@@ -1,3 +1,5 @@
+[![CI](https://github.com/arfc/rollo/actions/workflows/python-package-conda.yml/badge.svg)](https://github.com/arfc/rollo/actions/workflows/python-package-conda.yml)
+
 # ROLLO (Reactor evOLutionary aLgorithm Optimizer)
 
 ROLLO is a Python package that applies evolutionary algorithm techniques to optimize nuclear reactor design.
