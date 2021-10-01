@@ -26,12 +26,10 @@ def test_ackley_minimum_check():
     toolbox.pop_size = 1000
     toolbox.ngen = 20
 
-
     def ind_vals():
         x1 = toolbox.x1()
         x2 = toolbox.x2()
         return creator.Ind([x1, x2])
-
 
     toolbox.register("individual", ind_vals)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
@@ -59,7 +57,6 @@ def test_ackley_minimum_check():
         }
     )
 
-
     def evaluator_fn(ind):
         x1, x2 = ind[0], ind[1]
         ackley = (
@@ -70,7 +67,6 @@ def test_ackley_minimum_check():
         )
         return tuple([ackley])
 
-
     toolbox.register("evaluate", evaluator_fn)
     test_constraints = Constraints(
         output_dict=OrderedDict(),
@@ -79,6 +75,7 @@ def test_ackley_minimum_check():
     )
     see_all = []
     bad = []
+
     def run():
         a = Algorithm(
             deap_toolbox=toolbox,
@@ -96,11 +93,12 @@ def test_ackley_minimum_check():
         see_all.append(result)
         if result > 5:
             bad.append(result)
-        #assert min(a.backend.results["all"]["outputs"][-1])[0] < 0.1
-    
+        # assert min(a.backend.results["all"]["outputs"][-1])[0] < 0.1
+
     for i in range(100):
         run()
     print(see_all)
     print(bad)
-        
+
+
 test_ackley_minimum_check()
