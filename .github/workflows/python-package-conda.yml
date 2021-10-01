@@ -41,4 +41,7 @@ jobs:
         pytest test_backend.py
         pytest test_constraints.py
         pytest test_evaluation.py
+        pytest test_executor.py
+        pytest test_integration_ackley_minimum.py
+        pytest test_openmc_evaluation.py
         pytest test_toolbox_generator.py
