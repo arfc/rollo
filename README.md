@@ -1,5 +1,4 @@
 [![PyPI version](https://badge.fury.io/py/rollo.svg)](https://badge.fury.io/py/rollo)
-
 [![CI](https://github.com/arfc/rollo/actions/workflows/python-package-conda.yml/badge.svg)](https://github.com/arfc/rollo/actions/workflows/python-package-conda.yml)
 
 # ROLLO (Reactor evOLutionary aLgorithm Optimizer)
