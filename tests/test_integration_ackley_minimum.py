@@ -73,8 +73,6 @@ def test_ackley_minimum_check():
         input_constraints={},
         toolbox=toolbox,
     )
-    see_all = []
-    bad = []
 
     def run():
         a = Algorithm(
@@ -89,16 +87,4 @@ def test_ackley_minimum_check():
             parallel_method="none",
         )
         final_pop = a.generate()
-        result = min(a.backend.results["all"]["outputs"][-1])[0]
-        see_all.append(result)
-        if result > 5:
-            bad.append(result)
-        # assert min(a.backend.results["all"]["outputs"][-1])[0] < 0.1
-
-    for i in range(100):
-        run()
-    print(see_all)
-    print(bad)
-
-
-test_ackley_minimum_check()
+        assert min(a.backend.results["all"]["outputs"][-1])[0] < 0.1
