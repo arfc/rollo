@@ -27,6 +27,11 @@ jobs:
         conda env update --file environment.yml --name base
         conda install -c conda-forge openmc
         python setup.py install --user 
+    - name: Set up environment
+      run: | 
+        wget https://anl.box.com/shared/static/9igk353zpy8fn9ttvtrqgzvw1vtejoz6.xz
+        tar -xvf 9igk353zpy8fn9ttvtrqgzvw1vtejoz6.xz
+        echo "OPENMC_CROSS_SECTIONS=/endfb71_hdf5/cross_sections.xml" >> $GITHUB_ENV
     - name: Test with pytest
       run: |
         conda install pytest
