@@ -7,7 +7,6 @@ from deap import base, creator
 
 
 def test_eval_fn_generator():
-    os.chdir("./input_test_files")
     if os.path.exists("./openmc_0_0"):
         shutil.rmtree("./openmc_0_0")
     if os.path.exists("./moltres_0_0"):
@@ -50,12 +49,10 @@ def test_eval_fn_generator():
     expected_output_vals = tuple([0.03, output_vals[1], 1000, 10])
     shutil.rmtree("./openmc_0_0")
     shutil.rmtree("./moltres_0_0")
-    os.chdir("../")
     assert output_vals == expected_output_vals
 
 
 def test_get_output_vals():
-    os.chdir("./input_test_files")
     ev = Evaluation()
     ev.add_evaluator(
         solver_name="openmc",
@@ -81,7 +78,6 @@ def test_get_output_vals():
     )
     expected_output_vals = [0.03, 1.6331797843041689, None, 3]
     os.remove("./test_evaluation/openmc_output.py")
-    os.chdir("../")
     assert output_vals == expected_output_vals
 
 
@@ -102,7 +98,6 @@ def test_name_ind():
 
 
 def test_render_jinja_template_python():
-    os.chdir("./input_test_files")
     ev = Evaluation()
     rendered_template = ev.render_jinja_template_python(
         script="./input_test_render_jinja_template_python.py",
@@ -113,5 +108,4 @@ def test_render_jinja_template_python():
     )
     print(rendered_template)
     expected_rendered_template = "total_pf = 0.01\npoly_coeff = [1, 1, 1, 1]"
-    os.chdir("../")
     assert rendered_template == expected_rendered_template
