@@ -34,4 +34,5 @@ jobs:
         pytest test_algorithm.py
         pytest test_backend.py
         pytest test_constraints.py
+        pytest test_evaluation.py
         pytest test_toolbox_generator.py
