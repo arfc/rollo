@@ -4,9 +4,9 @@ from rollo.special_variables import SpecialVariables
 
 class InputValidation:
     """The InputValidation class contains methods to read and validate the JSON
-    ROLLO input file to ensure the user defined all key parameters. If the user 
-    did not, ROLLO raises an exception to tell the user which parameters are 
-    missing.
+    ROLLO input file to ensure the user defined all key parameters. If the
+    user did not, ROLLO raises an exception to tell the user which
+    parameters are missing.
 
     Attributes
     ----------
@@ -18,8 +18,8 @@ class InputValidation:
     def __init__(self, input_dict):
         self.input = input_dict
 
-    def add_all_defaults(self, input_dict):
-        """ Goes through the entire input_dict and adds default inputs if they 
+    def add_all_defaults(self):
+        """Goes through the entire input_dict and adds default inputs if they
         are missing from the input_dict
 
         Parameters
@@ -33,6 +33,7 @@ class InputValidation:
             input file dict with additional missing default inputs
 
         """
+        input_dict = self.input.copy()
         input_evaluators = {}
         for solver in input_dict["evaluators"]:
             input_evaluators[solver] = input_dict["evaluators"][solver]
@@ -41,26 +42,37 @@ class InputValidation:
             )
         input_algorithm = input_dict["algorithm"]
         input_algorithm = self.default_check(input_algorithm, "objective", "min")
-        input_algorithm = self.default_check(input_algorithm, "pop_size", 100)
+        input_algorithm = self.default_check(input_algorithm, "pop_size", 60)
         input_algorithm = self.default_check(input_algorithm, "generations", 10)
         input_algorithm = self.default_check(
-            input_algorithm, "selection_operator", {"operator": "selBest", "inds": 1}
+            input_algorithm, "mutation_probability", 0.23
+        )
+        input_algorithm = self.default_check(
+            input_algorithm, "mating_probability", 0.47
+        )
+        input_algorithm = self.default_check(
+            input_algorithm,
+            "selection_operator",
+            {"operator": "selTournament", "inds": 15, "tournsize": 5},
         )
         input_algorithm = self.default_check(
             input_algorithm,
             "mutation_operator",
-            {"operator": "mutGaussian", "indpb": 0.5, "mu": 0.5, "sigma": 0.5},
+            {"operator": "mutPolynomialBounded", "eta": 0.23, "indpb": 0.23},
         )
         input_algorithm = self.default_check(
-            input_algorithm, "mating_operator", {"operator": "cxOnePoint"}
+            input_algorithm,
+            "mating_operator",
+            {"operator": "cxBlend", "alpha": 0.46},
         )
         reloaded_input_dict = input_dict.copy()
         reloaded_input_dict["evaluators"] = input_evaluators
         reloaded_input_dict["algorithm"] = input_algorithm
-        return reloaded_input_dict
+        self.input = reloaded_input_dict.copy()
+        return
 
     def default_check(self, input_dict, variable, default_val):
-        """Checks if a single variable is missing from a dict, and adds a 
+        """Checks if a single variable is missing from a dict, and adds a
         default value if it is
 
         Parameters
@@ -217,8 +229,8 @@ class InputValidation:
         # k value cannot be larger than pop size
         if input_algorithm["selection_operator"]["operator"] == "selTournament":
             if (
-                input_algorithm["selection_operator"]["inds"] >
-                input_algorithm["pop_size"]
+                input_algorithm["selection_operator"]["inds"]
+                > input_algorithm["pop_size"]
             ):
                 raise Exception("Population size must be larger than inds.")
         return
@@ -257,9 +269,9 @@ class InputValidation:
                 op_op = op["operator"]
             except KeyError:
                 print(
-                    "<Input Validation Error> You must define an operator for the " +
-                    operator_type +
-                    "_operator"
+                    "<Input Validation Error> You must define an operator for "
+                    + operator_type
+                    + "_operator"
                 )
                 raise
             else:
@@ -461,11 +473,12 @@ class InputValidation:
                     a = input_evaluators[evaluator]["output_script"]
                 except KeyError:
                     print(
-                        "<Input Validation Error> You must define an output_script for evaluator: " +
-                        evaluator +
-                        " since the outputs: " +
-                        str(which_strings) +
-                        " are not inputs or pre-defined outputs."
+                        "<Input Validation Error>"
+                        + "You must define an output_script for evaluator: "
+                        + evaluator
+                        + " since the outputs: "
+                        + str(which_strings)
+                        + " are not inputs or pre-defined outputs."
                     )
                     raise
         return
@@ -511,12 +524,12 @@ class InputValidation:
 
         """
         assert variable in accepted_variables, (
-            "<Input Validation Error> variable: " +
-            name +
-            ", only accepts: " +
-            str(accepted_variables) +
-            " not variable: " +
-            variable
+            "<Input Validation Error> variable: "
+            + name
+            + ", only accepts: "
+            + str(accepted_variables)
+            + " not variable: "
+            + variable
         )
         return
 
@@ -544,19 +557,19 @@ class InputValidation:
                 a = dict_to_validate[key]
             for key in dict_to_validate:
                 assert key in combined_key_names, (
-                    "<Input Validation Error> Only " +
-                    str(combined_key_names) +
-                    " are accepted for " +
-                    variable_type +
-                    ", not variable: " +
-                    key
+                    "<Input Validation Error> Only "
+                    + str(combined_key_names)
+                    + " are accepted for "
+                    + variable_type
+                    + ", not variable: "
+                    + key
                 )
         except KeyError:
             print(
-                "<Input Validation Error> " +
-                str(key_names) +
-                " variables must be defined for " +
-                variable_type
+                "<Input Validation Error> "
+                + str(key_names)
+                + " variables must be defined for "
+                + variable_type
             )
             raise
         except AssertionError as error:

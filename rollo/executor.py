@@ -54,8 +54,9 @@ class Executor(object):
         t0 = time.time()
         input_dict = self.read_input_file()
         iv = InputValidation(input_dict)
+        iv.add_all_defaults()
         iv.validate()
-        complete_input_dict = iv.add_all_defaults(input_dict)
+        complete_input_dict = iv.input
         # organize control variables and output dict
         control_dict, output_dict = self.organize_input_output(complete_input_dict)
         # generate evaluator function
