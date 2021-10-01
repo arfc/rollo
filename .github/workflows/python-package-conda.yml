@@ -14,7 +14,6 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
-        channels: conda-forge
     - name: Add conda to system path
       run: |
         # $CONDA is an environment variable pointing to the root of the miniconda directory
@@ -28,4 +27,4 @@ jobs:
       run: |
         conda install pytest
         cd tests
-        pytest test_algorithm.py
+        pytest 
