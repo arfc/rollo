@@ -22,6 +22,9 @@ jobs:
       run: |
         # $CONDA is an environment variable pointing to the root of the miniconda directory
         echo $CONDA/bin >> $GITHUB_PATH
+      - name: Environment Variables
+        run: |
+          echo "OPENMC_CROSS_SECTIONS=$HOME/data/endfb71_hdf5/cross_sections.xml" >> $GITHUB_ENV
     - name: Install dependencies
       run: |
         conda env update --file environment.yml --name base
