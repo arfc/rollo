@@ -27,4 +27,5 @@ jobs:
       run: |
         conda install pytest
         cd tests
-        pytest 
+        pytest test_algorithm.py
+        pytest test_evaluation.py
