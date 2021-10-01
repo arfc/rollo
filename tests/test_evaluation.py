@@ -3,7 +3,7 @@ import os
 import shutil
 from rollo.evaluation import Evaluation
 from collections import OrderedDict
-from deap import base, creator 
+from deap import base, creator
 
 
 def test_eval_fn_generator():
