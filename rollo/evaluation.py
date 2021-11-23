@@ -3,6 +3,7 @@ import subprocess
 import ast
 import shutil
 import time
+import jinja2
 from jinja2 import nativetypes
 from rollo.openmc_evaluation import OpenMCEvaluation
 from rollo.moltres_evaluation import MoltresEvaluation
@@ -108,10 +109,19 @@ class Evaluation:
                 # path name for solver's run
                 path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
                 # render jinja-ed input script
-                rendered_script = self.render_jinja_template_python(
-                    script=self.input_scripts[solver][1],
-                    control_vars_solver=control_vars[solver],
-                )
+                print(control_vars)
+                if "python" in self.input_scripts[solver][0]:
+                    rendered_script = self.render_jinja_template_python(
+                        script=self.input_scripts[solver][1],
+                        control_vars_solver=control_vars[solver],
+                    )
+                else:
+                    rendered_script = self.render_jinja_template(
+                        script=self.input_scripts[solver][1],
+                        control_vars_solver=control_vars[solver],
+                        ind=ind, 
+                        solver=solver
+                    )
                 # enter directory for this particular solver's run
                 os.mkdir(path)
                 os.chdir(path)
@@ -123,7 +133,8 @@ class Evaluation:
                 f.write(rendered_script)
                 f.close()
                 with open("output.txt", "wb") as output:
-                    subprocess.call([self.input_scripts[solver][0], self.input_scripts[solver][1]], stdout=output)
+                    executable = self.input_scripts[solver][0].split(" ")
+                    subprocess.call(executable + [self.input_scripts[solver][1]], stdout=output)
 
                 # go back to normal directory with all files
                 os.chdir("../")
@@ -164,15 +175,17 @@ class Evaluation:
         if self.output_scripts[solver]:
             # copy rendered output script into a new file in the particular solver's run
             shutil.copyfile(
-                self.output_scripts[solver][1], path + "/" + self.input_scripts[solver][1]
+                self.output_scripts[solver][1], path + "/" + self.output_scripts[solver][1]
             )
             # enter directory for this particular solver's run
             os.chdir(path)
             # run the output script
-            oup_bytes = self.system_call(self.input_scripts[solver][0] + ' ' + self.input_scripts[solver][1])
-            if solver != 'openmc_gc':
+            oup_bytes = self.system_call(self.output_scripts[solver][0] + ' ' + self.output_scripts[solver][1])
+            try:
                 # return the output script's printed dictionary into a variable
                 oup_script_results = ast.literal_eval(oup_bytes.decode("utf-8"))
+            except: 
+                pass
             # go back to normal directory with all files
             os.chdir("../")
         for i, var in enumerate(output_dict):
@@ -275,14 +288,35 @@ class Evaluation:
         rendered_template = eval(render_str)
         return rendered_template
 
-    def render_jinja_template(self):
+    def render_jinja_template(self, script, control_vars_solver, ind, solver):
         """Renders a jinja2 templated input file. This will be used by solver's
         with a text based interface such as Moltres
 
-        ### TO BE POPULATED
+        Parameters
+        ----------
+        script : str
+            name of evaluator template script
+        control_vars_solver : str
+            name of evaluation solver software
+
+        Returns
+        -------
+        rendered_template : str
+            rendered evaluator template script
         """
 
-        return
+        with open(script) as f: 
+            tmp = jinja2.Template(f.read())
+        render_str = "tmp.render("
+        for var in control_vars_solver:
+            render_str += var + "='" + control_vars_solver[var] + "',"
+                # special condition for moltres 
+        if solver == "moltres": 
+            render_str += "group_constant_dir='../openmc_gc_" + str(ind.gen) + "_" + str(ind.num) + "'"
+        render_str += ")"
+        rendered_template = eval(render_str)
+
+        return rendered_template
 
     def openmc_run(self, rendered_openmc_script):
         """Runs the rendered openmc script
