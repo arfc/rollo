@@ -1,4 +1,5 @@
 from jsonschema import validate
+from collections import OrderedDict
 from rollo.special_variables import SpecialVariables
 
 
@@ -34,6 +35,7 @@ class InputValidation:
 
         """
         input_dict = self.input.copy()
+        input_dict["evaluators"] = OrderedDict(input_dict["evaluators"])
         input_evaluators = {}
         for solver in input_dict["evaluators"]:
             input_evaluators[solver] = input_dict["evaluators"][solver]
