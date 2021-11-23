@@ -34,11 +34,11 @@ class Evaluation:
     """
 
     def __init__(self):
-        self.supported_solvers = ["openmc", "moltres"]
+        self.supported_solvers = ["openmc", "openmc_gc", "moltres"]
         self.input_scripts = {}
         self.output_scripts = {}
         # Developers can add new solvers to self.eval_dict below
-        self.eval_dict = {"openmc": OpenMCEvaluation(), "moltres": MoltresEvaluation()}
+        self.eval_dict = {"openmc": OpenMCEvaluation(), "openmc_gc": OpenMCEvaluation(), "moltres": MoltresEvaluation()}
 
     def add_evaluator(self, solver_name, input_script, output_script):
         """Adds information about an evaluator to the Evaluation class object
@@ -109,14 +109,22 @@ class Evaluation:
                 path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
                 # render jinja-ed input script
                 rendered_script = self.render_jinja_template_python(
-                    script=self.input_scripts[solver],
+                    script=self.input_scripts[solver][1],
                     control_vars_solver=control_vars[solver],
                 )
                 # enter directory for this particular solver's run
                 os.mkdir(path)
                 os.chdir(path)
                 # run solver's function where run is executed
-                exec("self." + solver + "_run(rendered_script)")
+                #exec("self." + solver + "_run(rendered_script)")
+                
+                # run input file 
+                f = open(self.input_scripts[solver][1], "w+")
+                f.write(rendered_script)
+                f.close()
+                with open("output.txt", "wb") as output:
+                    subprocess.call([self.input_scripts[solver][0], self.input_scripts[solver][1]], stdout=output)
+
                 # go back to normal directory with all files
                 os.chdir("../")
                 # get output values
@@ -156,14 +164,15 @@ class Evaluation:
         if self.output_scripts[solver]:
             # copy rendered output script into a new file in the particular solver's run
             shutil.copyfile(
-                self.output_scripts[solver], path + "/" + solver + "_output.py"
+                self.output_scripts[solver][1], path + "/" + self.input_scripts[solver][1]
             )
             # enter directory for this particular solver's run
             os.chdir(path)
             # run the output script
-            oup_bytes = self.system_call("python " + solver + "_output.py")
-            # return the output script's printed dictionary into a variable
-            oup_script_results = ast.literal_eval(oup_bytes.decode("utf-8"))
+            oup_bytes = self.system_call(self.input_scripts[solver][0] + ' ' + self.input_scripts[solver][1])
+            if solver != 'openmc_gc':
+                # return the output script's printed dictionary into a variable
+                oup_script_results = ast.literal_eval(oup_bytes.decode("utf-8"))
             # go back to normal directory with all files
             os.chdir("../")
         for i, var in enumerate(output_dict):
@@ -291,6 +300,7 @@ class Evaluation:
         with open("output.txt", "wb") as output:
             subprocess.call(["python", "-u", "./openmc_input.py"], stdout=output)
         return
+        
 
     def moltres_run(self, rendered_moltres_script):
         """Runs the rendered moltres input file

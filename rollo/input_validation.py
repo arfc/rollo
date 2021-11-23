@@ -425,10 +425,10 @@ class InputValidation:
         """
         # evaluators available
         # add to this list if a developer adds a new evaluator
-        available_evaluators = ["openmc", "moltres"]
+        available_evaluators = ["openmc", "openmc_gc", "moltres"]
         # add to this dict if a developers adds a new predefined output
         # for an evaluator
-        pre_defined_outputs = {"openmc": ["keff"]}
+        pre_defined_outputs = {"openmc": ["keff"], "openmc_gc": [], "moltres": []}
 
         # validate evaluators
         self.validate_correct_keys(
@@ -441,7 +441,10 @@ class InputValidation:
             schema_evaluators["properties"][evaluator] = {
                 "type": "object",
                 "properties": {
-                    "input_script": {"type": "string"},
+                    "input_script": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
                     "inputs": {
                         "type": "array",
                         "items": {"type": "string"},
@@ -450,7 +453,10 @@ class InputValidation:
                         "type": "array",
                         "items": {"type": "string"},
                     },
-                    "output_script": {"type": "string"},
+                    "output_script": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
                     "keep_files": {"type": "boolean"},
                 },
             }
