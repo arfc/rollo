@@ -106,6 +106,7 @@ class Evaluation:
             output_vals = [None] * len(output_dict)
 
             for solver in input_evaluators:
+                print('SOLVER',solver)
                 # path name for solver's run
                 path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
                 # render jinja-ed input script
