@@ -447,6 +447,7 @@ class InputValidation:
                         "type": "array",
                         "items": {"type": "string"},
                     },
+                    "execute2": {"type": "string"},
                     "inputs": {
                         "type": "array",
                         "items": {"type": "string"},
@@ -467,7 +468,7 @@ class InputValidation:
             self.validate_correct_keys(
                 input_evaluators[evaluator],
                 ["input_script", "inputs", "outputs"],
-                ["output_script", "keep_files"],
+                ["output_script", "keep_files", "execute2"],
                 "evaluator: " + evaluator,
             )
             # check if outputs are in predefined outputs or inputs, and if not
