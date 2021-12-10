@@ -2,7 +2,7 @@ from .backend import BackEnd
 import random
 import warnings
 import sys
-
+"""
 try:
     from mpi4py import MPI
     import dill
@@ -14,7 +14,7 @@ except:
         "Failed to import mpi4py. (Only necessary for parallel method: mpi_evals). \
         Please ignore this warning if you are using other parallel methods such \
         as multiprocessing and none."
-    )
+    )"""
 
 
 class Algorithm(object):
