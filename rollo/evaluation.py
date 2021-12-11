@@ -136,6 +136,7 @@ class Evaluation:
                 with open("output.txt", "wb") as output:
                     executable = self.input_scripts[solver][0].split(" ")
                     subprocess.call(executable + [self.input_scripts[solver][1]], stdout=output)
+                with open("output2.txt", "wb") as output:
                     try:
                         print("execute2")
                         subprocess.call(input_evaluators[solver]["execute2"], stdout=output)
