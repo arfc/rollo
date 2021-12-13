@@ -138,7 +138,8 @@ class Evaluation:
                     subprocess.call(executable + [self.input_scripts[solver][1]], stdout=output)
                 with open("output2.txt", "wb") as output:
                     print("execute2")
-                    subprocess.call(input_evaluators[solver]["execute2"], stdout=output)
+                    execute = input_evaluators[solver]["execute2"].split(" ")
+                    subprocess.call(execute, stdout=output)
 
                 # go back to normal directory with all files
                 os.chdir("../")
