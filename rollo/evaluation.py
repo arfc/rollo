@@ -188,7 +188,8 @@ class Evaluation:
             # run the output script
             oup_bytes = self.system_call(self.output_scripts[solver][0] + ' ' + self.output_scripts[solver][1])
             # return the output script's printed dictionary into a variable
-            print('hi',oup_bytes.decode("utf-8"))
+            print('hi',oup_bytes)
+            print('hihi',oup_bytes.decode("utf-8"))
             oup_script_results = ast.literal_eval(oup_bytes.decode("utf-8"))
             print(oup_script_results)
             # go back to normal directory with all files
