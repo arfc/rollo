@@ -187,11 +187,9 @@ class Evaluation:
             os.chdir(path)
             # run the output script
             oup_bytes = self.system_call(self.output_scripts[solver][0] + ' ' + self.output_scripts[solver][1])
-            try:
-                # return the output script's printed dictionary into a variable
-                oup_script_results = ast.literal_eval(oup_bytes.decode("utf-8"))
-            except: 
-                pass
+            # return the output script's printed dictionary into a variable
+            oup_script_results = ast.literal_eval(oup_bytes.decode("utf-8"))
+            print(oup_script_results)
             # go back to normal directory with all files
             os.chdir("../")
         for i, var in enumerate(output_dict):
