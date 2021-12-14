@@ -443,6 +443,7 @@ class InputValidation:
             schema_evaluators["properties"][evaluator] = {
                 "type": "object",
                 "properties": {
+                    "order": {"type": "number"},
                     "input_script": {
                         "type": "array",
                         "items": {"type": "string"},
@@ -467,7 +468,7 @@ class InputValidation:
         for evaluator in input_evaluators:
             self.validate_correct_keys(
                 input_evaluators[evaluator],
-                ["input_script", "inputs", "outputs"],
+                ["input_script", "inputs", "outputs", "order"],
                 ["output_script", "keep_files", "execute2"],
                 "evaluator: " + evaluator,
             )

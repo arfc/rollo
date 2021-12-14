@@ -104,8 +104,10 @@ class Evaluation:
             self.rank_time = time.time()
             control_vars = self.name_ind(ind, control_dict, input_evaluators)
             output_vals = [None] * len(output_dict)
+            order_of_solvers = self.solver_order(input_evaluators)
+            print("ORDER", order_of_solvers)
 
-            for solver in input_evaluators:
+            for solver in order_of_solvers:
                 print('SOLVER',solver)
                 # path name for solver's run
                 path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
@@ -136,10 +138,14 @@ class Evaluation:
                 with open("output.txt", "wb") as output:
                     executable = self.input_scripts[solver][0].split(" ")
                     subprocess.call(executable + [self.input_scripts[solver][1]], stdout=output)
-                with open("output2.txt", "wb") as output:
-                    print("execute2")
-                    execute = input_evaluators[solver]["execute2"].split(" ")
-                    subprocess.call(execute, stdout=output)
+                try:
+                    with open("output2.txt", "wb") as output:
+                        print("execute2")
+                        execute = input_evaluators[solver]["execute2"].split(" ")
+                        subprocess.call(execute, stdout=output)
+                except: 
+                    print("no execute2")
+                    pass
 
                 # go back to normal directory with all files
                 os.chdir("../")
@@ -153,6 +159,12 @@ class Evaluation:
             return tuple(output_vals)
 
         return eval_function
+
+    def solver_order(self, input_evaluators):
+        order = [None] * len(input_evaluators)
+        for solver in input_evaluators:
+            order[input_evaluators[solver]["order"]] = solver
+        return order 
 
     def get_output_vals(self, output_vals, solver, output_dict, control_vars, path):
         """Returns a populated list with output values for each solver
@@ -188,10 +200,7 @@ class Evaluation:
             # run the output script
             oup_bytes = self.system_call(self.output_scripts[solver][0] + ' ' + self.output_scripts[solver][1])
             # return the output script's printed dictionary into a variable
-            print('hi',oup_bytes)
-            print('hihi',oup_bytes.decode("utf-8"))
             oup_script_results = ast.literal_eval(oup_bytes.decode("utf-8").partition('\n')[0])
-            print(oup_script_results)
             # go back to normal directory with all files
             os.chdir("../")
         for i, var in enumerate(output_dict):
