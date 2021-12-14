@@ -154,6 +154,16 @@ class Evaluation:
                     output_vals = self.get_output_vals(
                         output_vals, solver, output_dict, control_vars, path
                     )
+                else:
+                    shutil.copyfile(
+                    self.output_scripts[solver][1], path + "/" + self.output_scripts[solver][1]
+                )
+                    # enter directory for this particular solver's run
+                    os.chdir(path)
+                    # run the output script
+                    oup_bytes = self.system_call(self.output_scripts[solver][0] + ' ' + self.output_scripts[solver][1])
+                    # go back to normal directory with all files
+                    os.chdir("../")
                 if input_evaluators[solver]["keep_files"] == False:
                     shutil.rmtree(path)
             return tuple(output_vals)
