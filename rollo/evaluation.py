@@ -141,7 +141,7 @@ class Evaluation:
                     start = time.time()
                     subprocess.call(executable + [self.input_scripts[solver][1]], stdout=output)
                     end = time.time()
-                    print(end-start)
+                    print("TIME 1",end-start)
                 try:
                     with open("output2.txt", "wb") as output:
                         print("execute2")
@@ -149,7 +149,7 @@ class Evaluation:
                         execute = input_evaluators[solver]["execute2"].split(" ")
                         subprocess.call(execute, stdout=output)
                         end = time.time()
-                        print(end-start)
+                        print("TIME 2",end-start)
                 except: 
                     print("no execute2")
                     pass
