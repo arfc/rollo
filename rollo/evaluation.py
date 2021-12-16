@@ -4,6 +4,7 @@ import ast
 import shutil
 import time
 import jinja2
+import time
 from jinja2 import nativetypes
 from rollo.openmc_evaluation import OpenMCEvaluation
 from rollo.moltres_evaluation import MoltresEvaluation
@@ -137,12 +138,18 @@ class Evaluation:
                 f.close()
                 with open("output.txt", "wb") as output:
                     executable = self.input_scripts[solver][0].split(" ")
+                    start = time.time()
                     subprocess.call(executable + [self.input_scripts[solver][1]], stdout=output)
+                    end = time.time()
+                    print(end-start)
                 try:
                     with open("output2.txt", "wb") as output:
                         print("execute2")
+                        start = time.time()
                         execute = input_evaluators[solver]["execute2"].split(" ")
                         subprocess.call(execute, stdout=output)
+                        end = time.time()
+                        print(end-start)
                 except: 
                     print("no execute2")
                     pass
