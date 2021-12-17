@@ -215,7 +215,10 @@ class Evaluation:
             # enter directory for this particular solver's run
             os.chdir(path)
             # run the output script
+            start = time.time()
             oup_bytes = self.system_call(self.output_scripts[solver][0] + ' ' + self.output_scripts[solver][1])
+            end = time.time()
+            print("TIME 3",end-start)
             # return the output script's printed dictionary into a variable
             oup_script_results = ast.literal_eval(oup_bytes.decode("utf-8").partition('\n')[0])
             # go back to normal directory with all files
