@@ -168,7 +168,10 @@ class Evaluation:
                     # enter directory for this particular solver's run
                     os.chdir(path)
                     # run the output script
+                    start = time.time()
                     oup_bytes = self.system_call(self.output_scripts[solver][0] + ' ' + self.output_scripts[solver][1])
+                    end = time.time()
+                    print("TIME 3",end-start)
                     # go back to normal directory with all files
                     os.chdir("../")
                 if input_evaluators[solver]["keep_files"] == False:
