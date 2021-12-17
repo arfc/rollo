@@ -250,8 +250,8 @@ class Evaluation:
             printed output from running evaluation software output file
 
         """
-
-        p = subprocess.Popen([command], stdout=subprocess.PIPE, shell=True)
+        with open("output3.txt", "wb") as output:
+            p = subprocess.Popen([command], stdout=output, shell=True)
         return p.stdout.read()
 
     def name_ind(self, ind, control_dict, input_evaluators):
