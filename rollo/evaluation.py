@@ -149,7 +149,7 @@ class Evaluation:
                         os.chdir(path)
                     txt_file = "output_execute_"+str(i)+".txt"
                     with open(txt_file, "wb") as output:
-                        print("execute2", i)
+                        print("execute2", i, os.getcwd())
                         start = time.time()
                         executable = input_evaluators[solver]["execute2"][i][0].split(" ")
                         print(executable)
