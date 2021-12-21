@@ -448,7 +448,10 @@ class InputValidation:
                         "type": "array",
                         "items": {"type": "string"},
                     },
-                    "execute2": {"type": "string"},
+                    "execute2": {
+                        "type": "array",
+                        "items": {"type": "array"},
+                    },
                     "inputs": {
                         "type": "array",
                         "items": {"type": "string"},
