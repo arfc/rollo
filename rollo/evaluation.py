@@ -154,7 +154,7 @@ class Evaluation:
                         executable = input_evaluators[solver]["execute2"][i][0].split(" ")
                         print(executable)
                         print(input_evaluators[solver]["execute2"][i][1])
-                        subprocess.call(executable + input_evaluators[solver]["execute2"][i][1], stdout=output)
+                        subprocess.call(executable + [input_evaluators[solver]["execute2"][i][1]], stdout=output)
                         end = time.time()
                         print("TIME 2",end-start)
 
