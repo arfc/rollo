@@ -147,9 +147,9 @@ class Evaluation:
                         os.chdir("../")
                         shutil.copyfile(input_evaluators[solver]["execute2"][i][1], path + "/" + input_evaluators[solver]["execute2"][i][1])
                         os.chdir(path)
-                        executable = input_evaluators[solver]["execute2"][i][0].split(" ")
-                    else:
                         executable = input_evaluators[solver]["execute2"][i][0].split(" ") + [input_evaluators[solver]["execute2"][i][1]]
+                    else:
+                        executable = input_evaluators[solver]["execute2"][i][0].split(" ")
 
                     txt_file = "output_execute_"+str(i)+".txt"
                     with open(txt_file, "wb") as output:
