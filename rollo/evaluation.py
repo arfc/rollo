@@ -147,14 +147,16 @@ class Evaluation:
                         os.chdir("../")
                         shutil.copyfile(input_evaluators[solver]["execute2"][i][1], path + "/" + input_evaluators[solver]["execute2"][i][1])
                         os.chdir(path)
+                        executable = input_evaluators[solver]["execute2"][i][0].split(" ")
+                    else:
+                        executable = input_evaluators[solver]["execute2"][i][0].split(" ") + [input_evaluators[solver]["execute2"][i][1]]
+
                     txt_file = "output_execute_"+str(i)+".txt"
                     with open(txt_file, "wb") as output:
                         print("execute2", i, os.getcwd())
                         start = time.time()
-                        executable = input_evaluators[solver]["execute2"][i][0].split(" ")
                         print(executable)
-                        print(input_evaluators[solver]["execute2"][i][1])
-                        subprocess.call(executable + [input_evaluators[solver]["execute2"][i][1]], stdout=output)
+                        subprocess.call(executable, stdout=output)
                         end = time.time()
                         print("TIME 2",end-start)
 
