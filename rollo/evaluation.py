@@ -143,13 +143,19 @@ class Evaluation:
                     end = time.time()
                     print("TIME 1",end-start)
                 try:
-                    with open("output2.txt", "wb") as output:
-                        print("execute2")
-                        start = time.time()
-                        execute = input_evaluators[solver]["execute2"].split(" ")
-                        subprocess.call(execute, stdout=output)
-                        end = time.time()
-                        print("TIME 2",end-start)
+                    for i in len(input_evaluators[solver]["execute2"]):
+                        if len(input_evaluators[solver]["execute2"][i][1]) > 1:
+                            os.chdir("../")
+                            shutil.copyfile(input_evaluators[solver]["execute2"][i][1], path + "/" + input_evaluators[solver]["execute2"][i][1])
+                            os.chdir(path)
+                        txt_file = "output_execute_i.txt"
+                        with open(txt_file, "wb") as output:
+                            print("execute2", i)
+                            start = time.time()
+                            executable = input_evaluators[solver]["execute2"][i][0].split(" ")
+                            subprocess.call(executable + input_evaluators[solver]["execute2"][i][1], stdout=output)
+                            end = time.time()
+                            print("TIME 2",end-start)
                 except: 
                     print("no execute2")
                     pass
