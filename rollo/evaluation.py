@@ -146,8 +146,8 @@ class Evaluation:
                     if len(input_evaluators[solver]["execute2"][i][1]) > 1:
                         os.chdir("../")
                         shutil.copyfile(input_evaluators[solver]["execute2"][i][1], path + "/" + input_evaluators[solver]["execute2"][i][1])
-                        os.chdir(path)
-                    txt_file = "output_execute_i.txt"
+                    os.chdir(path)
+                    txt_file = "output_execute_"+str(i)+".txt"
                     with open(txt_file, "wb") as output:
                         print("execute2", i)
                         start = time.time()
