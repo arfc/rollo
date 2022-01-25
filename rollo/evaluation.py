@@ -3,6 +3,7 @@ import subprocess
 import ast
 import shutil
 import time
+from typing import OrderedDict
 import jinja2
 import time
 from jinja2 import nativetypes
@@ -71,7 +72,7 @@ class Evaluation:
             for ind in pop: 
                 name = str(ind.gen) + "_" + str(ind.num)
                 control_vars_dict[name] = self.name_ind(ind, control_dict, input_evaluators)
-
+            output_vals_dict = OrderedDict()
             for solver in order_of_solvers:
                 # create dir and input script 
                 run_input = ''''''
@@ -79,6 +80,7 @@ class Evaluation:
                 for ind in pop:
                     name = str(ind.gen) + "_" + str(ind.num)
                     path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
+                    output_vals_dict[name] = [None] * len(output_dict)
                     if "python" in self.input_scripts[solver][0]:
                         rendered_script = self.render_jinja_template_python(
                             script=self.input_scripts[solver][1],
@@ -99,6 +101,7 @@ class Evaluation:
                     for i in range(len(input_evaluators[solver]["execute2"])):
                         if len(input_evaluators[solver]["execute2"][i]) > 1:
                             shutil.copyfile("../"+input_evaluators[solver]["execute2"][i][1], input_evaluators[solver]["execute2"][i][1])
+                    shutil.copyfile("../"+input_evaluators[solver]["output_script"][1], input_evaluators[solver]["output_script"][1])
                     os.chdir("../")
 
                     # run input script 
@@ -129,13 +132,46 @@ class Evaluation:
                         run_execute2 += " > execute2_" + str(i) + "_out.txt & \n"
                         run_execute2  += "sleep 1 \n"
                     run_execute2 += "wait"
-                    print("HERE", i)
-                    print(run_execute2)
                     subprocess.call(run_execute2, shell=True)
+                # run output script if there is one 
+                run_output = ''''''
+                count = 0
+                for ind in pop:
+                    name = str(ind.gen) + "_" + str(ind.num)
+                    path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
+                    if count == 0:
+                        run_output += " cd " + path + "\n"
+                    else:
+                        run_output += " cd ../" + path + "\n"
+                    count += 1
+                    run_output += self.output_scripts[solver][0] + " " + self.output_scripts[solver][1] + " > output_script_out.txt & \n"
+                    run_output += "sleep 1 \n"
+                run_output += "wait"
+                subprocess.call(run_output, shell=True)
+
                 # get output vals 
+                for ind in pop:
+                    name = str(ind.gen) + "_" + str(ind.num)
+                    path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
+                    for i, var in enumerate(output_dict):
+                        if output_dict[var] == solver:
+                            # if variable is a control variable
+                            if var in control_vars_dict[name][solver]:
+                                output_vals_dict[name][i] = control_vars_dict[name][solver][var]
+                            # if variable's defined in output script
+                            else:
+                                os.chdir(path)
+                                file = open("output_script_out.txt")
+                                contents = file.read()
+                                oup_script_results = ast.literal_eval(contents)
+                                output_vals_dict[name][i] = oup_script_results[var]  
+                                file.close()
+                                os.chdir("../")
+            print(output_vals_dict)
+            all_output_vals = []
+            for k in output_vals_dict:
+                all_output_vals.append(tuple(output_vals_dict[k]))
 
-
-            all_output_vals = 1
             return all_output_vals # list of tuples
         
         return eval_fn_theta
