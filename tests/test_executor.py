@@ -64,6 +64,7 @@ test_input_dict = {
             "sigma": 0.5,
         },
         "mating_operator": {"operator": "cxOnePoint"},
+        "parallel": "none"
     },
 }
 

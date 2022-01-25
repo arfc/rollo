@@ -63,6 +63,11 @@ class Evaluation:
             pass
         return
 
+    def eval_function_theta(self, control_dict, output_dict, input_evaluators):
+
+        output_vals = [1,1,1]
+        return tuple(output_vals)
+
     def eval_fn_generator(self, control_dict, output_dict, input_evaluators):
         """Returns a function that accepts a DEAP individual and returns a
         tuple of output values listed in outputs

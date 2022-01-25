@@ -192,9 +192,15 @@ class Executor(object):
                 input_script=solver_dict["input_script"],
                 output_script=output_script,
             )
-        evaluator_fn = evaluator.eval_fn_generator(
-            control_dict, output_dict, input_dict["evaluators"]
-        )
+        parallel_type = input_dict["algorithm"]["parallel"]
+        if parallel_type == "theta":
+            evaluator_fn = evaluator.eval_function_theta(
+                control_dict, output_dict, input_dict["evaluators"]
+            )
+        else:
+            evaluator_fn = evaluator.eval_fn_generator(
+                control_dict, output_dict, input_dict["evaluators"]
+            )
         return evaluator_fn
 
     def load_toolbox(
