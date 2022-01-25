@@ -131,7 +131,7 @@ class Algorithm(object):
         # evaluate fitness values of initial pop
         invalids = [ind for ind in pop if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
-        fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
+        fitnesses = list(self.toolbox.map(self.toolbox.evaluate, pop))
         # assign fitness values to individuals
         for ind, fitness in zip(pop, fitnesses):
             fitness_vals = []
@@ -170,7 +170,7 @@ class Algorithm(object):
         # evaluate fitness of newly created pop for inds with invalid fitness
         invalids = [ind for ind in pop if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
-        fitnesses = self.toolbox.map(self.toolbox.evaluate, list(invalids))
+        fitnesses = list(self.toolbox.map(self.toolbox.evaluate, list(invalids)))
         # assign fitness values to individuals
         for ind, fitness in zip(invalids, fitnesses):
             fitness_vals = []
