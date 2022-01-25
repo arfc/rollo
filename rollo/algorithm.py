@@ -132,8 +132,10 @@ class Algorithm(object):
         invalids = [ind for ind in pop if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
         if self.parallel_method == "theta":
+            print("in theta")
             fitnesses = self.toolbox.evaluate(pop)
         else:
+            print("in other")
             fitnesses = list(self.toolbox.map(self.toolbox.evaluate, pop))
         # assign fitness values to individuals
         for ind, fitness in zip(pop, fitnesses):

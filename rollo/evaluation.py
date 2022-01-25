@@ -66,8 +66,64 @@ class Evaluation:
     def eval_fn_generator_theta(self, control_dict, output_dict, input_evaluators):
         
         def eval_fn_theta(pop):
-            control_vars = self.name_ind(ind, control_dict, input_evaluators)
             order_of_solvers = self.solver_order(input_evaluators)
+            control_vars_dict = {}
+            for ind in pop: 
+                name = str(ind.gen) + "_" + str(ind.num)
+                control_vars_dict[name] = self.name_ind(ind, control_dict, input_evaluators)
+
+            for solver in order_of_solvers:
+                # create dir and input script 
+                run_input = ''''''
+                count = 0
+                for ind in pop:
+                    name = str(ind.gen) + "_" + str(ind.num)
+                    path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
+                    if "python" in self.input_scripts[solver][0]:
+                        rendered_script = self.render_jinja_template_python(
+                            script=self.input_scripts[solver][1],
+                            control_vars_solver=control_vars_dict[name][solver],
+                        )
+                    else:
+                        rendered_script = self.render_jinja_template(
+                            script=self.input_scripts[solver][1],
+                            control_vars_solver=control_vars_dict[name][solver],
+                            ind=ind, 
+                            solver=solver
+                        )
+                    os.mkdir(path)
+                    os.chdir(path)
+                    f = open(self.input_scripts[solver][1], "w+")
+                    f.write(rendered_script)
+                    f.close()
+                    for i in range(len(input_evaluators[solver]["execute2"])):
+                        if len(input_evaluators[solver]["execute2"][i]) > 1:
+                            shutil.copyfile("../"+input_evaluators[solver]["execute2"][i][1], input_evaluators[solver]["execute2"][i][1])
+                    os.chdir("../")
+
+                    # run input script 
+                    if count == 0:
+                        run_input += " cd " + path + "\n"
+                    else:
+                        run_input += " cd ../" + path + "\n"
+                    count += 1
+                    run_input += self.input_scripts[solver][0] + " " + self.input_scripts[solver][1] + " > input_script_out.txt & \n"
+                    run_input += "sleep 1 \n"
+                run_input += "wait"
+                subprocess.call(run_input, shell=True)
+                # run execute2 
+                count = 0 
+                for i in range(len(input_evaluators[solver]["execute2"])):
+                    run_execute2 = ''''''
+                    for ind in pop:
+                        if count == 0:
+                            run_execute2 += " cd " + path + "\n"
+                        else:
+                            run_execute2 += " cd ../" + path + "\n"
+                        count += 1
+                        #run_execute2 
+
+
 
             all_output_vals = 1
             return all_output_vals # list of tuples
@@ -154,7 +210,7 @@ class Evaluation:
                     end = time.time()
                     print("TIME 1",end-start)
                 for i in range(len(input_evaluators[solver]["execute2"])):
-                    if len(input_evaluators[solver]["execute2"][i][1]) > 1:
+                    if len(input_evaluators[solver]["execute2"][i]) > 1:
                         os.chdir("../")
                         shutil.copyfile(input_evaluators[solver]["execute2"][i][1], path + "/" + input_evaluators[solver]["execute2"][i][1])
                         os.chdir(path)
