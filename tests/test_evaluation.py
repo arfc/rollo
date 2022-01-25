@@ -36,8 +36,18 @@ def test_eval_fn_generator():
             }
         ),
         input_evaluators={
-            "openmc": {"order": 0, "keep_files": True, "execute2": [], "outputs": ["packing_fraction", "keff", "num_batches"]},
-            "moltres": {"order": 1, "keep_files": True, "execute2": [], "outputs": ["max_temp"]},
+            "openmc": {
+                "order": 0,
+                "keep_files": True,
+                "execute2": [],
+                "outputs": ["packing_fraction", "keff", "num_batches"],
+            },
+            "moltres": {
+                "order": 1,
+                "keep_files": True,
+                "execute2": [],
+                "outputs": ["max_temp"],
+            },
         },
     )
 
