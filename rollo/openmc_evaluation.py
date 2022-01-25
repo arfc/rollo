@@ -1,5 +1,5 @@
 import glob
-#import openmc
+import openmc
 
 
 class OpenMCEvaluation:
@@ -31,6 +31,6 @@ class OpenMCEvaluation:
         """
         for file in glob.glob("statepoint*"):
             h5file = file
-        #sp = openmc.StatePoint(h5file, autolink=False)
-        #keff = sp.k_combined.nominal_value
-        return 1 #keff
+        sp = openmc.StatePoint(h5file, autolink=False)
+        keff = sp.k_combined.nominal_value
+        return keff
