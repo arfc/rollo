@@ -63,10 +63,16 @@ class Evaluation:
             pass
         return
 
-    def eval_function_theta(self, control_dict, output_dict, input_evaluators):
+    def eval_fn_generator_theta(self, control_dict, output_dict, input_evaluators):
+        
+        def eval_fn_theta(pop):
+            control_vars = self.name_ind(ind, control_dict, input_evaluators)
+            order_of_solvers = self.solver_order(input_evaluators)
 
-        output_vals = [1,1,1]
-        return tuple(output_vals)
+            all_output_vals = 1
+            return all_output_vals # list of tuples
+        
+        return eval_fn_theta
 
     def eval_fn_generator(self, control_dict, output_dict, input_evaluators):
         """Returns a function that accepts a DEAP individual and returns a
