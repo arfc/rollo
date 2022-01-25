@@ -15,13 +15,13 @@ def test_eval_fn_generator():
     ev = Evaluation()
     ev.add_evaluator(
         solver_name="openmc",
-        input_script="input_test_eval_fn_generator_openmc_template.py",
-        output_script="input_test_eval_fn_generator_openmc_output.py",
+        input_script=["python", "input_test_eval_fn_generator_openmc_template.py"],
+        output_script=["python", "input_test_eval_fn_generator_openmc_output.py"],
     )
     ev.add_evaluator(
         solver_name="moltres",
-        input_script="input_test_render_jinja_template_python.py",
-        output_script="input_test_evaluation_get_output_vals_moltres.py",
+        input_script=["python", "input_test_render_jinja_template_python.py"],
+        output_script=["python", "input_test_evaluation_get_output_vals_moltres.py"],
     )
     eval_function = ev.eval_fn_generator(
         control_dict=OrderedDict(
@@ -36,8 +36,8 @@ def test_eval_fn_generator():
             }
         ),
         input_evaluators={
-            "openmc": {"keep_files": True},
-            "moltres": {"keep_files": True},
+            "openmc": {"order": 0, "keep_files": True, "execute2": [], "outputs": ["packing_fraction", "keff", "num_batches"]},
+            "moltres": {"order": 1, "keep_files": True, "execute2": [], "outputs": ["max_temp"]},
         },
     )
 
