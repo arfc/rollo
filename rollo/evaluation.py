@@ -112,17 +112,27 @@ class Evaluation:
                 run_input += "wait"
                 subprocess.call(run_input, shell=True)
                 # run execute2 
-                count = 0 
                 for i in range(len(input_evaluators[solver]["execute2"])):
+                    count = 0 
                     run_execute2 = ''''''
                     for ind in pop:
+                        name = str(ind.gen) + "_" + str(ind.num)
+                        path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
                         if count == 0:
                             run_execute2 += " cd " + path + "\n"
                         else:
                             run_execute2 += " cd ../" + path + "\n"
                         count += 1
-                        #run_execute2 
-
+                        exe = input_evaluators[solver]["execute2"][i]
+                        for j in exe:
+                            run_execute2 += j + " "
+                        run_execute2 += " > execute2_" + str(i) + "_out.txt & \n"
+                        run_execute2  += "sleep 1 \n"
+                    run_execute2 += "wait"
+                    print("HERE", i)
+                    print(run_execute2)
+                    subprocess.call(run_execute2, shell=True)
+                # get output vals 
 
 
             all_output_vals = 1
