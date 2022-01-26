@@ -161,13 +161,16 @@ class Evaluation:
                             # if variable's defined in output script
                             else:
                                 os.chdir(path)
-                                file = open("output_script_out.txt")
-                                contents = file.read()
-                                oup_script_results = ast.literal_eval(contents)
+                                with open("output_script_out.txt") as f:
+                                    first_line = f.readline()
+                                oup_script_results = ast.literal_eval(first_line)
                                 output_vals_dict[name][i] = oup_script_results[var]  
-                                file.close()
                                 os.chdir("../")
-            print(output_vals_dict)
+            if input_evaluators[solver]["keep_files"] == False:
+                for ind in pop:
+                    name = str(ind.gen) + "_" + str(ind.num)
+                    path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
+                    shutil.rmtree(path)          
             all_output_vals = []
             for k in output_vals_dict:
                 all_output_vals.append(tuple(output_vals_dict[k]))
