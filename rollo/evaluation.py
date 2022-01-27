@@ -114,6 +114,7 @@ class Evaluation:
                     run_input += self.input_scripts[solver][0] + " " + self.input_scripts[solver][1] + " > input_script_out.txt & \n"
                     run_input += "sleep 1 \n"
                 run_input += "wait"
+                print("run input", run_input)
                 start_time = time.time()
                 subprocess.call(run_input, shell=True)
                 print(solver, "RUNTIME INPUT ", time.time()-start_time)
@@ -136,6 +137,7 @@ class Evaluation:
                         run_execute2  += "sleep 1 \n"
                     run_execute2 += "wait"
                     start_time = time.time()
+                    print("run execute", run_execute2)
                     subprocess.call(run_execute2, shell=True)
                     print(solver, "RUNTIME EXECUTE ", str(i), time.time()-start_time)
                 # run output script if there is one 
@@ -153,6 +155,7 @@ class Evaluation:
                     run_output += "sleep 1 \n"
                 run_output += "wait"
                 start_time = time.time()
+                print("run output", run_output)
                 subprocess.call(run_output, shell=True)
                 print(solver, "RUNTIME OUTPUT ", time.time()-start_time)
 
