@@ -67,6 +67,7 @@ class Evaluation:
     def eval_fn_generator_theta(self, control_dict, output_dict, input_evaluators):
         
         def eval_fn_theta(pop):
+            start_start_time = time.time()
             order_of_solvers = self.solver_order(input_evaluators)
             control_vars_dict = {}
             for ind in pop: 
@@ -113,7 +114,9 @@ class Evaluation:
                     run_input += self.input_scripts[solver][0] + " " + self.input_scripts[solver][1] + " > input_script_out.txt & \n"
                     run_input += "sleep 1 \n"
                 run_input += "wait"
+                start_time = time.time()
                 subprocess.call(run_input, shell=True)
+                print(solver, "RUNTIME INPUT ", time.time()-start_time)
                 # run execute2 
                 for i in range(len(input_evaluators[solver]["execute2"])):
                     count = 0 
@@ -132,7 +135,9 @@ class Evaluation:
                         run_execute2 += " > execute2_" + str(i) + "_out.txt & \n"
                         run_execute2  += "sleep 1 \n"
                     run_execute2 += "wait"
+                    start_time = time.time()
                     subprocess.call(run_execute2, shell=True)
+                    print(solver, "RUNTIME EXECUTE ", str(i), time.time()-start_time)
                 # run output script if there is one 
                 run_output = ''''''
                 count = 0
@@ -147,7 +152,9 @@ class Evaluation:
                     run_output += self.output_scripts[solver][0] + " " + self.output_scripts[solver][1] + " > output_script_out.txt & \n"
                     run_output += "sleep 1 \n"
                 run_output += "wait"
+                start_time = time.time()
                 subprocess.call(run_output, shell=True)
+                print(solver, "RUNTIME OUTPUT ", time.time()-start_time)
 
                 # get output vals 
                 for ind in pop:
@@ -174,7 +181,7 @@ class Evaluation:
             all_output_vals = []
             for k in output_vals_dict:
                 all_output_vals.append(tuple(output_vals_dict[k]))
-
+            print("RUNTIME EVAL FN ", time.time()-start_start_time)
             return all_output_vals # list of tuples
         
         return eval_fn_theta
