@@ -68,7 +68,7 @@ class Algorithm(object):
             control_dict,
             output_dict,
             input_dict,
-            start_time,
+            start_time
         ),
         self.input_dict = input_dict,
         self.parallel_method = parallel_method
@@ -129,6 +129,7 @@ class Algorithm(object):
         """
 
         print("Entering generation 0...")
+        print("aye")
         for i, ind in enumerate(pop):
             ind.gen = 0
             ind.num = i
@@ -171,6 +172,7 @@ class Algorithm(object):
         print("Entering generation " + str(gen) + "...")
         num_obj = len(self.input_dict["algorithm"]["objective"])
         if num_obj == 1:
+            print("OBJ 1")
             pop = self.apply_selection_operator(pop)
             pop = self.apply_mating_operator(pop)
             pop = self.apply_mutation_operator(pop)
@@ -197,12 +199,32 @@ class Algorithm(object):
                 ind.fitness.values = tuple(fitness_vals)
                 ind.output = fitness
         else:
+            "IN OBJ > 1"
             offspring = deap.algorithms.varOr(
                 pop,
                 self.toolbox,
                 self.toolbox.pop_size,
                 self.toolbox.cxpb,
                 self.toolbox.mutpb)
+            for i, ind in enumerate(offspring):
+                ind.gen = gen
+                ind.num = i
+            invalids = [ind for ind in offspring if not ind.fitness.valid]
+            copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
+            if self.parallel_method == "theta":
+                fitnesses = self.toolbox.evaluate(list(invalids))
+            else:
+                fitnesses = list(
+                    self.toolbox.map(
+                        self.toolbox.evaluate,
+                        list(invalids)))
+            for ind, fitness in zip(invalids, fitnesses):
+                fitness_vals = []
+                for i in range(self.toolbox.objs):
+                    fitness_vals.append(fitness[i])
+                ind.fitness.values = tuple(fitness_vals)
+                ind.output = fitness
+            pop = self.apply_selection_operator(pop+offspring)
         pop = self.constraint_obj.apply_constraints(pop)
         self.backend.update_backend(pop, gen, copy_invalids, random.getstate())
         return pop
@@ -222,7 +244,7 @@ class Algorithm(object):
 
         """
 
-        pre_pop = self.toolbox.select(pop)
+        pre_pop = self.toolbox.select(pop, self.toolbox.pop_size)
         select_pop = [self.toolbox.clone(ind) for ind in pre_pop]
         # extend pop length to pop_size
         while len(select_pop) != self.toolbox.pop_size:
