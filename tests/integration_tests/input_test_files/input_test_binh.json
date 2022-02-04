@@ -1,0 +1,29 @@
+{
+    "control_variables": {
+        "x1": {"min":0, "max": 5},
+        "x2": {"min":0, "max": 3}
+    },
+    "evaluators": {
+        "openmc": {
+            "order": 0,
+            "input_script": ["python", "input_test_binh.py"],
+            "execute2": [],
+            "inputs": ["x1", "x2"],
+            "output_script": ["python", "input_test_binh_output.py"],
+            "outputs": ["f1", "f2"],
+            "keep_files": false
+        }
+    },
+    "constraints": {},
+    "algorithm": {
+        "objective": ["min", "min"],
+        "optimized_variable": ["f1", "f2"],
+        "pop_size": 100,
+        "generations": 10,
+        "parallel": "none",
+        "selection_operator": {
+            "operator": "selBest", 
+            "inds": 2
+        }
+    }
+}
