@@ -8,9 +8,9 @@ import deap
 class Algorithm(object):
     """The Algorithm class contains methods to initialize and execute the genetic
     algorithm. It executes a general genetic algorithm framework that uses the
-    hyperparameters defined in the deap_toolbox, applies constraints defined 
-    in the constraints_obj, evaluates fitness values using the evaluation 
-    function produced by Evaluation contained in the deap_toolbox, and saves 
+    hyperparameters defined in the deap_toolbox, applies constraints defined
+    in the constraints_obj, evaluates fitness values using the evaluation
+    function produced by Evaluation contained in the deap_toolbox, and saves
     all the results with BackEnd.
 
     Parameters
@@ -70,7 +70,7 @@ class Algorithm(object):
             input_dict,
             start_time,
         ),
-        self.input_dict = input_dict, 
+        self.input_dict = input_dict,
         self.parallel_method = parallel_method
 
     def generate(self):
@@ -91,7 +91,7 @@ class Algorithm(object):
 
                 pool = multiprocessing.Pool()
                 self.toolbox.register("map", pool.map)
-            except:
+            except BaseException:
                 warnings.warn(
                     "multiprocessing_on_dill failed to import, rollo will run serially."
                 )
@@ -105,7 +105,9 @@ class Algorithm(object):
             pop = self.initialize_pop(pop)
             self.cp_file = "checkpoint.pkl"
         print(self.backend.results["logbook"])
-        for gen in range(self.backend.results["start_gen"] + 1, self.toolbox.ngen):
+        for gen in range(
+                self.backend.results["start_gen"] + 1,
+                self.toolbox.ngen):
             pop = self.apply_algorithm_ngen(pop, gen)
             print(self.backend.results["logbook"])
         print("rollo Simulation Completed!")
@@ -176,13 +178,17 @@ class Algorithm(object):
             for i, ind in enumerate(pop):
                 ind.gen = gen
                 ind.num = i
-            # evaluate fitness of newly created pop for inds with invalid fitness
+            # evaluate fitness of newly created pop for inds with invalid
+            # fitness
             invalids = [ind for ind in pop if not ind.fitness.valid]
             copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
             if self.parallel_method == "theta":
                 fitnesses = self.toolbox.evaluate(list(invalids))
             else:
-                fitnesses = list(self.toolbox.map(self.toolbox.evaluate, list(invalids)))
+                fitnesses = list(
+                    self.toolbox.map(
+                        self.toolbox.evaluate,
+                        list(invalids)))
             # assign fitness values to individuals
             for ind, fitness in zip(invalids, fitnesses):
                 fitness_vals = []
@@ -191,7 +197,12 @@ class Algorithm(object):
                 ind.fitness.values = tuple(fitness_vals)
                 ind.output = fitness
         else:
-            offspring = deap.algorithms.varOr(pop, self.toolbox, self.toolbox.pop_size, self.toolbox.cxpb, self.toolbox.mutpb)
+            offspring = deap.algorithms.varOr(
+                pop,
+                self.toolbox,
+                self.toolbox.pop_size,
+                self.toolbox.cxpb,
+                self.toolbox.mutpb)
         pop = self.constraint_obj.apply_constraints(pop)
         self.backend.update_backend(pop, gen, copy_invalids, random.getstate())
         return pop

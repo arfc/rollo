@@ -20,6 +20,10 @@
         "optimized_variable": ["f1", "f2"],
         "pop_size": 100,
         "generations": 10,
-        "parallel": "none"
+        "parallel": "none",
+        "selection_operator": {
+            "operator": "selNSGA2", 
+            "inds": 15
+        }
     }
 }
