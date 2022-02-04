@@ -2,6 +2,7 @@ from .backend import BackEnd
 import random
 import warnings
 import sys
+import deap
 
 
 class Algorithm(object):
@@ -68,7 +69,8 @@ class Algorithm(object):
             output_dict,
             input_dict,
             start_time,
-        )
+        ),
+        self.input_dict = input_dict, 
         self.parallel_method = parallel_method
 
     def generate(self):
@@ -165,27 +167,31 @@ class Algorithm(object):
 
         """
         print("Entering generation " + str(gen) + "...")
-        pop = self.apply_selection_operator(pop)
-        pop = self.apply_mating_operator(pop)
-        pop = self.apply_mutation_operator(pop)
-        # define pop's gen, ind num
-        for i, ind in enumerate(pop):
-            ind.gen = gen
-            ind.num = i
-        # evaluate fitness of newly created pop for inds with invalid fitness
-        invalids = [ind for ind in pop if not ind.fitness.valid]
-        copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
-        if self.parallel_method == "theta":
-            fitnesses = self.toolbox.evaluate(list(invalids))
+        num_obj = len(self.input_dict["algorithm"]["objective"])
+        if num_obj == 1:
+            pop = self.apply_selection_operator(pop)
+            pop = self.apply_mating_operator(pop)
+            pop = self.apply_mutation_operator(pop)
+            # define pop's gen, ind num
+            for i, ind in enumerate(pop):
+                ind.gen = gen
+                ind.num = i
+            # evaluate fitness of newly created pop for inds with invalid fitness
+            invalids = [ind for ind in pop if not ind.fitness.valid]
+            copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
+            if self.parallel_method == "theta":
+                fitnesses = self.toolbox.evaluate(list(invalids))
+            else:
+                fitnesses = list(self.toolbox.map(self.toolbox.evaluate, list(invalids)))
+            # assign fitness values to individuals
+            for ind, fitness in zip(invalids, fitnesses):
+                fitness_vals = []
+                for i in range(self.toolbox.objs):
+                    fitness_vals.append(fitness[i])
+                ind.fitness.values = tuple(fitness_vals)
+                ind.output = fitness
         else:
-            fitnesses = list(self.toolbox.map(self.toolbox.evaluate, list(invalids)))
-        # assign fitness values to individuals
-        for ind, fitness in zip(invalids, fitnesses):
-            fitness_vals = []
-            for i in range(self.toolbox.objs):
-                fitness_vals.append(fitness[i])
-            ind.fitness.values = tuple(fitness_vals)
-            ind.output = fitness
+            offspring = deap.algorithms.varOr(pop, self.toolbox, self.toolbox.pop_size, self.toolbox.cxpb, self.toolbox.mutpb)
         pop = self.constraint_obj.apply_constraints(pop)
         self.backend.update_backend(pop, gen, copy_invalids, random.getstate())
         return pop
