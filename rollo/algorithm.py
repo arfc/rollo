@@ -2,17 +2,15 @@ from .backend import BackEnd
 import random
 import warnings
 import sys
-from deap import algorithms as deap_algo
 
 
 class Algorithm(object):
     """The Algorithm class contains methods to initialize and execute the genetic
     algorithm. It executes a general genetic algorithm framework that uses the
-    hyperparameters defined in the deap_toolbox, applies constraints defined
-    in the constraints_obj, evaluates fitness values using the evaluation
-    function produced by Evaluation contained in the deap_toolbox, and saves
+    hyperparameters defined in the deap_toolbox, applies constraints defined 
+    in the constraints_obj, evaluates fitness values using the evaluation 
+    function produced by Evaluation contained in the deap_toolbox, and saves 
     all the results with BackEnd.
-
     Parameters
     ----------
     deap_toolbox : deap.base.Toolbox object
@@ -30,7 +28,6 @@ class Algorithm(object):
         solver and number of variables as each value
     output_dict : OrderedDict
         Ordered dict of output variables as keys and solvers as values
-
     Attributes
     ----------
     toolbox : deap.base.Toolbox object
@@ -44,7 +41,6 @@ class Algorithm(object):
         Contains and manipulates the output backend
     parallel_method : str
         parallelization method (none, multiprocessing, theta)
-
     """
 
     def __init__(
@@ -68,20 +64,17 @@ class Algorithm(object):
             control_dict,
             output_dict,
             input_dict,
-            start_time
+            start_time,
         )
-        self.input_dict = input_dict
         self.parallel_method = parallel_method
 
     def generate(self):
         """Executes the genetic algorithm and outputs the summarized results
         into an output file
-
         Returns
         -------
         list
             list of deap.creator.Ind for final generation
-
         """
 
         pop = self.toolbox.population(n=self.toolbox.pop_size)
@@ -91,7 +84,7 @@ class Algorithm(object):
 
                 pool = multiprocessing.Pool()
                 self.toolbox.register("map", pool.map)
-            except BaseException:
+            except:
                 warnings.warn(
                     "multiprocessing_on_dill failed to import, rollo will run serially."
                 )
@@ -105,9 +98,7 @@ class Algorithm(object):
             pop = self.initialize_pop(pop)
             self.cp_file = "checkpoint.pkl"
         print(self.backend.results["logbook"])
-        for gen in range(
-                self.backend.results["start_gen"] + 1,
-                self.toolbox.ngen):
+        for gen in range(self.backend.results["start_gen"] + 1, self.toolbox.ngen):
             pop = self.apply_algorithm_ngen(pop, gen)
             print(self.backend.results["logbook"])
         print("rollo Simulation Completed!")
@@ -115,21 +106,17 @@ class Algorithm(object):
 
     def initialize_pop(self, pop):
         """Initialize population for genetic algorithm
-
         Parameters
         ----------
         pop : list
             list of deap.creator.Ind for previous generation
-
         Returns
         -------
         list
             list of deap.creator.Ind with fitnesses evaluated
-
         """
 
         print("Entering generation 0...")
-        print("aye")
         for i, ind in enumerate(pop):
             ind.gen = 0
             ind.num = i
@@ -155,112 +142,56 @@ class Algorithm(object):
 
     def apply_algorithm_ngen(self, pop, gen):
         """Apply genetic algorithm to a population
-
         Parameters
         ----------
         pop : list
             list of deap.creator.Ind for previous generation
         gen: int
             generation number
-
         Returns
         -------
         list
             list of deap.creator.Ind for new generation
-
         """
         print("Entering generation " + str(gen) + "...")
-        num_obj = len(self.input_dict["algorithm"]["objective"])
-        if num_obj == 1:
-            print("OBJ 1")
-            pop = self.apply_selection_operator(pop)
-            pop = self.apply_mating_operator(pop)
-            pop = self.apply_mutation_operator(pop)
-            # define pop's gen, ind num
-            for i, ind in enumerate(pop):
-                ind.gen = gen
-                ind.num = i
-            # evaluate fitness of newly created pop for inds with invalid
-            # fitness
-            invalids = [ind for ind in pop if not ind.fitness.valid]
-            copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
-            if self.parallel_method == "theta":
-                fitnesses = self.toolbox.evaluate(list(invalids))
-            else:
-                fitnesses = list(
-                    self.toolbox.map(
-                        self.toolbox.evaluate,
-                        list(invalids)))
-            # assign fitness values to individuals
-            for ind, fitness in zip(invalids, fitnesses):
-                fitness_vals = []
-                for i in range(self.toolbox.objs):
-                    fitness_vals.append(fitness[i])
-                ind.fitness.values = tuple(fitness_vals)
-                ind.output = fitness
+        pop = self.apply_selection_operator(pop)
+        pop = self.apply_mating_operator(pop)
+        pop = self.apply_mutation_operator(pop)
+        # define pop's gen, ind num
+        for i, ind in enumerate(pop):
+            ind.gen = gen
+            ind.num = i
+        # evaluate fitness of newly created pop for inds with invalid fitness
+        invalids = [ind for ind in pop if not ind.fitness.valid]
+        copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
+        if self.parallel_method == "theta":
+            fitnesses = self.toolbox.evaluate(list(invalids))
         else:
-            print("IN OBJ > 1")
-            pop = self.fix_inds_outside_constraints(pop)
-            offspring = deap_algo.varOr(
-                pop,
-                self.toolbox,
-                self.toolbox.pop_size,
-                self.toolbox.cxpb,
-                self.toolbox.mutpb)
-            for i, ind in enumerate(offspring):
-                ind.gen = gen
-                ind.num = i
-            invalids = [ind for ind in offspring if not ind.fitness.valid]
-            copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
-            if self.parallel_method == "theta":
-                fitnesses = self.toolbox.evaluate(list(invalids))
-            else:
-                fitnesses = list(
-                    self.toolbox.map(
-                        self.toolbox.evaluate,
-                        list(invalids)))
-            for ind, fitness in zip(invalids, fitnesses):
-                fitness_vals = []
-                for i in range(self.toolbox.objs):
-                    fitness_vals.append(fitness[i])
-                ind.fitness.values = tuple(fitness_vals)
-                ind.output = fitness
-            pop = self.apply_selection_operator(pop+offspring)
+            fitnesses = list(self.toolbox.map(self.toolbox.evaluate, list(invalids)))
+        # assign fitness values to individuals
+        for ind, fitness in zip(invalids, fitnesses):
+            fitness_vals = []
+            for i in range(self.toolbox.objs):
+                fitness_vals.append(fitness[i])
+            ind.fitness.values = tuple(fitness_vals)
+            ind.output = fitness
         pop = self.constraint_obj.apply_constraints(pop)
         self.backend.update_backend(pop, gen, copy_invalids, random.getstate())
         return pop
 
-    def fix_inds_outside_constraints(self, offspring):
-        corrected_offspring = []
-        count = 0
-        for ind in offspring:
-            for i, val in enumerate(ind):
-                if val <= self.toolbox.min_list[i] or val >= self.toolbox.max_list[i]:
-                    break
-                if i == len(ind)-1:
-                    corrected_offspring.append(ind)
-                    count += 1
-        print(self.toolbox.pop_size-count, " individuals did not meet ind constraints.")
-        while len(corrected_offspring) != self.toolbox.pop_size:
-            corrected_offspring.append(self.toolbox.clone(random.choice(corrected_offspring)))
-        return corrected_offspring
-
     def apply_selection_operator(self, pop):
         """Applies selection operator to population
-
         Parameters
         ----------
         pop : list
             list of deap.creator.Ind for that generation
-
         Returns
         -------
         list
             new list of deap.creator.Ind after selection operator application
-
         """
 
-        pre_pop = self.toolbox.select(individuals=pop, k=self.toolbox.pop_size)
+        pre_pop = self.toolbox.select(pop)
         select_pop = [self.toolbox.clone(ind) for ind in pre_pop]
         # extend pop length to pop_size
         while len(select_pop) != self.toolbox.pop_size:
@@ -269,17 +200,14 @@ class Algorithm(object):
 
     def apply_mating_operator(self, pop):
         """Applies mating operator to population
-
         Parameters
         ----------
         pop : list
             list of deap.creator.Ind for that generation
-
         Returns
         -------
         list
             new list of deap.creator.Ind after mating operator application
-
         """
 
         final_pop = []
@@ -308,17 +236,14 @@ class Algorithm(object):
 
     def apply_mutation_operator(self, pop):
         """Applies mutation operator to population
-
         Parameters
         ----------
         pop : list
             list of deap.creator.Ind for that generation
-
         Returns
         -------
         list
             new list of deap.creator.Ind after mutation operator application
-
         """
 
         final_pop = []
