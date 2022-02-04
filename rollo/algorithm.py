@@ -2,7 +2,7 @@ from .backend import BackEnd
 import random
 import warnings
 import sys
-import deap
+from deap import algorithms as deap_algo
 
 
 class Algorithm(object):
@@ -69,8 +69,8 @@ class Algorithm(object):
             output_dict,
             input_dict,
             start_time
-        ),
-        self.input_dict = input_dict,
+        )
+        self.input_dict = input_dict
         self.parallel_method = parallel_method
 
     def generate(self):
@@ -199,8 +199,9 @@ class Algorithm(object):
                 ind.fitness.values = tuple(fitness_vals)
                 ind.output = fitness
         else:
-            "IN OBJ > 1"
-            offspring = deap.algorithms.varOr(
+            print("IN OBJ > 1")
+            pop = self.fix_inds_outside_constraints(pop)
+            offspring = deap_algo.varOr(
                 pop,
                 self.toolbox,
                 self.toolbox.pop_size,
@@ -229,6 +230,21 @@ class Algorithm(object):
         self.backend.update_backend(pop, gen, copy_invalids, random.getstate())
         return pop
 
+    def fix_inds_outside_constraints(self, offspring):
+        corrected_offspring = []
+        count = 0
+        for ind in offspring:
+            for i, val in enumerate(ind):
+                if val <= self.toolbox.min_list[i] or val >= self.toolbox.max_list[i]:
+                    break
+                if i == len(ind)-1:
+                    corrected_offspring.append(ind)
+                    count += 1
+        print(self.toolbox.pop_size-count, " individuals did not meet ind constraints.")
+        while len(corrected_offspring) != self.toolbox.pop_size:
+            corrected_offspring.append(self.toolbox.clone(random.choice(corrected_offspring)))
+        return corrected_offspring
+
     def apply_selection_operator(self, pop):
         """Applies selection operator to population
 
@@ -244,7 +260,7 @@ class Algorithm(object):
 
         """
 
-        pre_pop = self.toolbox.select(pop, self.toolbox.pop_size)
+        pre_pop = self.toolbox.select(individuals=pop, k=self.toolbox.pop_size)
         select_pop = [self.toolbox.clone(ind) for ind in pre_pop]
         # extend pop length to pop_size
         while len(select_pop) != self.toolbox.pop_size:
