@@ -40,7 +40,7 @@ class InputValidation:
         for solver in input_dict["evaluators"]:
             input_evaluators[solver] = input_dict["evaluators"][solver]
             input_evaluators[solver] = self.default_check(
-                input_evaluators[solver], "keep_files", True
+                input_evaluators[solver], "keep_files", "all"
             )
         input_algorithm = input_dict["algorithm"]
         input_algorithm = self.default_check(input_algorithm, "objective", "min")
@@ -464,7 +464,7 @@ class InputValidation:
                         "type": "array",
                         "items": {"type": "string"},
                     },
-                    "keep_files": {"type": "boolean"},
+                    "keep_files": {"type": "string"},
                 },
             }
         validate(instance=input_evaluators, schema=schema_evaluators)
@@ -475,6 +475,7 @@ class InputValidation:
                 ["output_script", "keep_files", "execute2"],
                 "evaluator: " + evaluator,
             )
+            self.validate_in_list(input_evaluators[evaluator]["keep_files"], ["none", "all", "only_final"], "keep_files")
             # check if outputs are in predefined outputs or inputs, and if not
             # output_script must be defined
             in_list, which_strings = self.validate_if_in_list(

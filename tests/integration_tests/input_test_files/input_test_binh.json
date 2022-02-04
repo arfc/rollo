@@ -11,7 +11,7 @@
             "inputs": ["x1", "x2"],
             "output_script": ["python", "input_test_binh_output.py"],
             "outputs": ["f1", "f2"],
-            "keep_files": false
+            "keep_files": "only_final"
         }
     },
     "constraints": {},
@@ -20,10 +20,6 @@
         "optimized_variable": ["f1", "f2"],
         "pop_size": 100,
         "generations": 10,
-        "parallel": "none",
-        "selection_operator": {
-            "operator": "selBest", 
-            "inds": 2
-        }
+        "parallel": "none"
     }
 }

@@ -64,7 +64,7 @@ class Evaluation:
             pass
         return
 
-    def eval_fn_generator_theta(self, control_dict, output_dict, input_evaluators):
+    def eval_fn_generator_theta(self, control_dict, output_dict, input_evaluators, gens):
         
         def eval_fn_theta(pop):
             start_start_time = time.time()
@@ -176,11 +176,17 @@ class Evaluation:
                                 oup_script_results = ast.literal_eval(first_line)
                                 output_vals_dict[name][i] = oup_script_results[var]  
                                 os.chdir("../")
-            if input_evaluators[solver]["keep_files"] == False:
+            if input_evaluators[solver]["keep_files"] == "none":
                 for ind in pop:
                     name = str(ind.gen) + "_" + str(ind.num)
                     path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
-                    shutil.rmtree(path)          
+                    shutil.rmtree(path)
+            elif input_evaluators[solver]["keep_files"] == "only_final":
+                for ind in pop:
+                    if ind.gen < gens - 1:
+                        name = str(ind.gen) + "_" + str(ind.num)
+                        path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
+                        shutil.rmtree(path)         
             all_output_vals = []
             for k in output_vals_dict:
                 all_output_vals.append(tuple(output_vals_dict[k]))
@@ -189,7 +195,7 @@ class Evaluation:
         
         return eval_fn_theta
 
-    def eval_fn_generator(self, control_dict, output_dict, input_evaluators):
+    def eval_fn_generator(self, control_dict, output_dict, input_evaluators, gens):
         """Returns a function that accepts a DEAP individual and returns a
         tuple of output values listed in outputs
 
@@ -306,8 +312,11 @@ class Evaluation:
                     print("TIME 3",end-start)
                     # go back to normal directory with all files
                     os.chdir("../")
-                if input_evaluators[solver]["keep_files"] == False:
+                if input_evaluators[solver]["keep_files"] == "none":
                     shutil.rmtree(path)
+                elif input_evaluators[solver]["keep_files"] == "only_final":
+                    if ind.gen < gens - 1:
+                       shutil.rmtree(path) 
             return tuple(output_vals)
 
         return eval_function

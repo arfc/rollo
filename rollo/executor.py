@@ -193,13 +193,14 @@ class Executor(object):
                 output_script=output_script,
             )
         parallel_type = input_dict["algorithm"]["parallel"]
+        gens = input_dict["algorithm"]["generations"]
         if parallel_type == "theta":
             evaluator_fn = evaluator.eval_fn_generator_theta(
-                control_dict, output_dict, input_dict["evaluators"]
+                control_dict, output_dict, input_dict["evaluators"], gens
             )
         else:
             evaluator_fn = evaluator.eval_fn_generator(
-                control_dict, output_dict, input_dict["evaluators"]
+                control_dict, output_dict, input_dict["evaluators"], gens
             )
         return evaluator_fn
 
