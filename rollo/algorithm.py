@@ -7,9 +7,9 @@ import sys
 class Algorithm(object):
     """The Algorithm class contains methods to initialize and execute the genetic
     algorithm. It executes a general genetic algorithm framework that uses the
-    hyperparameters defined in the deap_toolbox, applies constraints defined 
-    in the constraints_obj, evaluates fitness values using the evaluation 
-    function produced by Evaluation contained in the deap_toolbox, and saves 
+    hyperparameters defined in the deap_toolbox, applies constraints defined
+    in the constraints_obj, evaluates fitness values using the evaluation
+    function produced by Evaluation contained in the deap_toolbox, and saves
     all the results with BackEnd.
     Parameters
     ----------
@@ -84,7 +84,7 @@ class Algorithm(object):
 
                 pool = multiprocessing.Pool()
                 self.toolbox.register("map", pool.map)
-            except:
+            except BaseException:
                 warnings.warn(
                     "multiprocessing_on_dill failed to import, rollo will run serially."
                 )
@@ -98,7 +98,9 @@ class Algorithm(object):
             pop = self.initialize_pop(pop)
             self.cp_file = "checkpoint.pkl"
         print(self.backend.results["logbook"])
-        for gen in range(self.backend.results["start_gen"] + 1, self.toolbox.ngen):
+        for gen in range(
+                self.backend.results["start_gen"] + 1,
+                self.toolbox.ngen):
             pop = self.apply_algorithm_ngen(pop, gen)
             print(self.backend.results["logbook"])
         print("rollo Simulation Completed!")
@@ -167,7 +169,10 @@ class Algorithm(object):
         if self.parallel_method == "theta":
             fitnesses = self.toolbox.evaluate(list(invalids))
         else:
-            fitnesses = list(self.toolbox.map(self.toolbox.evaluate, list(invalids)))
+            fitnesses = list(
+                self.toolbox.map(
+                    self.toolbox.evaluate,
+                    list(invalids)))
         # assign fitness values to individuals
         for ind, fitness in zip(invalids, fitnesses):
             fitness_vals = []
