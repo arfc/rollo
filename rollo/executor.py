@@ -58,7 +58,8 @@ class Executor(object):
         iv.validate()
         complete_input_dict = iv.input
         # organize control variables and output dict
-        control_dict, output_dict = self.organize_input_output(complete_input_dict)
+        control_dict, output_dict = self.organize_input_output(
+            complete_input_dict)
         # generate evaluator function
         evaluator_fn = self.load_evaluator(
             control_dict, output_dict, complete_input_dict
@@ -185,7 +186,7 @@ class Executor(object):
             solver_dict = input_evaluators[solver]
             try:
                 output_script = solver_dict["output_script"]
-            except:
+            except BaseException:
                 output_script = None
             evaluator.add_evaluator(
                 solver_name=solver,

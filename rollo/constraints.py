@@ -4,8 +4,8 @@ import random
 
 
 class Constraints(object):
-    """The Constraints class contains methods to initialize constraints defined 
-    in the input file and applies the constraints by removing individuals that 
+    """The Constraints class contains methods to initialize constraints defined
+    in the input file and applies the constraints by removing individuals that
     do not meet the constraint.
 
     Parameters
@@ -120,7 +120,8 @@ class Constraints(object):
             if not_constrained:
                 new_pop.append(ind)
         if len(new_pop) == 0:
-            raise Exception("All individuals were constrained. Run with larger population size or reconsider your constraint choice. ")
+            raise Exception(
+                "All individuals were constrained. Run with larger population size or reconsider your constraint choice. ")
         final_pop = [self.toolbox.clone(ind) for ind in new_pop]
         while len(final_pop) < len(pop):
             final_pop.append(self.toolbox.clone(random.choice(new_pop)))

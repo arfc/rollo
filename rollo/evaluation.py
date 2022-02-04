@@ -14,10 +14,10 @@ from rollo.moltres_evaluation import MoltresEvaluation
 class Evaluation:
     """Holds functions that generate and execute the evaluation solver's scripts.
 
-    DEAP's (evolutionary algorithm package) fitness evaluator requires an 
-    evaluation function to evaluate each individual's fitness values. The 
-    Evaluation class contains a method that creates an evaluation function that 
-    runs the nuclear software and returns the required fitness values, defined 
+    DEAP's (evolutionary algorithm package) fitness evaluator requires an
+    evaluation function to evaluate each individual's fitness values. The
+    Evaluation class contains a method that creates an evaluation function that
+    runs the nuclear software and returns the required fitness values, defined
     in the input file.
 
     Attributes
@@ -41,7 +41,10 @@ class Evaluation:
         self.input_scripts = {}
         self.output_scripts = {}
         # Developers can add new solvers to self.eval_dict below
-        self.eval_dict = {"openmc": OpenMCEvaluation(), "openmc_gc": OpenMCEvaluation(), "moltres": MoltresEvaluation()}
+        self.eval_dict = {
+            "openmc": OpenMCEvaluation(),
+            "openmc_gc": OpenMCEvaluation(),
+            "moltres": MoltresEvaluation()}
 
     def add_evaluator(self, solver_name, input_script, output_script):
         """Adds information about an evaluator to the Evaluation class object
@@ -60,22 +63,28 @@ class Evaluation:
         self.input_scripts[solver_name] = input_script
         try:
             self.output_scripts[solver_name] = output_script
-        except:
+        except BaseException:
             pass
         return
 
-    def eval_fn_generator_theta(self, control_dict, output_dict, input_evaluators, gens):
-        
+    def eval_fn_generator_theta(
+            self,
+            control_dict,
+            output_dict,
+            input_evaluators,
+            gens):
+
         def eval_fn_theta(pop):
             start_start_time = time.time()
             order_of_solvers = self.solver_order(input_evaluators)
             control_vars_dict = {}
-            for ind in pop: 
+            for ind in pop:
                 name = str(ind.gen) + "_" + str(ind.num)
-                control_vars_dict[name] = self.name_ind(ind, control_dict, input_evaluators)
+                control_vars_dict[name] = self.name_ind(
+                    ind, control_dict, input_evaluators)
             output_vals_dict = OrderedDict()
             for solver in order_of_solvers:
-                # create dir and input script 
+                # create dir and input script
                 run_input = ''''''
                 count = 0
                 for ind in pop:
@@ -91,7 +100,7 @@ class Evaluation:
                         rendered_script = self.render_jinja_template(
                             script=self.input_scripts[solver][1],
                             control_vars_solver=control_vars_dict[name][solver],
-                            ind=ind, 
+                            ind=ind,
                             solver=solver
                         )
                     os.mkdir(path)
@@ -101,26 +110,31 @@ class Evaluation:
                     f.close()
                     for i in range(len(input_evaluators[solver]["execute2"])):
                         if len(input_evaluators[solver]["execute2"][i]) > 1:
-                            shutil.copyfile("../"+input_evaluators[solver]["execute2"][i][1], input_evaluators[solver]["execute2"][i][1])
-                    shutil.copyfile("../"+input_evaluators[solver]["output_script"][1], input_evaluators[solver]["output_script"][1])
+                            shutil.copyfile(
+                                "../" + input_evaluators[solver]["execute2"][i][1],
+                                input_evaluators[solver]["execute2"][i][1])
+                    shutil.copyfile(
+                        "../" + input_evaluators[solver]["output_script"][1],
+                        input_evaluators[solver]["output_script"][1])
                     os.chdir("../")
 
-                    # run input script 
+                    # run input script
                     if count == 0:
                         run_input += " cd " + path + "\n"
                     else:
                         run_input += " cd ../" + path + "\n"
                     count += 1
-                    run_input += self.input_scripts[solver][0] + " " + self.input_scripts[solver][1] + " > input_script_out.txt & \n"
+                    run_input += self.input_scripts[solver][0] + " " + \
+                        self.input_scripts[solver][1] + " > input_script_out.txt & \n"
                     run_input += "sleep 1 \n"
                 run_input += "wait"
                 print("run input", run_input)
                 start_time = time.time()
                 subprocess.call(run_input, shell=True)
-                print(solver, "RUNTIME INPUT ", time.time()-start_time)
-                # run execute2 
+                print(solver, "RUNTIME INPUT ", time.time() - start_time)
+                # run execute2
                 for i in range(len(input_evaluators[solver]["execute2"])):
-                    count = 0 
+                    count = 0
                     run_execute2 = ''''''
                     for ind in pop:
                         name = str(ind.gen) + "_" + str(ind.num)
@@ -133,14 +147,20 @@ class Evaluation:
                         exe = input_evaluators[solver]["execute2"][i]
                         for j in exe:
                             run_execute2 += j + " "
-                        run_execute2 += " > execute2_" + str(i) + "_out.txt & \n"
-                        run_execute2  += "sleep 1 \n"
+                        run_execute2 += " > execute2_" + \
+                            str(i) + "_out.txt & \n"
+                        run_execute2 += "sleep 1 \n"
                     run_execute2 += "wait"
                     start_time = time.time()
                     print("run execute", run_execute2)
                     subprocess.call(run_execute2, shell=True)
-                    print(solver, "RUNTIME EXECUTE ", str(i), time.time()-start_time)
-                # run output script if there is one 
+                    print(
+                        solver,
+                        "RUNTIME EXECUTE ",
+                        str(i),
+                        time.time() -
+                        start_time)
+                # run output script if there is one
                 run_output = ''''''
                 count = 0
                 for ind in pop:
@@ -151,15 +171,16 @@ class Evaluation:
                     else:
                         run_output += " cd ../" + path + "\n"
                     count += 1
-                    run_output += self.output_scripts[solver][0] + " " + self.output_scripts[solver][1] + " > output_script_out.txt & \n"
+                    run_output += self.output_scripts[solver][0] + " " + \
+                        self.output_scripts[solver][1] + " > output_script_out.txt & \n"
                     run_output += "sleep 1 \n"
                 run_output += "wait"
                 start_time = time.time()
                 print("run output", run_output)
                 subprocess.call(run_output, shell=True)
-                print(solver, "RUNTIME OUTPUT ", time.time()-start_time)
+                print(solver, "RUNTIME OUTPUT ", time.time() - start_time)
 
-                # get output vals 
+                # get output vals
                 for ind in pop:
                     name = str(ind.gen) + "_" + str(ind.num)
                     path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
@@ -173,8 +194,9 @@ class Evaluation:
                                 os.chdir(path)
                                 with open("output_script_out.txt") as f:
                                     first_line = f.readline()
-                                oup_script_results = ast.literal_eval(first_line)
-                                output_vals_dict[name][i] = oup_script_results[var]  
+                                oup_script_results = ast.literal_eval(
+                                    first_line)
+                                output_vals_dict[name][i] = oup_script_results[var]
                                 os.chdir("../")
             if input_evaluators[solver]["keep_files"] == "none":
                 for ind in pop:
@@ -186,16 +208,21 @@ class Evaluation:
                     if ind.gen < gens - 1:
                         name = str(ind.gen) + "_" + str(ind.num)
                         path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
-                        shutil.rmtree(path)         
+                        shutil.rmtree(path)
             all_output_vals = []
             for k in output_vals_dict:
                 all_output_vals.append(tuple(output_vals_dict[k]))
-            print("RUNTIME EVAL FN ", time.time()-start_start_time)
-            return all_output_vals # list of tuples
-        
+            print("RUNTIME EVAL FN ", time.time() - start_start_time)
+            return all_output_vals  # list of tuples
+
         return eval_fn_theta
 
-    def eval_fn_generator(self, control_dict, output_dict, input_evaluators, gens):
+    def eval_fn_generator(
+            self,
+            control_dict,
+            output_dict,
+            input_evaluators,
+            gens):
         """Returns a function that accepts a DEAP individual and returns a
         tuple of output values listed in outputs
 
@@ -241,7 +268,7 @@ class Evaluation:
             print("ORDER", order_of_solvers)
 
             for solver in order_of_solvers:
-                print('SOLVER',solver)
+                print('SOLVER', solver)
                 # path name for solver's run
                 path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
                 # render jinja-ed input script
@@ -255,7 +282,7 @@ class Evaluation:
                     rendered_script = self.render_jinja_template(
                         script=self.input_scripts[solver][1],
                         control_vars_solver=control_vars[solver],
-                        ind=ind, 
+                        ind=ind,
                         solver=solver
                     )
                 # enter directory for this particular solver's run
@@ -263,34 +290,39 @@ class Evaluation:
                 os.chdir(path)
                 # run solver's function where run is executed
                 #exec("self." + solver + "_run(rendered_script)")
-                
-                # run input file 
+
+                # run input file
                 f = open(self.input_scripts[solver][1], "w+")
                 f.write(rendered_script)
                 f.close()
                 with open("output.txt", "wb") as output:
                     executable = self.input_scripts[solver][0].split(" ")
                     start = time.time()
-                    subprocess.call(executable + [self.input_scripts[solver][1]], stdout=output)
+                    subprocess.call(executable +
+                                    [self.input_scripts[solver][1]], stdout=output)
                     end = time.time()
-                    print("TIME 1",end-start)
+                    print("TIME 1", end - start)
                 for i in range(len(input_evaluators[solver]["execute2"])):
                     if len(input_evaluators[solver]["execute2"][i]) > 1:
                         os.chdir("../")
-                        shutil.copyfile(input_evaluators[solver]["execute2"][i][1], path + "/" + input_evaluators[solver]["execute2"][i][1])
+                        shutil.copyfile(
+                            input_evaluators[solver]["execute2"][i][1],
+                            path + "/" + input_evaluators[solver]["execute2"][i][1])
                         os.chdir(path)
-                        executable = input_evaluators[solver]["execute2"][i][0].split(" ") + [input_evaluators[solver]["execute2"][i][1]]
+                        executable = input_evaluators[solver]["execute2"][i][0].split(
+                            " ") + [input_evaluators[solver]["execute2"][i][1]]
                     else:
-                        executable = input_evaluators[solver]["execute2"][i][0].split(" ")
+                        executable = input_evaluators[solver]["execute2"][i][0].split(
+                            " ")
 
-                    txt_file = "output_execute_"+str(i)+".txt"
+                    txt_file = "output_execute_" + str(i) + ".txt"
                     with open(txt_file, "wb") as output:
                         print("execute2", i, os.getcwd())
                         start = time.time()
                         print(executable)
                         subprocess.call(executable, stdout=output)
                         end = time.time()
-                        print("TIME 2",end-start)
+                        print("TIME 2", end - start)
 
                 # go back to normal directory with all files
                 os.chdir("../")
@@ -301,22 +333,23 @@ class Evaluation:
                     )
                 else:
                     shutil.copyfile(
-                    self.output_scripts[solver][1], path + "/" + self.output_scripts[solver][1]
-                )
+                        self.output_scripts[solver][1],
+                        path + "/" + self.output_scripts[solver][1])
                     # enter directory for this particular solver's run
                     os.chdir(path)
                     # run the output script
                     start = time.time()
-                    oup_bytes = self.system_call(self.output_scripts[solver][0] + ' ' + self.output_scripts[solver][1])
+                    oup_bytes = self.system_call(
+                        self.output_scripts[solver][0] + ' ' + self.output_scripts[solver][1])
                     end = time.time()
-                    print("TIME 3",end-start)
+                    print("TIME 3", end - start)
                     # go back to normal directory with all files
                     os.chdir("../")
                 if input_evaluators[solver]["keep_files"] == "none":
                     shutil.rmtree(path)
                 elif input_evaluators[solver]["keep_files"] == "only_final":
                     if ind.gen < gens - 1:
-                       shutil.rmtree(path) 
+                        shutil.rmtree(path)
             return tuple(output_vals)
 
         return eval_function
@@ -325,9 +358,15 @@ class Evaluation:
         order = [None] * len(input_evaluators)
         for solver in input_evaluators:
             order[input_evaluators[solver]["order"]] = solver
-        return order 
+        return order
 
-    def get_output_vals(self, output_vals, solver, output_dict, control_vars, path):
+    def get_output_vals(
+            self,
+            output_vals,
+            solver,
+            output_dict,
+            control_vars,
+            path):
         """Returns a populated list with output values for each solver
 
         Parameters
@@ -352,19 +391,24 @@ class Evaluation:
         """
 
         if self.output_scripts[solver]:
-            # copy rendered output script into a new file in the particular solver's run
+            # copy rendered output script into a new file in the particular
+            # solver's run
             shutil.copyfile(
-                self.output_scripts[solver][1], path + "/" + self.output_scripts[solver][1]
-            )
+                self.output_scripts[solver][1],
+                path + "/" + self.output_scripts[solver][1])
             # enter directory for this particular solver's run
             os.chdir(path)
             # run the output script
             start = time.time()
-            oup_bytes = self.system_call(self.output_scripts[solver][0] + ' ' + self.output_scripts[solver][1])
+            oup_bytes = self.system_call(
+                self.output_scripts[solver][0] +
+                ' ' +
+                self.output_scripts[solver][1])
             end = time.time()
-            print("TIME 3",end-start)
+            print("TIME 3", end - start)
             # return the output script's printed dictionary into a variable
-            oup_script_results = ast.literal_eval(oup_bytes.decode("utf-8").partition('\n')[0])
+            oup_script_results = ast.literal_eval(
+                oup_bytes.decode("utf-8").partition('\n')[0])
             # go back to normal directory with all files
             os.chdir("../")
         for i, var in enumerate(output_dict):
@@ -397,7 +441,7 @@ class Evaluation:
             printed output from running evaluation software output file
 
         """
-    
+
         p = subprocess.Popen([command], stdout=subprocess.PIPE, shell=True)
         return p.stdout.read()
 
@@ -462,7 +506,8 @@ class Evaluation:
         template = nativetypes.NativeTemplate(imported_script)
         render_str = "template.render("
         for inp in control_vars_solver:
-            render_str += "**{'" + inp + "':" + str(control_vars_solver[inp]) + "},"
+            render_str += "**{'" + inp + "':" + \
+                str(control_vars_solver[inp]) + "},"
         render_str += ")"
         rendered_template = eval(render_str)
         return rendered_template
@@ -484,14 +529,15 @@ class Evaluation:
             rendered evaluator template script
         """
 
-        with open(script) as f: 
+        with open(script) as f:
             tmp = jinja2.Template(f.read())
         render_str = "tmp.render("
         for var in control_vars_solver:
             render_str += var + "='" + control_vars_solver[var] + "',"
-                # special condition for moltres 
-        if solver == "moltres": 
-            render_str += "group_constant_dir='../openmc_gc_" + str(ind.gen) + "_" + str(ind.num) + "'"
+            # special condition for moltres
+        if solver == "moltres":
+            render_str += "group_constant_dir='../openmc_gc_" + \
+                str(ind.gen) + "_" + str(ind.num) + "'"
         render_str += ")"
         rendered_template = eval(render_str)
 
@@ -511,9 +557,9 @@ class Evaluation:
         f.write(rendered_openmc_script)
         f.close()
         with open("output.txt", "wb") as output:
-            subprocess.call(["python", "-u", "./openmc_input.py"], stdout=output)
+            subprocess.call(
+                ["python", "-u", "./openmc_input.py"], stdout=output)
         return
-        
 
     def moltres_run(self, rendered_moltres_script):
         """Runs the rendered moltres input file
