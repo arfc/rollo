@@ -156,15 +156,14 @@ class Algorithm(object):
             list of deap.creator.Ind for new generation
         """
         print("Entering generation " + str(gen) + "...")
-        pop = self.apply_selection_operator(pop)
-        pop = self.apply_mating_operator(pop)
-        pop = self.apply_mutation_operator(pop)
+        offspring = self.apply_mating_operator(pop)
+        offspring = self.apply_mutation_operator(offspring)
         # define pop's gen, ind num
-        for i, ind in enumerate(pop):
+        for i, ind in enumerate(offspring):
             ind.gen = gen
             ind.num = i
         # evaluate fitness of newly created pop for inds with invalid fitness
-        invalids = [ind for ind in pop if not ind.fitness.valid]
+        invalids = [ind for ind in offspring if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
         if self.parallel_method == "theta":
             fitnesses = self.toolbox.evaluate(list(invalids))
@@ -180,6 +179,7 @@ class Algorithm(object):
                 fitness_vals.append(fitness[i])
             ind.fitness.values = tuple(fitness_vals)
             ind.output = fitness
+        pop = self.apply_selection_operator(pop+offspring)
         pop = self.constraint_obj.apply_constraints(pop)
         self.backend.update_backend(pop, gen, copy_invalids, random.getstate())
         return pop
@@ -196,12 +196,8 @@ class Algorithm(object):
             new list of deap.creator.Ind after selection operator application
         """
 
-        pre_pop = self.toolbox.select(pop)
-        select_pop = [self.toolbox.clone(ind) for ind in pre_pop]
-        # extend pop length to pop_size
-        while len(select_pop) != self.toolbox.pop_size:
-            select_pop.append(self.toolbox.clone(random.choice(pre_pop)))
-        return select_pop
+        pop = self.toolbox.select(individuals=pop, k=self.toolbox.pop_size)
+        return pop
 
     def apply_mating_operator(self, pop):
         """Applies mating operator to population

@@ -11,7 +11,7 @@
             "inputs": ["x1", "x2"],
             "output_script": ["python", "input_test_binh_output.py"],
             "outputs": ["f1", "f2"],
-            "keep_files": "only_final"
+            "keep_files": "none"
         }
     },
     "constraints": {},

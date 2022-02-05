@@ -49,6 +49,7 @@ def test_eval_fn_generator():
                 "outputs": ["max_temp"],
             },
         },
+        gens=10,
     )
 
     creator.create("obj", base.Fitness, weights=(-1.0,))

@@ -175,13 +175,13 @@ def test_apply_selection_operator():
     pop = a.initialize_pop(pop)
     cloned_pop = [toolbox.clone(ind) for ind in pop]
     selected_pop = a.apply_selection_operator(cloned_pop)
+    print(len(selected_pop), selected_pop)
     expected_inds = [toolbox.clone(ind) for ind in pop]
     expected_inds.sort(key=lambda x: x[2])
-    expected_inds = expected_inds[k:]
     for s in selected_pop:
         assert s in expected_inds
     os.remove("checkpoint.pkl")
-
+    
 
 def test_apply_mating_operator():
     a = Algorithm(

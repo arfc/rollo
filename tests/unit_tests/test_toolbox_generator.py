@@ -126,9 +126,9 @@ def test_min_max_list():
 def test_add_selection_operators():
     tg = ToolboxGenerator()
     selection_dict_list = [
-        {"operator": "selTournament", "inds": 5, "tournsize": 2},
-        {"operator": "selNSGA2", "inds": 5},
-        {"operator": "selBest", "inds": 5},
+        {"operator": "selTournament", "tournsize": 2},
+        {"operator": "selNSGA2"},
+        {"operator": "selBest"},
     ]
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
@@ -146,12 +146,8 @@ def test_add_selection_operators():
             toolbox = tg.add_selection_operators(toolbox, selection_dict)
             expected_inds = []
             for i, ind in enumerate(pop):
-                if (i % 2) == 0:
-                    ind.fitness.values = (1,)
-                else:
-                    ind.fitness.values = (0,)
-                    expected_inds.append(ind)
-            new_pop = toolbox.select(pop)
+                expected_inds.append(ind)
+            new_pop = toolbox.select(pop, k=10)
             assert "select" in dir(toolbox)
             if selection_dict["operator"] == "selBest":
                 assert new_pop == expected_inds

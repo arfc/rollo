@@ -57,7 +57,7 @@ class InputValidation:
         input_algorithm = self.default_check(
             input_algorithm,
             "selection_operator",
-            {"operator": "selTournament", "inds": 15, "tournsize": 5},
+            {"operator": "selTournament", "tournsize": 5},
         )
         input_algorithm = self.default_check(
             input_algorithm,
@@ -230,13 +230,6 @@ class InputValidation:
         self.validate_algorithm_operators("mutation", input_algorithm)
         self.validate_algorithm_operators("mating", input_algorithm)
 
-        # k value cannot be larger than pop size
-        if input_algorithm["selection_operator"]["operator"] == "selTournament":
-            if (
-                input_algorithm["selection_operator"]["inds"]
-                > input_algorithm["pop_size"]
-            ):
-                raise Exception("Population size must be larger than inds.")
         return
 
     def validate_algorithm_operators(self, operator_type, input_algorithm):
@@ -253,9 +246,9 @@ class InputValidation:
 
         deap_operators = {
             "selection": {
-                "selTournament": ["inds", "tournsize"],
-                "selNSGA2": ["inds"],
-                "selBest": ["inds"],
+                "selTournament": ["tournsize"],
+                "selNSGA2": [],
+                "selBest": [],
             },
             "mutation": {
                 "mutPolynomialBounded": ["eta", "indpb"],
