@@ -13,7 +13,7 @@ class Algorithm(object):
     all the results with BackEnd.
     Parameters
     ----------
-    deap_toolbox : deap.base.Toolbox object
+    deap_toolbox : deap.base.Toolbox
         DEAP toolbox populated with user-defined genetic algorithm parameters
     constraint_obj : rollo.constraints.Constraints
         Holds information about constraints for the problem and functions to

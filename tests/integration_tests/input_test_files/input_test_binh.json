@@ -18,12 +18,23 @@
     "algorithm": {
         "objective": ["min", "min"],
         "optimized_variable": ["f1", "f2"],
-        "pop_size": 100,
-        "generations": 10,
+        "weight": [1, 1], 
+        "pop_size": 120,
+        "generations": 5,
         "parallel": "none",
+        "mutation_probability": 0.23,
+        "mating_probability": 0.46,  
         "selection_operator": {
-            "operator": "selNSGA2", 
-            "inds": 15
+            "operator": "selNSGA2"
+        }, 
+        "mutation_operator": {
+            "operator": "mutPolynomialBounded", 
+            "eta": 0.23, 
+            "indpb": 0.23
+        }, 
+        "mating_operator": {
+            "operator": "cxBlend", 
+            "alpha": 0.46
         }
     }
 }

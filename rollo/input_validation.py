@@ -44,7 +44,9 @@ class InputValidation:
             )
         input_algorithm = input_dict["algorithm"]
         input_algorithm = self.default_check(
-            input_algorithm, "objective", "min")
+            input_algorithm, "objective", ["min"])
+        input_algorithm = self.default_check(
+            input_algorithm, "weight", [1.0])
         input_algorithm = self.default_check(input_algorithm, "pop_size", 60)
         input_algorithm = self.default_check(
             input_algorithm, "generations", 10)
@@ -176,6 +178,10 @@ class InputValidation:
                     "type": "array",
                     "items": {"type": "string"},
                 },
+                "weight": {
+                    "type": "array",
+                    "items": {"type": "number"},
+                },
                 "optimized_variable": {
                     "type": "array",
                     "items": {"type": "string"},
@@ -197,6 +203,7 @@ class InputValidation:
             [
                 "parallel",
                 "objective",
+                "weight",
                 "pop_size",
                 "generations",
                 "mutation_probability",
