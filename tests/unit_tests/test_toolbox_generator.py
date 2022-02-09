@@ -35,6 +35,7 @@ test_input_dict = {
     "constraints": {"keff": {"operator": ">", "constrained_val": 1}},
     "algorithm": {
         "objective": ["max", "min"],
+        "weight": [1, 1],
         "optimized_variable": ["keff", "packing_fraction"],
         "pop_size": 100,
         "generations": 10,
