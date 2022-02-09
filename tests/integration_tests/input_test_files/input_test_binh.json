@@ -23,7 +23,7 @@
         "generations": 5,
         "parallel": "none",
         "mutation_probability": 0.23,
-        "mating_probability": 0.46,  
+        "mating_probability": 0.90,  
         "selection_operator": {
             "operator": "selNSGA2"
         }, 
