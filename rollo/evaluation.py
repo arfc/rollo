@@ -78,11 +78,14 @@ class Evaluation:
             start_start_time = time.time()
             order_of_solvers = self.solver_order(input_evaluators)
             control_vars_dict = {}
+            output_vals_dict = OrderedDict()
             for ind in pop:
                 name = str(ind.gen) + "_" + str(ind.num)
                 control_vars_dict[name] = self.name_ind(
                     ind, control_dict, input_evaluators)
-            output_vals_dict = OrderedDict()
+                output_vals_dict[name] = [None] * len(output_dict)
+            print('control_dict', control_dict)
+            print('control_vars_dict',control_vars_dict)
             for solver in order_of_solvers:
                 # create dir and input script
                 run_input = ''''''
@@ -90,7 +93,6 @@ class Evaluation:
                 for ind in pop:
                     name = str(ind.gen) + "_" + str(ind.num)
                     path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
-                    output_vals_dict[name] = [None] * len(output_dict)
                     if "python" in self.input_scripts[solver][0]:
                         rendered_script = self.render_jinja_template_python(
                             script=self.input_scripts[solver][1],
