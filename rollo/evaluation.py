@@ -198,6 +198,7 @@ class Evaluation:
                                     first_line)
                                 output_vals_dict[name][i] = oup_script_results[var]
                                 os.chdir("../")
+                print(solver, output_vals_dict[name], "output vals dict")
             if input_evaluators[solver]["keep_files"] == "none":
                 for ind in pop:
                     name = str(ind.gen) + "_" + str(ind.num)
