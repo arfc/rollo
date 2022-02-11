@@ -1,0 +1,25 @@
+{
+    "control_variables": {
+        "x1": {"min":-32.768, "max": 32.768},
+        "x2": {"min":-32.768, "max": 32.768}
+    },
+    "evaluators": {
+        "openmc": {
+            "order": 0,
+            "input_script": ["python", "input_test_ackley.py"],
+            "execute2": [],
+            "inputs": ["x1", "x2"],
+            "output_script": ["python", "input_test_ackley_output.py"],
+            "outputs": ["ackley"],
+            "keep_files": "none"
+        }
+    },
+    "constraints": {},
+    "algorithm": {
+        "objective": ["min"],
+        "optimized_variable": ["ackley"],
+        "pop_size": 100,
+        "generations": 10,
+        "parallel": "none"
+    }
+}
