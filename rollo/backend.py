@@ -96,11 +96,7 @@ class BackEnd(object):
 
         names = []
         for ind in self.control_dict:
-            if self.control_dict[ind][1] > 1:
-                for i in range(self.control_dict[ind][1]):
-                    names.append(ind + "_" + str(i))
-            else:
-                names.append(ind)
+            names.append(ind)
         names_dict = {}
         for i, n in enumerate(names):
             names_dict[n] = i
