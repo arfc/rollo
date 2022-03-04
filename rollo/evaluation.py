@@ -107,7 +107,7 @@ class Evaluation:
             output_vals = [None] * len(output_dict)
             order_of_solvers = self.solver_order(input_evaluators)
 
-            for solver in input_evaluators:
+            for solver in order_of_solvers:
                 # path name for solver's run
                 path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
                 # render jinja-ed input script
@@ -134,6 +134,12 @@ class Evaluation:
             return tuple(output_vals)
 
         return eval_function
+
+    def solver_order(self, input_evaluators):
+        order = [None] * len(input_evaluators)
+        for solver in input_evaluators:
+            order[input_evaluators[solver]["order"]] = solver
+        return order
 
     def get_output_vals(self, output_vals, solver, output_dict, control_vars, path):
         """Returns a populated list with output values for each solver
