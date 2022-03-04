@@ -33,11 +33,11 @@ class ToolboxGenerator(object):
         """
 
         weight_list = []
-        for obj in input_algorithm["objective"]:
+        for obj, wt in zip(input_algorithm["objective"], input_algorithm["weight"]):
             if obj == "min":
-                weight_list.append(-1.0)
+                weight_list.append(-wt)
             elif obj == "max":
-                weight_list.append(+1.0)
+                weight_list.append(+wt)
         creator.create("obj", base.Fitness, weights=tuple(weight_list))
         creator.create("Ind", list, fitness=creator.obj)
         toolbox = base.Toolbox()
@@ -194,13 +194,12 @@ class ToolboxGenerator(object):
             toolbox.register(
                 "select",
                 tools.selTournament,
-                k=selection_dict["inds"],
                 tournsize=selection_dict["tournsize"],
             )
         elif operator == "selNSGA2":
-            toolbox.register("select", tools.selNSGA2, k=selection_dict["inds"])
+            toolbox.register("select", tools.selNSGA2)
         elif operator == "selBest":
-            toolbox.register("select", tools.selBest, k=selection_dict["inds"])
+            toolbox.register("select", tools.selBest)
         return toolbox
 
     def add_mutation_operators(self, toolbox, mutation_dict, min_list, max_list):
