@@ -192,9 +192,9 @@ class BackEnd(object):
                         self.input_file["evaluators"][solver]["output_script"], "r"
                     ) as file:
                         evaluator_files[solver + "_output"] = file.read()
-                except:
+                except BaseException:
                     pass
-        except:
+        except BaseException:
             pass
         cp = dict(
             input_file=self.input_file,
