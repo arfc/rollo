@@ -38,10 +38,11 @@ class InputValidation:
         for solver in input_dict["evaluators"]:
             input_evaluators[solver] = input_dict["evaluators"][solver]
             input_evaluators[solver] = self.default_check(
-                input_evaluators[solver], "keep_files", True
+                input_evaluators[solver], "keep_files", "all"
             )
         input_algorithm = input_dict["algorithm"]
         input_algorithm = self.default_check(input_algorithm, "objective", "min")
+        input_algorithm = self.default_check(input_algorithm, "weight", [1.0])
         input_algorithm = self.default_check(input_algorithm, "pop_size", 60)
         input_algorithm = self.default_check(input_algorithm, "generations", 10)
         input_algorithm = self.default_check(
@@ -53,7 +54,7 @@ class InputValidation:
         input_algorithm = self.default_check(
             input_algorithm,
             "selection_operator",
-            {"operator": "selTournament", "inds": 15, "tournsize": 5},
+            {"operator": "selTournament", "tournsize": 5},
         )
         input_algorithm = self.default_check(
             input_algorithm,
@@ -172,6 +173,10 @@ class InputValidation:
                     "type": "array",
                     "items": {"type": "string"},
                 },
+                "weight": {
+                    "type": "array",
+                    "items": {"type": "number"},
+                },
                 "optimized_variable": {
                     "type": "array",
                     "items": {"type": "string"},
@@ -193,6 +198,7 @@ class InputValidation:
             [
                 "parallel",
                 "objective",
+                "weight",
                 "pop_size",
                 "generations",
                 "mutation_probability",
@@ -249,9 +255,9 @@ class InputValidation:
 
         deap_operators = {
             "selection": {
-                "selTournament": ["inds", "tournsize"],
-                "selNSGA2": ["inds"],
-                "selBest": ["inds"],
+                "selTournament": ["tournsize"],
+                "selNSGA2": [],
+                "selBest": [],
             },
             "mutation": {
                 "mutPolynomialBounded": ["eta", "indpb"],
@@ -441,6 +447,7 @@ class InputValidation:
             schema_evaluators["properties"][evaluator] = {
                 "type": "object",
                 "properties": {
+                    "order": {"type": "number"},
                     "input_script": {"type": "string"},
                     "inputs": {
                         "type": "array",
@@ -451,16 +458,21 @@ class InputValidation:
                         "items": {"type": "string"},
                     },
                     "output_script": {"type": "string"},
-                    "keep_files": {"type": "boolean"},
+                    "keep_files": {"type": "string"},
                 },
             }
         validate(instance=input_evaluators, schema=schema_evaluators)
         for evaluator in input_evaluators:
             self.validate_correct_keys(
                 input_evaluators[evaluator],
-                ["input_script", "inputs", "outputs"],
+                ["input_script", "inputs", "outputs", "order"],
                 ["output_script", "keep_files"],
                 "evaluator: " + evaluator,
+            )
+            self.validate_in_list(
+                input_evaluators[evaluator]["keep_files"],
+                ["none", "all", "only_final"],
+                "keep_files",
             )
             # check if outputs are in predefined outputs or inputs, and if not
             # output_script must be defined
