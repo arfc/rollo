@@ -54,7 +54,7 @@ class InputValidation:
         input_algorithm = self.default_check(
             input_algorithm,
             "selection_operator",
-            {"operator": "selTournament", "tournsize": 5},
+            {"operator": "selTournament", "inds": 15, "tournsize": 5},
         )
         input_algorithm = self.default_check(
             input_algorithm,
@@ -255,9 +255,9 @@ class InputValidation:
 
         deap_operators = {
             "selection": {
-                "selTournament": ["tournsize"],
-                "selNSGA2": [],
-                "selBest": [],
+                "selTournament": ["inds", "tournsize"],
+                "selNSGA2": ["inds"],
+                "selBest": ["inds"],
             },
             "mutation": {
                 "mutPolynomialBounded": ["eta", "indpb"],
