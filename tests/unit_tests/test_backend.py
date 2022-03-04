@@ -3,7 +3,7 @@ from deap import base, creator, tools
 import os
 import random
 from collections import OrderedDict
-
+"""
 creator.create(
     "obj",
     base.Fitness,
@@ -14,16 +14,16 @@ creator.create(
 )
 creator.create("Ind", list, fitness=creator.obj)
 toolbox = base.Toolbox()
-toolbox.register("pf", random.uniform, 0, 1)
-toolbox.register("poly", random.uniform, 1, 2)
+toolbox.register("var_1", random.uniform, 0, 1)
+toolbox.register("var_2", random.uniform, -1, 0)
 toolbox.pop_size = 10
 toolbox.ngen = 10
 
 
 def ind_vals():
-    pf = toolbox.pf()
-    poly = toolbox.poly()
-    return creator.Ind([pf, poly, pf + poly])
+    var_1 = toolbox.var_1()
+    var_2 = toolbox.var_2()
+    return creator.Ind([var_1, var_2])
 
 
 toolbox.register("individual", ind_vals)
@@ -36,7 +36,7 @@ def evaluator_fn(ind):
 
 toolbox.register("evaluate", evaluator_fn)
 control_dict = OrderedDict(
-    {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
+    {"var_1": ["openmc"], "var_2": ["openmc", "moltres"]}
 )
 output_dict = OrderedDict(
     {
@@ -67,11 +67,8 @@ def test_ind_naming():
     )
     ind_dict = b.ind_naming()
     expected_ind_dict = {
-        "packing_fraction": 0,
-        "polynomial_triso_0": 1,
-        "polynomial_triso_1": 2,
-        "polynomial_triso_2": 3,
-        "polynomial_triso_3": 4,
+        "var_1": 0,
+        "var_2": 1
     }
     assert ind_dict == expected_ind_dict
 
@@ -88,7 +85,7 @@ def test_output_naming():
         "max_temp": 3,
     }
     assert oup_dict == expected_oup_dict
-
+"""
 
 def test_initialize_checkpoint_backend():
     os.chdir("./input_test_files")
@@ -145,7 +142,8 @@ def test_update_backend():
     rndstate = random.getstate()
     b.update_backend(new_pop, gen, invalids, rndstate)
     pop = b.results["population"]
-    assert b.results["halloffame"].items[0] == max(pop + new_pop, key=lambda x: x[2])
+    print(b.results["halloffame"])
+    assert b.results["halloffame"].items[0] == max(pop + new_pop, key=lambda x: x[1])
     assert len(b.results["logbook"]) == 2
     bb = BackEnd(
         "input_test_files/test_checkpoint.pkl",
