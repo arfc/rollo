@@ -193,8 +193,9 @@ class Executor(object):
                 input_script=solver_dict["input_script"],
                 output_script=output_script,
             )
+        gens = input_dict["algorithm"]["generations"]
         evaluator_fn = evaluator.eval_fn_generator(
-            control_dict, output_dict, input_dict["evaluators"]
+            control_dict, output_dict, input_dict["evaluators"], gens
         )
         return evaluator_fn
 
