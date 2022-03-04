@@ -18,12 +18,11 @@ except BaseException:
 
 class Algorithm(object):
     """The Algorithm class contains methods to initialize and execute the genetic
-        algorithm. It executes a general genetic algorithm framework that uses the
-        hyperparameters defined in the deap_toolbox, applies constraints defined
-        in the constraints_obj, evaluates
-    fitness values using the evaluation
-        function produced by Evaluation contained in the deap_toolbox, and saves
-        all the results with BackEnd.
+        algorithm. It executes a general genetic algorithm framework that uses 
+        the hyperparameters defined in the deap_toolbox, applies constraints 
+        defined in the constraints_obj, evaluates fitness values using the 
+        evaluation function produced by Evaluation contained in the 
+        deap_toolbox, and saves all the results with BackEnd.
 
         Parameters
         ----------
