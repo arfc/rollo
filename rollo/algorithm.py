@@ -18,19 +18,20 @@ except BaseException:
 
 class Algorithm(object):
     """The Algorithm class contains methods to initialize and execute the genetic
-        algorithm. It executes a general genetic algorithm framework that uses 
-        the hyperparameters defined in the deap_toolbox, applies constraints 
-        defined in the constraints_obj, evaluates fitness values using the 
-        evaluation function produced by Evaluation contained in the 
+        algorithm. It executes a general genetic algorithm framework that uses
+        the hyperparameters defined in the deap_toolbox, applies constraints
+        defined in the constraints_obj, evaluates fitness values using the
+        evaluation function produced by Evaluation contained in the
         deap_toolbox, and saves all the results with BackEnd.
 
         Parameters
         ----------
         deap_toolbox : deap.base.Toolbox object
-            DEAP toolbox populated with user-defined genetic algorithm parameters
+            DEAP toolbox populated with user-defined genetic algorithm 
+            parameters
         constraint_obj : rollo.constraints.Constraints
-            Holds information about constraints for the problem and functions to
-            apply the constraints
+            Holds information about constraints for the problem and
+            functions to apply the constraints
         checkpoint_file : str
             Name of checkpoint file
         deap_creator : deap.creator object
