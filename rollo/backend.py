@@ -6,8 +6,8 @@ import time
 
 class BackEnd(object):
     """The BackEnd class contains methods to save genetic algorithm population
-    results into a pickled checkpoint file and to restart a partially completed
-    genetic algorithm from the checkpoint file.
+    results into a pickled checkpoint file and to restart a partially
+    completed genetic algorithm from the checkpoint file.
 
     Parameters
     ----------
