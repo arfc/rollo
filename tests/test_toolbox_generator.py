@@ -77,9 +77,9 @@ def test_setup():
     )
 
     test_toolbox_ind = toolbox.individual()
-    assert type(test_toolbox_ind) == creator.Ind
+    assert isinstance(test_toolbox_ind, creator.Ind)
     test_toolbox_pop = toolbox.population(n=10)
-    assert type(test_toolbox_pop) == list
+    assert isinstance(test_toolbox_pop, list)
     test_toolbox_eval = toolbox.evaluate()
     assert test_toolbox_eval == tuple([1, 1])
     assert toolbox.pop_size == 100
@@ -103,7 +103,7 @@ def test_individual_values():
     ind_values = tg.individual_values(
         test_input_dict["control_variables"], ctrl_dict, toolbox
     )
-    assert type(ind_values) is creator.Ind
+    assert isinstance(ind_values, creator.Ind)
     assert ind_values[0] >= 0.005
     assert ind_values[0] <= 0.1
     for i in range(1, 4):
@@ -141,7 +141,11 @@ def test_add_selection_operators():
             toolbox = base.Toolbox()
             toolbox.register("num", random.uniform, -1, 1)
             toolbox.register("individual", f_cycle)
-            toolbox.register("population", tools.initRepeat, list, toolbox.individual)
+            toolbox.register(
+                "population",
+                tools.initRepeat,
+                list,
+                toolbox.individual)
             pop = toolbox.population(n=10)
             toolbox = tg.add_selection_operators(toolbox, selection_dict)
             expected_inds = []
@@ -194,7 +198,8 @@ def test_add_mating_operators():
     toolbox.register("num", random.uniform, -1, 1)
 
     def f_cycle():
-        return creator.Ind([toolbox.num(), toolbox.num(), toolbox.num(), toolbox.num()])
+        return creator.Ind([toolbox.num(), toolbox.num(),
+                           toolbox.num(), toolbox.num()])
 
     toolbox.register("individual", f_cycle)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
