@@ -60,7 +60,7 @@ def test_ackley_minimum_check():
     def evaluator_fn(ind):
         x1, x2 = ind[0], ind[1]
         ackley = (
-            -20 * np.exp(-0.2 * np.sqrt(1 / 2 * (x1 ** 2 + x2 ** 2)))
+            -20 * np.exp(-0.2 * np.sqrt(1 / 2 * (x1**2 + x2**2)))
             - np.exp(1 / 2 * (np.cos(2 * np.pi * x1) + np.cos(2 * np.pi * x2)))
             + 20
             + np.exp(1)
