@@ -119,6 +119,10 @@ class Constraints(object):
                     not_constrained = False
             if not_constrained:
                 new_pop.append(ind)
+        if len(new_pop) == 0:
+            raise Exception(
+                "All individuals were constrained. Run with larger population size or reconsider your constraint choice. "
+            )
         final_pop = [self.toolbox.clone(ind) for ind in new_pop]
         while len(final_pop) < len(pop):
             final_pop.append(self.toolbox.clone(random.choice(new_pop)))
