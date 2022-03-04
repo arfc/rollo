@@ -8,9 +8,10 @@ class OpenMCEvaluation:
     files. Developers can update this
     file with methods to
         evaluate frequently used OpenMC outputs.
-        - To add new openmc output variable evaluation functions, create a function
-        called "evaluate_###". ### names the openmc output variable. Also, add ###
-        name as a str into the pre_defined_output list.
+        - To add new openmc output variable evaluation functions, create a
+        function called "evaluate_###". ### names the openmc output
+        variable. Also, add ### name as a str into the pre_defined_output
+        list.
 
         Attributes
         ----------
