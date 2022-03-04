@@ -1,6 +1,6 @@
 class MoltresEvaluation:
     """The MoltresEvaluation class contains ROLLO built-in methods for evaluating
-    Moltres output files. Developers can update thisfile with methods to 
+    Moltres output files. Developers can update thisfile with methods to
     evaluate frequently used Moltres outputs.
 
     Attributes

@@ -9,20 +9,19 @@ try:
 
     MPI.pickle.__init__(dill.dumps, dill.loads)
     from mpi4py.futures import MPICommExecutor
-except:
+except BaseException:
     warnings.warn(
         "Failed to import mpi4py. (Only necessary for parallel method: mpi_evals). \
         Please ignore this warning if you are using other parallel methods such \
-        as multiprocessing and none."
-    )
+        as multiprocessing and none.")
 
 
 class Algorithm(object):
     """The Algorithm class contains methods to initialize and execute the genetic
     algorithm. It executes a general genetic algorithm framework that uses the
-    hyperparameters defined in the deap_toolbox, applies constraints defined 
-    in the constraints_obj, evaluates fitness values using the evaluation 
-    function produced by Evaluation contained in the deap_toolbox, and saves 
+    hyperparameters defined in the deap_toolbox, applies constraints defined
+    in the constraints_obj, evaluates fitness values using the evaluation
+    function produced by Evaluation contained in the deap_toolbox, and saves
     all the results with BackEnd.
 
     Parameters
@@ -102,7 +101,7 @@ class Algorithm(object):
 
                 pool = multiprocessing.Pool()
                 self.toolbox.register("map", pool.map)
-            except:
+            except BaseException:
                 warnings.warn(
                     "multiprocessing_on_dill failed to import, rollo will run serially."
                 )
@@ -114,7 +113,7 @@ class Algorithm(object):
                         with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
                             pass
                     sys.exit(0)
-            except:
+            except BaseException:
                 warnings.warn("MPI Failed.")
                 pass
         if self.cp_file:
@@ -126,14 +125,16 @@ class Algorithm(object):
             pop = self.initialize_pop(pop)
             self.cp_file = "checkpoint.pkl"
         print(self.backend.results["logbook"])
-        for gen in range(self.backend.results["start_gen"] + 1, self.toolbox.ngen):
+        for gen in range(
+                self.backend.results["start_gen"] + 1,
+                self.toolbox.ngen):
             pop = self.apply_algorithm_ngen(pop, gen)
             print(self.backend.results["logbook"])
         print("rollo Simulation Completed!")
         if self.parallel_method == "mpi_evals":
             try:
                 MPI.COMM_WORLD.bcast(False)
-            except:
+            except BaseException:
                 pass
         return pop
 
@@ -164,7 +165,7 @@ class Algorithm(object):
                 MPI.COMM_WORLD.bcast(True)
                 with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
                     fitnesses = executor.map(self.toolbox.evaluate, list(pop))
-            except:
+            except BaseException:
                 warnings.warn("MPI Failed, rollo will run serially.")
                 fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
         else:
@@ -211,10 +212,12 @@ class Algorithm(object):
             try:
                 MPI.COMM_WORLD.bcast(True)
                 with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
-                    fitnesses = executor.map(self.toolbox.evaluate, list(invalids))
-            except:
+                    fitnesses = executor.map(
+                        self.toolbox.evaluate, list(invalids))
+            except BaseException:
                 warnings.warn("MPI Failed, rollo will run serially.")
-                fitnesses = self.toolbox.map(self.toolbox.evaluate, list(invalids))
+                fitnesses = self.toolbox.map(
+                    self.toolbox.evaluate, list(invalids))
         else:
             fitnesses = self.toolbox.map(self.toolbox.evaluate, list(invalids))
         # assign fitness values to individuals
