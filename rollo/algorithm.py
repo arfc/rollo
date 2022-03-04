@@ -19,43 +19,44 @@ except:
 
 class Algorithm(object):
     """The Algorithm class contains methods to initialize and execute the genetic
-    algorithm. It executes a general genetic algorithm framework that uses the
-    hyperparameters defined in the deap_toolbox, applies constraints defined 
-    in the constraints_obj, evaluates fitness values using the evaluation 
-    function produced by Evaluation contained in the deap_toolbox, and saves 
-    all the results with BackEnd.
+        algorithm. It executes a general genetic algorithm framework that uses the
+        hyperparameters defined in the deap_toolbox, applies constraints defined
+        in the constraints_obj, evaluates
+    fitness values using the evaluation
+        function produced by Evaluation contained in the deap_toolbox, and saves
+        all the results with BackEnd.
 
-    Parameters
-    ----------
-    deap_toolbox : deap.base.Toolbox object
-        DEAP toolbox populated with user-defined genetic algorithm parameters
-    constraint_obj : rollo.constraints.Constraints
-        Holds information about constraints for the problem and functions to
-        apply the constraints
-    checkpoint_file : str
-        Name of checkpoint file
-    deap_creator : deap.creator object
-        DEAP meta-factory allowing to create classes that will fulfill the
-        needs of the evolutionary algorithms
-    control_dict : OrderedDict
-        Ordered dict of control variables as keys and a list of their
-        solver and number of variables as each value
-    output_dict : OrderedDict
-        Ordered dict of output variables as keys and solvers as values
+        Parameters
+        ----------
+        deap_toolbox : deap.base.Toolbox object
+            DEAP toolbox populated with user-defined genetic algorithm parameters
+        constraint_obj : rollo.constraints.Constraints
+            Holds information about constraints for the problem and functions to
+            apply the constraints
+        checkpoint_file : str
+            Name of checkpoint file
+        deap_creator : deap.creator object
+            DEAP meta-factory allowing to create classes that will fulfill the
+            needs of the evolutionary algorithms
+        control_dict : OrderedDict
+            Ordered dict of control variables as keys and a list of their
+            solver and number of variables as each value
+        output_dict : OrderedDict
+            Ordered dict of output variables as keys and solvers as values
 
-    Attributes
-    ----------
-    toolbox : deap.base.Toolbox object
-        DEAP toolbox populated with user-defined genetic algorithm parameters
-    constraint_obj : rollo.constraints.Constraints
-        Holds information about constraints for the problem and functions to
-        apply the constraints
-    cp_file : str
-        Name of checkpoint file
-    backend : rollo.backend.Backend
-        Contains and manipulates the output backend
-    parallel_method : str
-        parallelization method (none, multiprocessing, mpi_evals)
+        Attributes
+        ----------
+        toolbox : deap.base.Toolbox object
+            DEAP toolbox populated with user-defined genetic algorithm parameters
+        constraint_obj : rollo.constraints.Constraints
+            Holds information about constraints for the problem and functions to
+            apply the constraints
+        cp_file : str
+            Name of checkpoint file
+        backend : rollo.backend.Backend
+            Contains and manipulates the output backend
+        parallel_method : str
+            parallelization method (none, multiprocessing, mpi_evals)
 
     """
 

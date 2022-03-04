@@ -6,44 +6,45 @@ import time
 
 class BackEnd(object):
     """The BackEnd class contains methods to save genetic algorithm population
-    results into a pickled checkpoint file and to restart a partially completed 
-    genetic algorithm from the checkpoint file.
+        results into a pickled checkpoint
+    file and to restart a partially completed
+        genetic algorithm from the checkpoint file.
 
-    Parameters
-    ----------
-    checkpoint_file : str
-        Name of checkpoint file
-    deap_creator : deap.creator object
-        DEAP meta-factory allowing to create classes that will fulfill the
-        needs of the evolutionary algorithms
-    control_dict : OrderedDict
-        Ordered dict of control variables as keys and a list of their
-        solver and number of variables as each value
-    output_dict : OrderedDict
-        Ordered dict of output variables as keys and solvers as values
-    input_file : str
-        input file contents
-    start_time : float
-        time the simulation began
+        Parameters
+        ----------
+        checkpoint_file : str
+            Name of checkpoint file
+        deap_creator : deap.creator object
+            DEAP meta-factory allowing to create classes that will fulfill the
+            needs of the evolutionary algorithms
+        control_dict : OrderedDict
+            Ordered dict of control variables as keys and a list of their
+            solver and number of variables as each value
+        output_dict : OrderedDict
+            Ordered dict of output variables as keys and solvers as values
+        input_file : str
+            input file contents
+        start_time : float
+            time the simulation began
 
-    Attributes
-    ----------
-    results : dict
-        contains results from simulation
-    checkpoint_file : str
-        Name of checkpoint file
-    creator : deap.creator object
-        DEAP meta-factory allowing to create classes that will fulfill the
-        needs of the evolutionary algorithms
-    control_dict : OrderedDict
-        Ordered dict of control variables as keys and a list of their
-        solver and number of variables as each value
-    output_dict : OrderedDict
-        Ordered dict of output variables as keys and solvers as values
-    input_file : str
-        input file contents
-    start_time : float
-        time the simulation began
+        Attributes
+        ----------
+        results : dict
+            contains results from simulation
+        checkpoint_file : str
+            Name of checkpoint file
+        creator : deap.creator object
+            DEAP meta-factory allowing to create classes that will fulfill the
+            needs of the evolutionary algorithms
+        control_dict : OrderedDict
+            Ordered dict of control variables as keys and a list of their
+            solver and number of variables as each value
+        output_dict : OrderedDict
+            Ordered dict of output variables as keys and solvers as values
+        input_file : str
+            input file contents
+        start_time : float
+            time the simulation began
 
     """
 

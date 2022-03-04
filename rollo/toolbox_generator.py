@@ -4,7 +4,7 @@ import random
 
 
 class ToolboxGenerator(object):
-    """The ToolboxGenerator class initializes DEAP's toolbox and creator 
+    """The ToolboxGenerator class initializes DEAP's toolbox and creator
     modules with genetic algorithm hyperparameters defined in the input file."""
 
     def setup(self, evaluator_fn, input_algorithm, input_ctrl_vars, control_dict):
