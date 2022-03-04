@@ -27,7 +27,7 @@ class Algorithm(object):
         Parameters
         ----------
         deap_toolbox : deap.base.Toolbox object
-            DEAP toolbox populated with user-defined genetic algorithm 
+            DEAP toolbox populated with user-defined genetic algorithm
             parameters
         constraint_obj : rollo.constraints.Constraints
             Holds information about constraints for the problem and
@@ -46,10 +46,11 @@ class Algorithm(object):
         Attributes
         ----------
         toolbox : deap.base.Toolbox object
-            DEAP toolbox populated with user-defined genetic algorithm parameters
+            DEAP toolbox populated with user-defined genetic algorithm
+            parameters
         constraint_obj : rollo.constraints.Constraints
-            Holds information about constraints for the problem and functions to
-            apply the constraints
+            Holds information about constraints for the problem and
+            functions to apply the constraints
         cp_file : str
             Name of checkpoint file
         backend : rollo.backend.Backend
