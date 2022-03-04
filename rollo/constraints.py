@@ -16,7 +16,8 @@ class Constraints(object):
         input_constraints : dict
             constraints sub-dictionary from input file
         toolbox : deap.base.Toolbox object
-            DEAP toolbox populated with user-defined genetic algorithm parameters
+            DEAP toolbox populated with user-defined genetic algorithm
+            parameters
 
         Attributes
         ----------
@@ -27,7 +28,8 @@ class Constraints(object):
         ops: dict
             dict of accepted operators
         toolbox : deap.base.Toolbox object
-            DEAP toolbox populated with user-defined genetic algorithm parameters
+            DEAP toolbox populated with user-defined genetic algorithm
+            parameters
 
     """
 
@@ -122,7 +124,8 @@ class Constraints(object):
                 new_pop.append(ind)
         if len(new_pop) == 0:
             raise Exception(
-                "All individuals were constrained. Run with larger population size or reconsider your constraint choice. "
+                "All individuals were constrained. Run with larger population \
+                size or reconsider your constraint choice. "
             )
         final_pop = [self.toolbox.clone(ind) for ind in new_pop]
         while len(final_pop) < len(pop):

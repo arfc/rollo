@@ -14,8 +14,8 @@ class Evaluation:
         DEAP's (evolutionary algorithm package) fitness evaluator requires an
         evaluation function to evaluate each individual's
     fitness values. The
-        Evaluation class contains a method that creates an evaluation function that
-        runs the nuclear software and returns the required
+        Evaluation class contains a method that creates an evaluation function
+        that runs the nuclear software and returns the required
     fitness values, defined
         in the input file.
 
@@ -24,11 +24,11 @@ class Evaluation:
         supported_solvers : list of str
             list of supported evaluation software
         input_scripts : dict
-            key is evaluation software name, value is that evaluation software's
-            template input script name
+            key is evaluation software name, value is that evaluation
+            software's template input script name
         output_scripts : dict
-            key is evaluation software name, value is that evaluation software's
-            template output script name
+            key is evaluation software name, value is that evaluation
+            software's template output script name
         eval_dict : dict
             key is evaluation software name, value is a class containing the
             functions to evaluate its output files
@@ -65,7 +65,12 @@ class Evaluation:
             pass
         return
 
-    def eval_fn_generator(self, control_dict, output_dict, input_evaluators, gens):
+    def eval_fn_generator(
+            self,
+            control_dict,
+            output_dict,
+            input_evaluators,
+            gens):
         """Returns a function that accepts a DEAP individual and returns a
         tuple of output values listed in outputs
 

@@ -38,7 +38,8 @@ class ToolboxGenerator(object):
         """
 
         weight_list = []
-        for obj, wt in zip(input_algorithm["objective"], input_algorithm["weight"]):
+        for obj, wt in zip(input_algorithm["objective"],
+                           input_algorithm["weight"]):
             if obj == "min":
                 weight_list.append(-wt)
             elif obj == "max":
