@@ -36,9 +36,10 @@ def test_eval_fn_generator():
             }
         ),
         input_evaluators={
-            "openmc": {"keep_files": True},
-            "moltres": {"keep_files": True},
+            "openmc": {"keep_files": True, "order": 0},
+            "moltres": {"keep_files": True, "order": 1},
         },
+        gens=2,
     )
 
     creator.create("obj", base.Fitness, weights=(-1.0,))
