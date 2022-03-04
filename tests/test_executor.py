@@ -83,7 +83,8 @@ def test_load_evaluator():
     if os.path.exists("./moltres_0_0"):
         shutil.rmtree("./moltres_0_0")
     e = Executor("input_file_placeholder")
-    test_control_dict, test_output_dict = e.organize_input_output(test_input_dict)
+    test_control_dict, test_output_dict = e.organize_input_output(
+        test_input_dict)
     eval_function = e.load_evaluator(
         control_dict=test_control_dict,
         output_dict=test_output_dict,
@@ -134,9 +135,9 @@ def test_load_toolbox():
     )
 
     test_toolbox_ind = toolbox.individual()
-    assert type(test_toolbox_ind) == creator.Ind
+    assert isinstance(test_toolbox_ind, creator.Ind)
     test_toolbox_pop = toolbox.population(n=10)
-    assert type(test_toolbox_pop) == list
+    assert isinstance(test_toolbox_pop, list)
     test_toolbox_eval = toolbox.evaluate()
     assert test_toolbox_eval == tuple([1, 1])
     assert toolbox.pop_size == 100
@@ -158,4 +159,4 @@ def test_load_constraints():
     constraint_obj = e.load_constraints(
         output_dict, test_input_dict["constraints"], base.Toolbox()
     )
-    assert type(constraint_obj) == Constraints
+    assert isinstance(constraint_obj, Constraints)

@@ -118,7 +118,7 @@ def test_initialize_pop():
         assert ind.fitness.values[0] < 3
         assert ind.fitness.values[0] > 1
         assert ind.output[1] == 5
-        assert type(ind) is creator.Ind
+        assert isinstance(ind, creator.Ind)
         assert ind[0] < 1
         assert ind[0] > 0
         assert ind[1] > 1

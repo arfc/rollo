@@ -41,10 +41,12 @@ class InputValidation:
                 input_evaluators[solver], "keep_files", "all"
             )
         input_algorithm = input_dict["algorithm"]
-        input_algorithm = self.default_check(input_algorithm, "objective", "min")
+        input_algorithm = self.default_check(
+            input_algorithm, "objective", "min")
         input_algorithm = self.default_check(input_algorithm, "weight", [1.0])
         input_algorithm = self.default_check(input_algorithm, "pop_size", 60)
-        input_algorithm = self.default_check(input_algorithm, "generations", 10)
+        input_algorithm = self.default_check(
+            input_algorithm, "generations", 10)
         input_algorithm = self.default_check(
             input_algorithm, "mutation_probability", 0.23
         )
@@ -319,7 +321,10 @@ class InputValidation:
         for evaluator in input_evaluators:
             allowed_constraints += input_evaluators[evaluator]["outputs"]
         for constraint in input_constraints:
-            self.validate_in_list(constraint, allowed_constraints, "Constraints")
+            self.validate_in_list(
+                constraint,
+                allowed_constraints,
+                "Constraints")
         # schema validation
         schema_constraints = {"type": "object", "properties": {}}
         for constraint in input_constraints:
@@ -386,8 +391,8 @@ class InputValidation:
         # key validation
         for var in variables:
             self.validate_correct_keys(
-                input_ctrl_vars[var], ["min", "max"], [], "control variable: " + var
-            )
+                input_ctrl_vars[var], [
+                    "min", "max"], [], "control variable: " + var)
 
         # validate special control variables
         # add validation here if developer adds new special input variable
@@ -410,7 +415,9 @@ class InputValidation:
                     "height": {"type": "number"},
                 },
             }
-            validate(instance=input_ctrl_vars_poly, schema=schema_ctrl_vars_poly)
+            validate(
+                instance=input_ctrl_vars_poly,
+                schema=schema_ctrl_vars_poly)
             # key validation
             self.validate_correct_keys(
                 input_ctrl_vars_poly,

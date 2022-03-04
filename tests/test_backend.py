@@ -52,19 +52,27 @@ input_file = {}  # placeholder
 
 def test_initialize_new_backend():
     b = BackEnd(
-        "square_checkpoint.pkl", creator, control_dict, output_dict, input_file, 0
-    )
+        "square_checkpoint.pkl",
+        creator,
+        control_dict,
+        output_dict,
+        input_file,
+        0)
     b.initialize_new_backend()
     assert b.results["start_gen"] == 0
-    assert type(b.results["halloffame"]) == tools.HallOfFame
-    assert type(b.results["logbook"]) == tools.Logbook
-    assert type(b.results["all"]) == dict
+    assert isinstance(b.results["halloffame"], tools.HallOfFame)
+    assert isinstance(b.results["logbook"], tools.Logbook)
+    assert isinstance(b.results["all"], dict)
 
 
 def test_ind_naming():
     b = BackEnd(
-        "square_checkpoint.pkl", creator, control_dict, output_dict, input_file, 0
-    )
+        "square_checkpoint.pkl",
+        creator,
+        control_dict,
+        output_dict,
+        input_file,
+        0)
     ind_dict = b.ind_naming()
     expected_ind_dict = {
         "packing_fraction": 0,
@@ -78,8 +86,12 @@ def test_ind_naming():
 
 def test_output_naming():
     b = BackEnd(
-        "square_checkpoint.pkl", creator, control_dict, output_dict, input_file, 0
-    )
+        "square_checkpoint.pkl",
+        creator,
+        control_dict,
+        output_dict,
+        input_file,
+        0)
     oup_dict = b.output_naming()
     expected_oup_dict = {
         "packing_fraction": 0,
@@ -114,7 +126,7 @@ def test_initialize_checkpoint_backend():
         assert ind.fitness.values[0] < 3
     assert b.results["start_gen"] == 0
     assert b.results["halloffame"].items[0] == max(pop, key=lambda x: x[2])
-    assert type(b.results["logbook"]) == tools.Logbook
+    assert isinstance(b.results["logbook"], tools.Logbook)
     assert len(b.results["logbook"]) == 1
     os.remove("./input_test_files/test_checkpoint.pkl")
 
@@ -145,7 +157,8 @@ def test_update_backend():
     rndstate = random.getstate()
     b.update_backend(new_pop, gen, invalids, rndstate)
     pop = b.results["population"]
-    assert b.results["halloffame"].items[0] == max(pop + new_pop, key=lambda x: x[2])
+    assert b.results["halloffame"].items[0] == max(
+        pop + new_pop, key=lambda x: x[2])
     assert len(b.results["logbook"]) == 2
     bb = BackEnd(
         "input_test_files/test_checkpoint.pkl",

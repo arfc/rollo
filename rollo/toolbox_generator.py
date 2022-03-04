@@ -7,7 +7,12 @@ class ToolboxGenerator(object):
     """The ToolboxGenerator class initializes DEAP's toolbox and creator
     modules with genetic algorithm hyperparameters defined in the input file."""
 
-    def setup(self, evaluator_fn, input_algorithm, input_ctrl_vars, control_dict):
+    def setup(
+            self,
+            evaluator_fn,
+            input_algorithm,
+            input_ctrl_vars,
+            control_dict):
         """sets up DEAP toolbox with user-defined inputs
 
         Parameters
@@ -47,11 +52,22 @@ class ToolboxGenerator(object):
         for var in input_ctrl_vars:
             if var not in special_control_vars:
                 var_dict = input_ctrl_vars[var]
-                toolbox.register(var, random.uniform, var_dict["min"], var_dict["max"])
+                toolbox.register(
+                    var,
+                    random.uniform,
+                    var_dict["min"],
+                    var_dict["max"])
         toolbox.register(
-            "individual", self.individual_values, input_ctrl_vars, control_dict, toolbox
-        )
-        toolbox.register("population", tools.initRepeat, list, toolbox.individual)
+            "individual",
+            self.individual_values,
+            input_ctrl_vars,
+            control_dict,
+            toolbox)
+        toolbox.register(
+            "population",
+            tools.initRepeat,
+            list,
+            toolbox.individual)
         toolbox.register("evaluate", evaluator_fn)
         min_list, max_list = self.min_max_list(control_dict, input_ctrl_vars)
         toolbox.min_list, toolbox.max_list = min_list, max_list
@@ -138,8 +154,13 @@ class ToolboxGenerator(object):
         return min_list, max_list
 
     def add_toolbox_operators(
-        self, toolbox, selection_dict, mutation_dict, mating_dict, min_list, max_list
-    ):
+            self,
+            toolbox,
+            selection_dict,
+            mutation_dict,
+            mating_dict,
+            min_list,
+            max_list):
         """Adds selection, mutation, and mating operators to the deap toolbox
 
         Parameters
@@ -198,12 +219,20 @@ class ToolboxGenerator(object):
                 tournsize=selection_dict["tournsize"],
             )
         elif operator == "selNSGA2":
-            toolbox.register("select", tools.selNSGA2, k=selection_dict["inds"])
+            toolbox.register(
+                "select",
+                tools.selNSGA2,
+                k=selection_dict["inds"])
         elif operator == "selBest":
             toolbox.register("select", tools.selBest, k=selection_dict["inds"])
         return toolbox
 
-    def add_mutation_operators(self, toolbox, mutation_dict, min_list, max_list):
+    def add_mutation_operators(
+            self,
+            toolbox,
+            mutation_dict,
+            min_list,
+            max_list):
         """Adds mutation operator to the deap toolbox
 
         Parameters
@@ -255,7 +284,10 @@ class ToolboxGenerator(object):
         if operator == "cxOnePoint":
             toolbox.register("mate", tools.cxOnePoint)
         elif operator == "cxUniform":
-            toolbox.register("mate", tools.cxUniform, indpb=mating_dict["indpb"])
+            toolbox.register(
+                "mate",
+                tools.cxUniform,
+                indpb=mating_dict["indpb"])
         elif operator == "cxBlend":
             toolbox.register("mate", tools.cxBlend, alpha=mating_dict["alpha"])
         return toolbox

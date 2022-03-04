@@ -40,7 +40,9 @@ class Evaluation:
         self.input_scripts = {}
         self.output_scripts = {}
         # Developers can add new solvers to self.eval_dict below
-        self.eval_dict = {"openmc": OpenMCEvaluation(), "moltres": MoltresEvaluation()}
+        self.eval_dict = {
+            "openmc": OpenMCEvaluation(),
+            "moltres": MoltresEvaluation()}
 
     def add_evaluator(self, solver_name, input_script, output_script):
         """Adds information about an evaluator to the Evaluation class object
@@ -59,7 +61,7 @@ class Evaluation:
         self.input_scripts[solver_name] = input_script
         try:
             self.output_scripts[solver_name] = output_script
-        except:
+        except BaseException:
             pass
         return
 
@@ -141,7 +143,13 @@ class Evaluation:
             order[input_evaluators[solver]["order"]] = solver
         return order
 
-    def get_output_vals(self, output_vals, solver, output_dict, control_vars, path):
+    def get_output_vals(
+            self,
+            output_vals,
+            solver,
+            output_dict,
+            control_vars,
+            path):
         """Returns a populated list with output values for each solver
 
         Parameters
@@ -166,7 +174,8 @@ class Evaluation:
         """
 
         if self.output_scripts[solver]:
-            # copy rendered output script into a new file in the particular solver's run
+            # copy rendered output script into a new file in the particular
+            # solver's run
             shutil.copyfile(
                 self.output_scripts[solver], path + "/" + solver + "_output.py"
             )
@@ -273,7 +282,8 @@ class Evaluation:
         template = nativetypes.NativeTemplate(imported_script)
         render_str = "template.render("
         for inp in control_vars_solver:
-            render_str += "**{'" + inp + "':" + str(control_vars_solver[inp]) + "},"
+            render_str += "**{'" + inp + "':" + \
+                str(control_vars_solver[inp]) + "},"
         render_str += ")"
         rendered_template = eval(render_str)
         return rendered_template
@@ -301,7 +311,8 @@ class Evaluation:
         f.write(rendered_openmc_script)
         f.close()
         with open("output.txt", "wb") as output:
-            subprocess.call(["python", "-u", "./openmc_input.py"], stdout=output)
+            subprocess.call(
+                ["python", "-u", "./openmc_input.py"], stdout=output)
         return
 
     def moltres_run(self, rendered_moltres_script):
