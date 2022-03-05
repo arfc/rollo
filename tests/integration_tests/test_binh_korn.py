@@ -1,3 +1,11 @@
+"""Integration Test to validate the Evolutionary Algorithm.
+The Binh and Korn function is a two-objective function. 
+[1]T. T. Binh and U. Korn, “MOBES: A multiobjective evolution strategy 
+for constrained optimization problems,” in The third international 
+conference on genetic algorithms (Mendel 97), 1997, vol. 25, p. 27.
+We use it as a performance test for two-objective optimization.
+"""
+
 import os, subprocess, pickle 
 from deap import base, creator, tools
 import deap.benchmarks.tools as bt
