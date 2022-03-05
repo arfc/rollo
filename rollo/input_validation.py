@@ -248,10 +248,12 @@ class InputValidation:
 
         deap_operators = {
             "selection": {
-                "selTournament": ["tournsize"], "selNSGA2": [], "selBest": [], }, "mutation": {
+                "selTournament": ["tournsize"], "selNSGA2": [], "selBest": [], },
+            "mutation": {
                 "mutPolynomialBounded": [
-                    "eta", "indpb"], }, "mating": {
-                    "cxOnePoint": [], "cxUniform": ["indpb"], "cxBlend": ["alpha"]}, }
+                    "eta", "indpb"], },
+            "mating": {
+                "cxOnePoint": [], "cxUniform": ["indpb"], "cxBlend": ["alpha"]}, }
 
         try:
             op = input_algorithm[operator_type + "_operator"]
