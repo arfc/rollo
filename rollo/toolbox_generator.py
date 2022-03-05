@@ -216,16 +216,14 @@ class ToolboxGenerator(object):
             toolbox.register(
                 "select",
                 tools.selTournament,
-                k=selection_dict["inds"],
                 tournsize=selection_dict["tournsize"],
             )
         elif operator == "selNSGA2":
             toolbox.register(
                 "select",
-                tools.selNSGA2,
-                k=selection_dict["inds"])
+                tools.selNSGA2)
         elif operator == "selBest":
-            toolbox.register("select", tools.selBest, k=selection_dict["inds"])
+            toolbox.register("select", tools.selBest)
         return toolbox
 
     def add_mutation_operators(
