@@ -24,8 +24,7 @@
         "mutation_probability": 0.23,
         "mating_probability": 0.90,
         "selection_operator": {
-            "operator": "selNSGA2",
-            "inds": 10
+            "operator": "selNSGA2"
         },
         "mutation_operator": {
             "operator": "mutPolynomialBounded",

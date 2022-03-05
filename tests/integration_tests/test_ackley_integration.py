@@ -25,4 +25,4 @@ def test_ackley_integration():
         cp = pickle.load(cp_file)
 
     logbook = cp["all"]
-    assert min(logbook["outputs"][-1])[0] < 0.1
+    assert min(logbook["outputs"][-1])[0] < 0.5
