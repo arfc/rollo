@@ -1,7 +1,7 @@
 {
     "control_variables": {
-        "x1": {"min":0, "max": 5},
-        "x2": {"min":0, "max": 3}
+        "x1": {"min": 0, "max": 5},
+        "x2": {"min": 0, "max": 3}
     },
     "evaluators": {
         "openmc": {
@@ -17,23 +17,23 @@
     "algorithm": {
         "objective": ["min", "min"],
         "optimized_variable": ["f1", "f2"],
-        "weight": [1, 1], 
+        "weight": [1, 1],
         "pop_size": 120,
         "generations": 5,
         "parallel": "none",
         "mutation_probability": 0.23,
-        "mating_probability": 0.90,  
+        "mating_probability": 0.90,
         "selection_operator": {
             "operator": "selNSGA2",
             "inds": 10
-        }, 
+        },
         "mutation_operator": {
-            "operator": "mutPolynomialBounded", 
-            "eta": 0.23, 
+            "operator": "mutPolynomialBounded",
+            "eta": 0.23,
             "indpb": 0.23
-        }, 
+        },
         "mating_operator": {
-            "operator": "cxBlend", 
+            "operator": "cxBlend",
             "alpha": 0.46
         }
     }

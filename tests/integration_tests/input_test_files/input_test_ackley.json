@@ -1,7 +1,7 @@
 {
     "control_variables": {
-        "x1": {"min":-32.768, "max": 32.768},
-        "x2": {"min":-32.768, "max": 32.768}
+        "x1": {"min": -32.768, "max": 32.768},
+        "x2": {"min": -32.768, "max": 32.768}
     },
     "evaluators": {
         "openmc": {

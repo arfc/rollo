@@ -9,4 +9,4 @@ ackley = (
     + np.exp(1)
 )
 
-print(ackley) 
+print(ackley)
