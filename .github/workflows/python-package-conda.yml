@@ -36,7 +36,7 @@ jobs:
     - name: Test with pytest
       run: |
         conda install pytest
-        cd tests
+        cd tests/unit_tests/
         pytest test_algorithm.py
         pytest test_backend.py
         pytest test_constraints.py
