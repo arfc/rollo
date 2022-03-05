@@ -43,7 +43,7 @@ test_input_dict = {
         "generations": 10,
         "mutation_probability": 0.5,
         "mating_probability": 0.5,
-        "selection_operator": {"operator": "selBest", "inds": 1},
+        "selection_operator": {"operator": "selBest"},
         "mutation_operator": {
             "operator": "mutGaussian",
             "indpb": 0.5,
@@ -129,9 +129,9 @@ def test_min_max_list():
 def test_add_selection_operators():
     tg = ToolboxGenerator()
     selection_dict_list = [
-        {"operator": "selTournament", "inds": 5, "tournsize": 2},
-        {"operator": "selNSGA2", "inds": 5},
-        {"operator": "selBest", "inds": 5},
+        {"operator": "selTournament", "tournsize": 2},
+        {"operator": "selNSGA2"},
+        {"operator": "selBest"},
     ]
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
@@ -151,19 +151,12 @@ def test_add_selection_operators():
                 toolbox.individual)
             pop = toolbox.population(n=10)
             toolbox = tg.add_selection_operators(toolbox, selection_dict)
-            expected_inds = []
-            for i, ind in enumerate(pop):
-                if (i % 2) == 0:
-                    ind.fitness.values = (1,)
-                else:
-                    ind.fitness.values = (0,)
-                    expected_inds.append(ind)
-            new_pop = toolbox.select(pop)
+            new_pop = toolbox.select(pop, k=len(pop))
             assert "select" in dir(toolbox)
             if selection_dict["operator"] == "selBest":
-                assert new_pop == expected_inds
+                assert new_pop == pop
             else:
-                assert len(new_pop) == len(expected_inds)
+                assert len(new_pop) == len(pop)
 
 
 def test_add_mutation_operators():
