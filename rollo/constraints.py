@@ -4,8 +4,8 @@ import random
 
 
 class Constraints(object):
-    """The Constraints class contains methods to initialize constraints defined 
-    in the input file and applies the constraints by removing individuals that 
+    """The Constraints class contains methods to initialize constraints defined
+    in the input file and applies the constraints by removing individuals that
     do not meet the constraint.
 
     Parameters

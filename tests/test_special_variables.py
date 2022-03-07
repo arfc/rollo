@@ -44,6 +44,7 @@ def test_polynomial_triso_values():
             poly[2] * dz_vals +
             poly[3]
         )
-        pf_z = poly_val / sum(poly_val) * no_trisos * vol_triso / poly_dict["volume"]
+        pf_z = poly_val / sum(poly_val) * no_trisos * \
+            vol_triso / poly_dict["volume"]
         assert len([i for i in pf_z if i > 0.25]) == 0
         assert len([i for i in poly_val if i < 0]) == 0

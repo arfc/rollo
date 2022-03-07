@@ -11,10 +11,10 @@ from rollo.moltres_evaluation import MoltresEvaluation
 class Evaluation:
     """Holds functions that generate and execute the evaluation solver's scripts.
 
-    DEAP's (evolutionary algorithm package) fitness evaluator requires an 
-    evaluation function to evaluate each individual's fitness values. The 
-    Evaluation class contains a method that creates an evaluation function that 
-    runs the nuclear software and returns the required fitness values, defined 
+    DEAP's (evolutionary algorithm package) fitness evaluator requires an
+    evaluation function to evaluate each individual's fitness values. The
+    Evaluation class contains a method that creates an evaluation function that
+    runs the nuclear software and returns the required fitness values, defined
     in the input file.
 
     Attributes
@@ -38,7 +38,9 @@ class Evaluation:
         self.input_scripts = {}
         self.output_scripts = {}
         # Developers can add new solvers to self.eval_dict below
-        self.eval_dict = {"openmc": OpenMCEvaluation(), "moltres": MoltresEvaluation()}
+        self.eval_dict = {
+            "openmc": OpenMCEvaluation(),
+            "moltres": MoltresEvaluation()}
 
     def add_evaluator(self, solver_name, input_script, output_script):
         """Adds information about an evaluator to the Evaluation class object
@@ -57,7 +59,7 @@ class Evaluation:
         self.input_scripts[solver_name] = input_script
         try:
             self.output_scripts[solver_name] = output_script
-        except:
+        except BaseException:
             pass
         return
 
@@ -123,13 +125,19 @@ class Evaluation:
                 output_vals = self.get_output_vals(
                     output_vals, solver, output_dict, control_vars, path
                 )
-                if input_evaluators[solver]["keep_files"] == False:
+                if not input_evaluators[solver]["keep_files"]:
                     shutil.rmtree(path)
             return tuple(output_vals)
 
         return eval_function
 
-    def get_output_vals(self, output_vals, solver, output_dict, control_vars, path):
+    def get_output_vals(
+            self,
+            output_vals,
+            solver,
+            output_dict,
+            control_vars,
+            path):
         """Returns a populated list with output values for each solver
 
         Parameters
@@ -154,7 +162,8 @@ class Evaluation:
         """
 
         if self.output_scripts[solver]:
-            # copy rendered output script into a new file in the particular solver's run
+            # copy rendered output script into a new file in the particular
+            # solver's run
             shutil.copyfile(
                 self.output_scripts[solver], path + "/" + solver + "_output.py"
             )
@@ -261,7 +270,8 @@ class Evaluation:
         template = nativetypes.NativeTemplate(imported_script)
         render_str = "template.render("
         for inp in control_vars_solver:
-            render_str += "**{'" + inp + "':" + str(control_vars_solver[inp]) + "},"
+            render_str += "**{'" + inp + "':" + \
+                str(control_vars_solver[inp]) + "},"
         render_str += ")"
         rendered_template = eval(render_str)
         return rendered_template
@@ -289,7 +299,8 @@ class Evaluation:
         f.write(rendered_openmc_script)
         f.close()
         with open("output.txt", "wb") as output:
-            subprocess.call(["python", "-u", "./openmc_input.py"], stdout=output)
+            subprocess.call(
+                ["python", "-u", "./openmc_input.py"], stdout=output)
         return
 
     def moltres_run(self, rendered_moltres_script):
