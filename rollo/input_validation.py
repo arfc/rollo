@@ -214,7 +214,7 @@ class InputValidation:
         # validation for objective and optimized variable
         self.validate_in_list(
             input_algorithm["parallel"],
-            ["none", "multiprocessing", "mpi_evals"],
+            ["none", "multiprocessing", "theta"],
             "parallel",
         )
         for obj in input_algorithm["objective"]:
@@ -449,7 +449,14 @@ class InputValidation:
                 "type": "object",
                 "properties": {
                     "order": {"type": "number"},
-                    "input_script": {"type": "string"},
+                    "input_script": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "execute": {
+                        "type": "array",
+                        "items": {"type": "array"},
+                    },
                     "inputs": {
                         "type": "array",
                         "items": {"type": "string"},
@@ -458,7 +465,10 @@ class InputValidation:
                         "type": "array",
                         "items": {"type": "string"},
                     },
-                    "output_script": {"type": "string"},
+                    "output_script": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
                     "keep_files": {"type": "string"},
                 },
             }
@@ -467,7 +477,7 @@ class InputValidation:
             self.validate_correct_keys(
                 input_evaluators[evaluator],
                 ["input_script", "inputs", "outputs", "order"],
-                ["output_script", "keep_files"],
+                ["output_script", "keep_files", "execute"],
                 "evaluator: " + evaluator,
             )
             self.validate_in_list(
