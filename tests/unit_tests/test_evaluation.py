@@ -6,9 +6,6 @@ from rollo.evaluation import Evaluation
 from collections import OrderedDict
 from deap import base, creator
 
-creator.create("obj", base.Fitness, weights=(-1.0,))
-creator.create("Ind", list, fitness=creator.obj)
-
 
 def test_eval_fn_generator():
     os.chdir("./input_test_files")
@@ -44,7 +41,8 @@ def test_eval_fn_generator():
         },
         gens=2,
     )
-
+    creator.create("obj", base.Fitness, weights=(-1.0,))
+    creator.create("Ind", list, fitness=creator.obj)
     ind = creator.Ind([0.03, 1, 1, 1, 1])
     ind.gen = 0
     ind.num = 0
@@ -66,6 +64,8 @@ def test_run_input_script():
         input_script=["python", "input_test_run_input_script.py"],
         output_script=["python", "placeholder.py"],
     )
+    creator.create("obj", base.Fitness, weights=(-1.0,))
+    creator.create("Ind", list, fitness=creator.obj)
     ind = creator.Ind([1, 1])
     ind.gen = 0
     ind.num = 0
