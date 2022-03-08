@@ -81,6 +81,8 @@ class Evaluation:
             Ordered dict of output variables as keys and solvers as values
         input_evaluators : dict
             evaluators sub-dictionary from input file
+        gens: int
+            total generations in simulation (defined in input file)
 
         Returns
         -------
