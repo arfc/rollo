@@ -118,7 +118,9 @@ class Evaluation:
                 path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
                 os.mkdir(path)
                 self.run_input_script(solver, control_vars[solver], ind, path)
-                self.run_execute(input_evaluators["solver"]["execute2"], path)
+                if "execute2" in input_evaluators[solver]:
+                    self.run_execute(
+                        input_evaluators[solver]["execute2"], path)
                 # get output values
                 output_vals = self.get_output_vals(
                     output_vals, solver, output_dict, control_vars, path

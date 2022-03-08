@@ -9,7 +9,7 @@ from deap import base, creator
 creator.create("obj", base.Fitness, weights=(-1.0,))
 creator.create("Ind", list, fitness=creator.obj)
 
-"""
+
 def test_eval_fn_generator():
     os.chdir("./input_test_files")
     if os.path.exists("./openmc_0_0"):
@@ -54,7 +54,6 @@ def test_eval_fn_generator():
     shutil.rmtree("./moltres_0_0")
     os.chdir("../")
     assert output_vals == expected_output_vals
-"""
 
 
 def test_run_input_script():
@@ -129,7 +128,6 @@ def test_get_output_vals():
     assert output_vals == expected_output_vals
 
 
-"""
 def test_name_ind():
     ev = Evaluation()
     control_vars = ev.name_ind(
@@ -162,5 +160,3 @@ def test_render_jinja_template():
     expected_rendered_template = "total_pf = 0.01\npoly_coeff = [1, 1, 1, 1]"
     os.chdir("../")
     assert rendered_template == expected_rendered_template
-
-"""
