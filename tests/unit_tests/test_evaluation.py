@@ -9,7 +9,7 @@ from deap import base, creator
 creator.create("obj", base.Fitness, weights=(-1.0,))
 creator.create("Ind", list, fitness=creator.obj)
 
-
+"""
 def test_eval_fn_generator():
     os.chdir("./input_test_files")
     if os.path.exists("./openmc_0_0"):
@@ -54,10 +54,13 @@ def test_eval_fn_generator():
     shutil.rmtree("./moltres_0_0")
     os.chdir("../")
     assert output_vals == expected_output_vals
+"""
 
 
 def test_run_input_script():
     os.chdir("./input_test_files")
+    path = "openmc_0_0"
+    os.mkdir(path)
     ev = Evaluation()
     ev.add_evaluator(
         solver_name="openmc",
@@ -68,15 +71,30 @@ def test_run_input_script():
     ind.gen = 0
     ind.num = 0
     control_vars_solver = {"hi": 1, "hi2": 2}
-    path = "openmc_0_0"
     ev.run_input_script("openmc", control_vars_solver, ind, path)
     with open("./" + path + "/input_script_output.txt") as fp:
         Lines = fp.readlines()[0]
     assert Lines == "[1, 2]\n"
+    shutil.rmtree(path)
     os.chdir("../")
     return
 
 
+def test_run_execute():
+    os.chdir("./input_test_files")
+    path = "openmc_0_0"
+    os.mkdir(path)
+    ev = Evaluation()
+    ev.run_execute([["python", "test_run_execute.py"]], path)
+    with open("./" + path + "/execute_0_output.txt") as fp:
+        Lines = fp.readlines()[0]
+    assert Lines == "[1, 2]\n"
+    shutil.rmtree(path)
+    os.chdir("../")
+    return
+
+
+"""
 def test_get_output_vals():
     os.chdir("./input_test_files")
     ev = Evaluation()
@@ -140,3 +158,4 @@ def test_render_jinja_template():
     expected_rendered_template = "total_pf = 0.01\npoly_coeff = [1, 1, 1, 1]"
     os.chdir("../")
     assert rendered_template == expected_rendered_template
+"""

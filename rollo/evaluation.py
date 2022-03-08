@@ -113,7 +113,7 @@ class Evaluation:
                 path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
                 os.mkdir(path)
                 self.run_input_script(solver, control_vars[solver], ind, path)
-                self.run_execute()
+                self.run_execute(input_evaluators["solver"]["execute2"], path)
                 # get output values
                 output_vals = self.get_output_vals(
                     output_vals, solver, output_dict, control_vars, path
@@ -149,6 +149,20 @@ class Evaluation:
                 stdout=output,
                 shell=True)
         os.chdir("../")
+        return
+
+    def run_execute(self, input_evaluator_solver_execute2, path):
+        for i, executables in enumerate(input_evaluator_solver_execute2):
+            if len(executables) > 1:
+                shutil.copyfile(executables[1], path + "/" + executables[1])
+                os.chdir(path)
+                execute = executables[0] + " " + executables[1]
+            else:
+                execute = executables[0]
+            txt_file = "execute_" + str(i) + "_output.txt"
+            with open(txt_file, "wb") as output:
+                subprocess.call(execute, stdout=output, shell=True)
+            os.chdir("../")
         return
 
     def solver_order(self, input_evaluators):
