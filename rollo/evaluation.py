@@ -101,7 +101,7 @@ class Evaluation:
                     control_vars_dict[name] = self.name_ind(
                         ind, control_dict, input_evaluators)
                     output_vals_dict[name] = [None] * len(output_dict)
-                return all_output_vals # list of tuples
+                return all_output_vals  # list of tuples
         else:
             def eval_function(ind):
                 """Accepts a DEAP individual and returns a tuple of output values
@@ -120,7 +120,8 @@ class Evaluation:
 
                 """
 
-                control_vars = self.name_ind(ind, control_dict, input_evaluators)
+                control_vars = self.name_ind(
+                    ind, control_dict, input_evaluators)
                 output_vals = [None] * len(output_dict)
                 order_of_solvers = self.solver_order(input_evaluators)
 
@@ -128,7 +129,8 @@ class Evaluation:
                     # path name for solver's run
                     path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
                     os.mkdir(path)
-                    self.run_input_script(solver, control_vars[solver], ind, path)
+                    self.run_input_script(
+                        solver, control_vars[solver], ind, path)
                     if "execute2" in input_evaluators[solver]:
                         self.run_execute(
                             input_evaluators[solver]["execute2"], path)
