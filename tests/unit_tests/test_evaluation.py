@@ -97,6 +97,9 @@ def test_run_execute():
     return
 
 
+def test_solver_order():
+    return
+
 def test_get_output_vals():
     os.chdir("./input_test_files")
     ev = Evaluation()

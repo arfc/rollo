@@ -253,24 +253,6 @@ class Evaluation:
                     output_vals[i] = oup_script_results[var]
         return output_vals
 
-    def system_call(self, command):
-        """Runs evaluation software output file
-
-        Parameters
-        ----------
-        command : str
-            command to run in the command line
-
-        Returns
-        -------
-        str
-            printed output from running evaluation software output file
-
-        """
-
-        p = subprocess.Popen([command], stdout=subprocess.PIPE, shell=True)
-        return p.stdout.read()
-
     def name_ind(self, ind, control_dict, input_evaluators):
         """Returns a dictionary that maps the control_dict's variable names to
         values from ind list
