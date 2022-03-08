@@ -122,6 +122,24 @@ def test_create_input_execute_output_scripts():
     return
 
 
+def test_generate_run_command_supercomputer():
+    init()
+    ind1, ind2 = creator.Ind([1]), creator.Ind([2])
+    ind1.gen, ind1.num = 0, 0
+    ind2.gen, ind2.num = 0, 1
+    pop = [ind1, ind2]
+    ev = Evaluation()
+    command = ev.generate_run_command_supercomputer(
+        pop, "openmc", "python hello.py")
+    expected_command = "cd openmc_0_0\npython hello.py & \nsleep 1 \n" + \
+        "cd ../openmc_0_1\npython hello.py & \nsleep 1 \nwait"
+    assert command == expected_command
+    return
+
+
+test_generate_run_command_supercomputer()
+
+
 def test_run_input_script_serial():
     os.chdir("./input_test_files")
     path = "openmc_0_0"

@@ -179,8 +179,31 @@ class Evaluation:
             self.generate_output_script(path, solver)
         return
 
-    def run_input_and_execute_and_output_scripts(self,):
+    def run_input_and_execute_and_output_scripts(self, pop, solver):
+        # run input script
+        run_input = self.generate_run_command_supercomputer(
+            pop=pop,
+            solver=solver,
+            single_command=self.input_scripts[solver][0] + " " +
+            self.input_scripts[solver][1] + " > input_script_out.txt")
+        subprocess.call(run_input, shell=True)
+        # run execute script
         return
+
+    def generate_run_command_supercomputer(self, pop, solver, single_command):
+        command = ''''''
+        count = 0
+        for ind in pop:
+            path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
+            if count == 0:
+                command += "cd " + path + "\n"
+            else:
+                command += "cd ../" + path + "\n"
+            count += 1
+            command += single_command + " & \n"
+            command += "sleep 1 \n"
+        command += "wait"
+        return command
 
     def run_input_script_serial(self, solver, control_vars_solver, ind, path):
         self.render_input_script(solver, control_vars_solver, ind, path)
