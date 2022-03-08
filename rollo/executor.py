@@ -195,14 +195,8 @@ class Executor(object):
             )
         parallel_type = input_dict["algorithm"]["parallel"]
         gens = input_dict["algorithm"]["generations"]
-        if parallel_type == "supercomputer":
-            evaluator_fn = evaluator.eval_fn_generator_theta(
-                control_dict, output_dict, input_dict["evaluators"], gens
-            )
-        else:
-            evaluator_fn = evaluator.eval_fn_generator(
-                control_dict, output_dict, input_dict["evaluators"], gens
-            )
+        evaluator_fn = evaluator.eval_fn_generator(
+            control_dict, output_dict, input_dict["evaluators"], gens, parallel_type)
         return evaluator_fn
 
     def load_toolbox(

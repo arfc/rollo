@@ -69,7 +69,8 @@ class Evaluation:
             control_dict,
             output_dict,
             input_evaluators,
-            gens):
+            gens,
+            parallel_type):
         """Returns a function that accepts a DEAP individual and returns a
         tuple of output values listed in outputs
 
@@ -90,47 +91,50 @@ class Evaluation:
             output by the software
 
         """
+        if parallel_type == "supercomputer":
+            def eval_function(ind):
+                return
+        else:
+            def eval_function(ind):
+                """Accepts a DEAP individual and returns a tuple of output values
+                listed in outputs
 
-        def eval_function(ind):
-            """Accepts a DEAP individual and returns a tuple of output values
-            listed in outputs
+                Parameters
+                ----------
+                ind : deap.creator.Ind
+                    Created in `rollo.toolbox_generator.ToolboxGenerator`. It is
+                    a list with special attributes.
 
-            Parameters
-            ----------
-            ind : deap.creator.Ind
-                Created in `rollo.toolbox_generator.ToolboxGenerator`. It is
-                a list with special attributes.
+                Returns
+                -------
+                tuple
+                    output values from evaluators ordered by output_dict
 
-            Returns
-            -------
-            tuple
-                output values from evaluators ordered by output_dict
+                """
 
-            """
+                self.rank_time = time.time()
+                control_vars = self.name_ind(ind, control_dict, input_evaluators)
+                output_vals = [None] * len(output_dict)
+                order_of_solvers = self.solver_order(input_evaluators)
 
-            self.rank_time = time.time()
-            control_vars = self.name_ind(ind, control_dict, input_evaluators)
-            output_vals = [None] * len(output_dict)
-            order_of_solvers = self.solver_order(input_evaluators)
-
-            for solver in order_of_solvers:
-                # path name for solver's run
-                path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
-                os.mkdir(path)
-                self.run_input_script(solver, control_vars[solver], ind, path)
-                if "execute2" in input_evaluators[solver]:
-                    self.run_execute(
-                        input_evaluators[solver]["execute2"], path)
-                # get output values
-                output_vals = self.get_output_vals(
-                    output_vals, solver, output_dict, control_vars, path
-                )
-                if input_evaluators[solver]["keep_files"] == "none":
-                    shutil.rmtree(path)
-                elif input_evaluators[solver]["keep_files"] == "only_final":
-                    if ind.gen < gens - 1:
+                for solver in order_of_solvers:
+                    # path name for solver's run
+                    path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
+                    os.mkdir(path)
+                    self.run_input_script(solver, control_vars[solver], ind, path)
+                    if "execute2" in input_evaluators[solver]:
+                        self.run_execute(
+                            input_evaluators[solver]["execute2"], path)
+                    # get output values
+                    output_vals = self.get_output_vals(
+                        output_vals, solver, output_dict, control_vars, path
+                    )
+                    if input_evaluators[solver]["keep_files"] == "none":
                         shutil.rmtree(path)
-            return tuple(output_vals)
+                    elif input_evaluators[solver]["keep_files"] == "only_final":
+                        if ind.gen < gens - 1:
+                            shutil.rmtree(path)
+                return tuple(output_vals)
 
         return eval_function
 
