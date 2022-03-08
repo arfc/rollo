@@ -137,9 +137,6 @@ def test_generate_run_command_supercomputer():
     return
 
 
-test_generate_run_command_supercomputer()
-
-
 def test_run_input_script_serial():
     os.chdir("./input_test_files")
     path = "openmc_0_0"
