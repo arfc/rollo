@@ -116,7 +116,7 @@ class Evaluation:
                         os.mkdir(path)
                         self.render_input_script(
                             solver, control_vars_dict[name][solver], ind, path)
-                        self.render_execute_scripts(
+                        self.generate_execute_scripts(
                             path, input_evaluators[solver]["execute2"])
 
                 return all_output_vals  # list of tuples
@@ -168,9 +168,23 @@ class Evaluation:
 
         return eval_function
 
-    def create_input_execute_output_scripts(self):
+    def create_input_execute_output_scripts(
+            self,
+            pop,
+            solver,
+            control_vars_dict,
+            input_evaluators_solver_execute):
+        for ind in pop:
+            name = str(ind.gen) + "_" + str(ind.num)
+            path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
+            os.mkdir(path)
+            self.render_input_script(
+                solver, control_vars_dict[name], ind, path)
+            self.generate_execute_scripts(
+                path, input_evaluators_solver_execute)
+            self.generate_output_script(path, solver)
         return
-        
+
     def run_input_script_serial(self, solver, control_vars_solver, ind, path):
         self.render_input_script(solver, control_vars_solver, ind, path)
         self.subprocess_call(
@@ -182,7 +196,7 @@ class Evaluation:
         return
 
     def run_execute_serial(self, input_evaluator_solver_execute2, path):
-        self.render_execute_scripts(path, input_evaluator_solver_execute2)
+        self.generate_execute_scripts(path, input_evaluator_solver_execute2)
         for i, executables in enumerate(input_evaluator_solver_execute2):
             if len(executables) > 1:
                 execute = executables[0] + " " + executables[1]
@@ -212,11 +226,19 @@ class Evaluation:
         os.chdir("../")
         return
 
-    def render_execute_scripts(self, path, input_evaluator_solver_execute2):
+    def generate_execute_scripts(self, path, input_evaluator_solver_execute2):
         os.chdir(path)
         for executables in input_evaluator_solver_execute2:
             if len(executables) > 1:
                 shutil.copyfile("../" + executables[1], executables[1])
+        os.chdir("../")
+        return
+
+    def generate_output_script(self, path, solver):
+        os.chdir(path)
+        shutil.copyfile(
+            "../" + self.output_scripts[solver][1],
+            self.output_scripts[solver][1])
         os.chdir("../")
         return
 

@@ -8,8 +8,21 @@ from deap import base, creator
 
 if os.path.exists("./input_test_files/openmc_0_0"):
     shutil.rmtree("./input_test_files/openmc_0_0")
+if os.path.exists("./input_test_files/openmc_0_1"):
+    shutil.rmtree("./input_test_files/openmc_0_1")
 if os.path.exists("./input_test_files/moltres_0_0"):
     shutil.rmtree("./input_test_files/moltres_0_0")
+
+
+def init():
+    creator.create(
+        "obj",
+        base.Fitness,
+        weights=(
+            1.0,
+        ),
+    )
+    creator.create("Ind", list, fitness=creator.obj)
 
 
 def test_eval_fn_generator():
@@ -17,8 +30,12 @@ def test_eval_fn_generator():
     ev = Evaluation()
     ev.add_evaluator(
         solver_name="openmc",
-        input_script=["python", "input_test_eval_fn_generator_openmc_template.py"],
-        output_script=["python", "input_test_eval_fn_generator_openmc_output.py"],
+        input_script=[
+            "python",
+            "input_test_eval_fn_generator_openmc_template.py"],
+        output_script=[
+            "python",
+            "input_test_eval_fn_generator_openmc_output.py"],
     )
     ev.add_evaluator(
         solver_name="moltres", input_script=[
@@ -26,7 +43,8 @@ def test_eval_fn_generator():
             "python", "input_test_evaluation_get_output_vals_moltres.py"], )
     eval_function = ev.eval_fn_generator(
         control_dict=OrderedDict(
-            {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
+            {"packing_fraction": ["openmc", 1],
+                "polynomial_triso": ["openmc", 4]}
         ),
         output_dict=OrderedDict(
             {
@@ -54,6 +72,57 @@ def test_eval_fn_generator():
     shutil.rmtree("./moltres_0_0")
     os.chdir("../")
     assert output_vals == expected_output_vals
+
+
+def test_create_input_execute_output_scripts():
+    init()
+    os.chdir("./input_test_files")
+    ev = Evaluation()
+    ev.add_evaluator(
+        solver_name="openmc",
+        input_script=["python", "input_test_run_input_script.py"],
+        output_script=["python", "input_test_evaluation_get_output_vals.py"],
+    )
+    control_vars_dict = {
+        "0_0": {
+            "hi": 1, "hi2": 2}, "0_1": {
+            "hi": 3, "hi2": 4}}
+    ind1, ind2 = creator.Ind([1]), creator.Ind([2])
+    ind1.gen, ind1.num = 0, 0
+    ind2.gen, ind2.num = 0, 1
+    pop = [ind1, ind2]
+    input_evaluators_solver_execute = [
+        ["python", "input_test_run_execute.py"], ["rollo-non-existent-executable"]]
+    ev.create_input_execute_output_scripts(
+        pop=pop,
+        solver="openmc",
+        control_vars_dict=control_vars_dict,
+        input_evaluators_solver_execute=input_evaluators_solver_execute)
+    with open("./openmc_0_0/input_test_run_input_script.py") as fp:
+        Lines = fp.readline()
+    assert Lines == "print([1, 2])"
+    with open("./openmc_0_1/input_test_run_input_script.py") as fp:
+        Lines = fp.readline()
+    assert Lines == "print([3, 4])"
+    with open("./openmc_0_0/input_test_run_execute.py") as fp:
+        Lines = fp.readline()
+    assert Lines == "print([5, 6])"
+    with open("./openmc_0_1/input_test_run_execute.py") as fp:
+        Lines = fp.readline()
+    assert Lines == "print([5, 6])"
+    with open("./openmc_0_0/input_test_evaluation_get_output_vals.py") as fp:
+        Lines = fp.readline()
+    assert Lines == 'print({"random": 3})\n'
+    with open("./openmc_0_1/input_test_evaluation_get_output_vals.py") as fp:
+        Lines = fp.readline()
+    assert Lines == 'print({"random": 3})\n'
+    shutil.rmtree("openmc_0_0")
+    shutil.rmtree("openmc_0_1")
+    os.chdir("../")
+    return
+
+
+test_create_input_execute_output_scripts()
 
 
 def test_run_input_script_serial():
@@ -90,7 +159,7 @@ def test_run_execute_serial():
         "rollo-non-existent-executable"]], path)
     with open("./" + path + "/execute_0_output.txt") as fp:
         Lines = fp.readlines()[0]
-    assert Lines == "[1, 2]\n"
+    assert Lines == "[5, 6]\n"
     with open("./" + path + "/execute_1_output.txt") as fp:
         Lines = fp.readlines()[0]
     assert "not found" and "rollo-non-existent-executable" in Lines
@@ -144,7 +213,8 @@ def test_name_ind():
     control_vars = ev.name_ind(
         ind=[0.01, 1, 1, 1, 1],
         control_dict=OrderedDict(
-            {"packing_fraction": ["openmc", 1], "polynomial_triso": ["moltres", 4]}
+            {"packing_fraction": ["openmc", 1],
+                "polynomial_triso": ["moltres", 4]}
         ),
         input_evaluators=["openmc", "moltres"],
     )
