@@ -4,6 +4,7 @@ import ast
 import shutil
 import time
 import jinja2
+from collections import OrderedDict
 from rollo.openmc_evaluation import OpenMCEvaluation
 from rollo.moltres_evaluation import MoltresEvaluation
 
@@ -101,6 +102,23 @@ class Evaluation:
                     control_vars_dict[name] = self.name_ind(
                         ind, control_dict, input_evaluators)
                     output_vals_dict[name] = [None] * len(output_dict)
+
+                for solver in order_of_solvers:
+                    self.create_input_execute_output_scripts()
+                    self.run_input_and_execute_and_output_scripts()
+                    all_output_vals = self.get_output_vals_supercomputer()
+                    # create dir and input script
+                    run_input = ''''''
+                    count = 0
+                    for ind in pop:
+                        name = str(ind.gen) + "_" + str(ind.num)
+                        path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
+                        os.mkdir(path)
+                        self.render_input_script(
+                            solver, control_vars_dict[name][solver], ind, path)
+                        self.render_execute_scripts(
+                            path, input_evaluators[solver]["execute2"])
+
                 return all_output_vals  # list of tuples
         else:
             def eval_function(ind):
@@ -129,15 +147,18 @@ class Evaluation:
                     # path name for solver's run
                     path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
                     os.mkdir(path)
-                    self.run_input_script(
+                    # run input script
+                    self.run_input_script_serial(
                         solver, control_vars[solver], ind, path)
-                    if "execute2" in input_evaluators[solver]:
-                        self.run_execute(
-                            input_evaluators[solver]["execute2"], path)
+                    # run execute if they exist
+                    if "execute" in input_evaluators[solver]:
+                        self.run_execute_serial(
+                            input_evaluators[solver]["execute"], path)
                     # get output values
                     output_vals = self.get_output_vals(
                         output_vals, solver, output_dict, control_vars, path
                     )
+                    # remove files
                     if input_evaluators[solver]["keep_files"] == "none":
                         shutil.rmtree(path)
                     elif input_evaluators[solver]["keep_files"] == "only_final":
@@ -147,47 +168,25 @@ class Evaluation:
 
         return eval_function
 
-    def run_input_script(self, solver, control_vars_solver, ind, path):
-        # render jinja-ed input script
-        rendered_script = self.render_jinja_template(
-            script=self.input_scripts[solver][1],
-            control_vars_solver=control_vars_solver,
-            ind=ind,
-            solver=solver
-        )
-        # enter directory for this particular solver's run
-        os.chdir(path)
-        # run input file
-        f = open(self.input_scripts[solver][1], "w+")
-        f.write(rendered_script)
-        f.close()
-        with open("input_script_output.txt", "wb") as output:
-            subprocess.call(
-                self.input_scripts[solver][0] +
-                " " +
-                self.input_scripts[solver][1],
-                stdout=output,
-                stderr=output,
-                shell=True)
-        os.chdir("../")
+    def run_input_script_serial(self, solver, control_vars_solver, ind, path):
+        self.render_input_script(solver, control_vars_solver, ind, path)
+        self.subprocess_call(
+            path,
+            "input_script_out.txt",
+            self.input_scripts[solver][0] +
+            " " +
+            self.input_scripts[solver][1])
         return
 
-    def run_execute(self, input_evaluator_solver_execute2, path):
-        os.chdir(path)
+    def run_execute_serial(self, input_evaluator_solver_execute2, path):
+        self.render_execute_scripts(path, input_evaluator_solver_execute2)
         for i, executables in enumerate(input_evaluator_solver_execute2):
             if len(executables) > 1:
-                shutil.copyfile("../" + executables[1], executables[1])
                 execute = executables[0] + " " + executables[1]
             else:
                 execute = executables[0]
-            txt_file = "execute_" + str(i) + "_output.txt"
-            with open(txt_file, "wb") as output:
-                subprocess.call(
-                    execute,
-                    stdout=output,
-                    stderr=output,
-                    shell=True)
-        os.chdir("../")
+            self.subprocess_call(
+                path, "execute_" + str(i) + "_output.txt", execute)
         return
 
     def solver_order(self, input_evaluators):
@@ -195,6 +194,39 @@ class Evaluation:
         for solver in input_evaluators:
             order[input_evaluators[solver]["order"]] = solver
         return order
+
+    def render_input_script(self, solver, control_vars_solver, ind, path):
+        rendered_script = self.render_jinja_template(
+            script=self.input_scripts[solver][1],
+            control_vars_solver=control_vars_solver,
+            ind=ind,
+            solver=solver
+        )
+        os.chdir(path)
+        f = open(self.input_scripts[solver][1], "w+")
+        f.write(rendered_script)
+        f.close()
+        os.chdir("../")
+        return
+
+    def render_execute_scripts(self, path, input_evaluator_solver_execute2):
+        os.chdir(path)
+        for executables in input_evaluator_solver_execute2:
+            if len(executables) > 1:
+                shutil.copyfile("../" + executables[1], executables[1])
+        os.chdir("../")
+        return
+
+    def subprocess_call(self, path, out_file, command):
+        os.chdir(path)
+        with open(out_file, "wb") as output:
+            subprocess.call(
+                command,
+                stdout=output,
+                stderr=output,
+                shell=True)
+        os.chdir("../")
+        return
 
     def get_output_vals(
             self,

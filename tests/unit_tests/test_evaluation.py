@@ -6,13 +6,14 @@ from rollo.evaluation import Evaluation
 from collections import OrderedDict
 from deap import base, creator
 
+if os.path.exists("./input_test_files/openmc_0_0"):
+    shutil.rmtree("./input_test_files/openmc_0_0")
+if os.path.exists("./input_test_files/moltres_0_0"):
+    shutil.rmtree("./input_test_files/moltres_0_0")
+
 
 def test_eval_fn_generator():
     os.chdir("./input_test_files")
-    if os.path.exists("./openmc_0_0"):
-        shutil.rmtree("./openmc_0_0")
-    if os.path.exists("./moltres_0_0"):
-        shutil.rmtree("./moltres_0_0")
     ev = Evaluation()
     ev.add_evaluator(
         solver_name="openmc",
@@ -40,6 +41,7 @@ def test_eval_fn_generator():
             "moltres": {"keep_files": True, "order": 1},
         },
         gens=2,
+        parallel_type="none"
     )
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
@@ -70,8 +72,8 @@ def test_run_input_script():
     ind.gen = 0
     ind.num = 0
     control_vars_solver = {"hi": 1, "hi2": 2}
-    ev.run_input_script("openmc", control_vars_solver, ind, path)
-    with open("./" + path + "/input_script_output.txt") as fp:
+    ev.run_input_script_serial("openmc", control_vars_solver, ind, path)
+    with open("./" + path + "/input_script_out.txt") as fp:
         Lines = fp.readlines()[0]
     assert Lines == "[1, 2]\n"
     shutil.rmtree(path)
@@ -84,8 +86,8 @@ def test_run_execute():
     path = "openmc_0_0"
     os.mkdir(path)
     ev = Evaluation()
-    ev.run_execute([["python", "input_test_run_execute.py"], [
-                   "rollo-non-existent-executable"]], path)
+    ev.run_execute_serial([["python", "input_test_run_execute.py"], [
+        "rollo-non-existent-executable"]], path)
     with open("./" + path + "/execute_0_output.txt") as fp:
         Lines = fp.readlines()[0]
     assert Lines == "[1, 2]\n"
