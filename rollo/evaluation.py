@@ -152,17 +152,21 @@ class Evaluation:
         return
 
     def run_execute(self, input_evaluator_solver_execute2, path):
+        os.chdir(path)
         for i, executables in enumerate(input_evaluator_solver_execute2):
             if len(executables) > 1:
-                shutil.copyfile(executables[1], path + "/" + executables[1])
-                os.chdir(path)
+                shutil.copyfile("../" + executables[1], executables[1])
                 execute = executables[0] + " " + executables[1]
             else:
                 execute = executables[0]
             txt_file = "execute_" + str(i) + "_output.txt"
             with open(txt_file, "wb") as output:
-                subprocess.call(execute, stdout=output, shell=True)
-            os.chdir("../")
+                subprocess.call(
+                    execute,
+                    stdout=output,
+                    stderr=output,
+                    shell=True)
+        os.chdir("../")
         return
 
     def solver_order(self, input_evaluators):

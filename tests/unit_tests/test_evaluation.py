@@ -85,10 +85,14 @@ def test_run_execute():
     path = "openmc_0_0"
     os.mkdir(path)
     ev = Evaluation()
-    ev.run_execute([["python", "test_run_execute.py"]], path)
+    ev.run_execute([["python", "test_run_execute.py"], [
+                   "rollo-non-existent-executable"]], path)
     with open("./" + path + "/execute_0_output.txt") as fp:
         Lines = fp.readlines()[0]
     assert Lines == "[1, 2]\n"
+    with open("./" + path + "/execute_1_output.txt") as fp:
+        Lines = fp.readlines()[0]
+    assert "not found" and "rollo-non-existent-executable" in Lines
     shutil.rmtree(path)
     os.chdir("../")
     return
