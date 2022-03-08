@@ -104,20 +104,13 @@ class Evaluation:
                     output_vals_dict[name] = [None] * len(output_dict)
 
                 for solver in order_of_solvers:
-                    self.create_input_execute_output_scripts()
+                    self.create_input_execute_output_scripts(
+                        pop,
+                        solver,
+                        control_vars_dict,
+                        input_evaluators["solver"])
                     self.run_input_and_execute_and_output_scripts()
                     all_output_vals = self.get_output_vals_supercomputer()
-                    # create dir and input script
-                    run_input = ''''''
-                    count = 0
-                    for ind in pop:
-                        name = str(ind.gen) + "_" + str(ind.num)
-                        path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
-                        os.mkdir(path)
-                        self.render_input_script(
-                            solver, control_vars_dict[name][solver], ind, path)
-                        self.generate_execute_scripts(
-                            path, input_evaluators[solver]["execute2"])
 
                 return all_output_vals  # list of tuples
         else:
@@ -173,16 +166,20 @@ class Evaluation:
             pop,
             solver,
             control_vars_dict,
-            input_evaluators_solver_execute):
+            input_evaluators_solver):
         for ind in pop:
             name = str(ind.gen) + "_" + str(ind.num)
             path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
             os.mkdir(path)
             self.render_input_script(
                 solver, control_vars_dict[name], ind, path)
-            self.generate_execute_scripts(
-                path, input_evaluators_solver_execute)
+            if "execute" in input_evaluators_solver:
+                self.generate_execute_scripts(
+                    path, input_evaluators_solver["execute"])
             self.generate_output_script(path, solver)
+        return
+
+    def run_input_and_execute_and_output_scripts(self,):
         return
 
     def run_input_script_serial(self, solver, control_vars_solver, ind, path):
@@ -286,27 +283,16 @@ class Evaluation:
         if self.output_scripts[solver]:
             # copy rendered output script into a new file in the particular
             # solver's run
-            shutil.copyfile(
-                self.output_scripts[solver][1],
-                path + "/" + self.output_scripts[solver][1])
+            self.generate_output_script(path, solver)
             # enter directory for this particular solver's run
-            os.chdir(path)
             # run the output script
             execute = self.output_scripts[solver][0] + \
                 " " + self.output_scripts[solver][1]
-            txt_file = "./output_script_output.txt"
-            with open(txt_file, "wb") as output:
-                subprocess.call(
-                    execute,
-                    stdout=output,
-                    stderr=output,
-                    shell=True)
+            self.subprocess_call(path, "./output_script_out.txt", execute)
             # return the output script's printed dictionary into a variable
-            with open(txt_file) as fp:
+            with open("./" + path + "/output_script_out.txt") as fp:
                 firstline = fp.readlines()[0]
             oup_script_results = ast.literal_eval(firstline)
-            # go back to normal directory with all files
-            os.chdir("../")
         for i, var in enumerate(output_dict):
             if output_dict[var] == solver:
                 # if variable is a control variable

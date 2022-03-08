@@ -91,13 +91,13 @@ def test_create_input_execute_output_scripts():
     ind1.gen, ind1.num = 0, 0
     ind2.gen, ind2.num = 0, 1
     pop = [ind1, ind2]
-    input_evaluators_solver_execute = [
-        ["python", "input_test_run_execute.py"], ["rollo-non-existent-executable"]]
+    input_evaluators_solver = {"execute": [
+        ["python", "input_test_run_execute.py"], ["rollo-non-existent-executable"]]}
     ev.create_input_execute_output_scripts(
         pop=pop,
         solver="openmc",
         control_vars_dict=control_vars_dict,
-        input_evaluators_solver_execute=input_evaluators_solver_execute)
+        input_evaluators_solver=input_evaluators_solver)
     with open("./openmc_0_0/input_test_run_input_script.py") as fp:
         Lines = fp.readline()
     assert Lines == "print([1, 2])"
@@ -120,9 +120,6 @@ def test_create_input_execute_output_scripts():
     shutil.rmtree("openmc_0_1")
     os.chdir("../")
     return
-
-
-test_create_input_execute_output_scripts()
 
 
 def test_run_input_script_serial():
@@ -202,7 +199,7 @@ def test_get_output_vals():
         path="./test_evaluation/",
     )
     expected_output_vals = [0.03, 1.6331797843041689, None, 3]
-    os.remove("./test_evaluation/output_script_output.txt")
+    os.remove("./test_evaluation/output_script_out.txt")
     os.remove("./test_evaluation/input_test_evaluation_get_output_vals.py")
     os.chdir("../")
     assert output_vals == expected_output_vals
