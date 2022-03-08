@@ -98,7 +98,12 @@ def test_run_execute():
 
 
 def test_solver_order():
+    input_evaluators = {"openmc": {"order": 0}, "moltres": {"order": 1}}
+    ev = Evaluation()
+    order = ev.solver_order(input_evaluators)
+    assert order == ["openmc", "moltres"]
     return
+
 
 def test_get_output_vals():
     os.chdir("./input_test_files")
