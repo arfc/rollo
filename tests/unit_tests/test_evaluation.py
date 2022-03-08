@@ -98,14 +98,13 @@ def test_run_execute():
     return
 
 
-"""
 def test_get_output_vals():
     os.chdir("./input_test_files")
     ev = Evaluation()
     ev.add_evaluator(
         solver_name="openmc",
-        input_script="placeholder.py",
-        output_script="input_test_evaluation_get_output_vals.py",
+        input_script=["python", "placeholder.py"],
+        output_script=["python", "input_test_evaluation_get_output_vals.py"],
     )
     output_vals = ev.get_output_vals(
         output_vals=[None] * 4,
@@ -125,11 +124,12 @@ def test_get_output_vals():
         path="./test_evaluation/",
     )
     expected_output_vals = [0.03, 1.6331797843041689, None, 3]
-    os.remove("./test_evaluation/openmc_output.py")
+    os.remove("./test_evaluation/output_script_output.txt")
     os.chdir("../")
     assert output_vals == expected_output_vals
 
 
+"""
 def test_name_ind():
     ev = Evaluation()
     control_vars = ev.name_ind(
@@ -162,4 +162,5 @@ def test_render_jinja_template():
     expected_rendered_template = "total_pf = 0.01\npoly_coeff = [1, 1, 1, 1]"
     os.chdir("../")
     assert rendered_template == expected_rendered_template
+
 """

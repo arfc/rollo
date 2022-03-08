@@ -37,6 +37,11 @@ class Evaluation:
         self.supported_solvers = ["openmc", "moltres"]
         self.input_scripts = {}
         self.output_scripts = {}
+        # Developers can add new solvers to self.eval_dict below
+        self.eval_dict = {
+            "openmc": OpenMCEvaluation(),
+            "openmc_gc": OpenMCEvaluation(),
+            "moltres": MoltresEvaluation()}
 
     def add_evaluator(self, solver_name, input_script, output_script):
         """Adds information about an evaluator to the Evaluation class object
@@ -147,6 +152,7 @@ class Evaluation:
                 " " +
                 self.input_scripts[solver][1],
                 stdout=output,
+                stderr=output,
                 shell=True)
         os.chdir("../")
         return
@@ -209,14 +215,24 @@ class Evaluation:
             # copy rendered output script into a new file in the particular
             # solver's run
             shutil.copyfile(
-                self.output_scripts[solver], path + "/" + solver + "_output.py"
-            )
+                self.output_scripts[solver][1],
+                path + "/" + self.output_scripts[solver][1])
             # enter directory for this particular solver's run
             os.chdir(path)
             # run the output script
-            oup_bytes = self.system_call("python " + solver + "_output.py")
+            execute = self.output_scripts[solver][0] + \
+                " " + self.output_scripts[solver][1]
+            txt_file = "./output_script_output.txt"
+            with open(txt_file, "wb") as output:
+                subprocess.call(
+                    execute,
+                    stdout=output,
+                    stderr=output,
+                    shell=True)
             # return the output script's printed dictionary into a variable
-            oup_script_results = ast.literal_eval(oup_bytes.decode("utf-8"))
+            with open(txt_file) as fp:
+                firstline = fp.readlines()[0]
+            oup_script_results = ast.literal_eval(firstline)
             # go back to normal directory with all files
             os.chdir("../")
         for i, var in enumerate(output_dict):
