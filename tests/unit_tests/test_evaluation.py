@@ -124,6 +124,7 @@ def test_get_output_vals():
     )
     expected_output_vals = [0.03, 1.6331797843041689, None, 3]
     os.remove("./test_evaluation/output_script_output.txt")
+    os.remove("./test_evaluation/input_test_evaluation_get_output_vals.py")
     os.chdir("../")
     assert output_vals == expected_output_vals
 
