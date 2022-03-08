@@ -168,6 +168,9 @@ class Evaluation:
 
         return eval_function
 
+    def create_input_execute_output_scripts(self):
+        return
+        
     def run_input_script_serial(self, solver, control_vars_solver, ind, path):
         self.render_input_script(solver, control_vars_solver, ind, path)
         self.subprocess_call(

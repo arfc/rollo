@@ -56,7 +56,7 @@ def test_eval_fn_generator():
     assert output_vals == expected_output_vals
 
 
-def test_run_input_script():
+def test_run_input_script_serial():
     os.chdir("./input_test_files")
     path = "openmc_0_0"
     os.mkdir(path)
@@ -81,7 +81,7 @@ def test_run_input_script():
     return
 
 
-def test_run_execute():
+def test_run_execute_serial():
     os.chdir("./input_test_files")
     path = "openmc_0_0"
     os.mkdir(path)
