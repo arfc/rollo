@@ -1,9 +1,13 @@
 import pytest
+import ast
 import os
 import shutil
 from rollo.evaluation import Evaluation
 from collections import OrderedDict
 from deap import base, creator
+
+creator.create("obj", base.Fitness, weights=(-1.0,))
+creator.create("Ind", list, fitness=creator.obj)
 
 
 def test_eval_fn_generator():
@@ -15,14 +19,13 @@ def test_eval_fn_generator():
     ev = Evaluation()
     ev.add_evaluator(
         solver_name="openmc",
-        input_script="input_test_eval_fn_generator_openmc_template.py",
-        output_script="input_test_eval_fn_generator_openmc_output.py",
+        input_script=["python", "input_test_eval_fn_generator_openmc_template.py"],
+        output_script=["python", "input_test_eval_fn_generator_openmc_output.py"],
     )
     ev.add_evaluator(
-        solver_name="moltres",
-        input_script="input_test_render_jinja_template_python.py",
-        output_script="input_test_evaluation_get_output_vals_moltres.py",
-    )
+        solver_name="moltres", input_script=[
+            "python", "input_test_render_jinja_template_python.py"], output_script=[
+            "python", "input_test_evaluation_get_output_vals_moltres.py"], )
     eval_function = ev.eval_fn_generator(
         control_dict=OrderedDict(
             {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
@@ -42,8 +45,6 @@ def test_eval_fn_generator():
         gens=2,
     )
 
-    creator.create("obj", base.Fitness, weights=(-1.0,))
-    creator.create("Ind", list, fitness=creator.obj)
     ind = creator.Ind([0.03, 1, 1, 1, 1])
     ind.gen = 0
     ind.num = 0
@@ -53,6 +54,27 @@ def test_eval_fn_generator():
     shutil.rmtree("./moltres_0_0")
     os.chdir("../")
     assert output_vals == expected_output_vals
+
+
+def test_run_input_script():
+    os.chdir("./input_test_files")
+    ev = Evaluation()
+    ev.add_evaluator(
+        solver_name="openmc",
+        input_script=["python", "test_run_input_script.py"],
+        output_script=["python", "placeholder.py"],
+    )
+    ind = creator.Ind([1, 1])
+    ind.gen = 0
+    ind.num = 0
+    control_vars_solver = {"hi": 1, "hi2": 2}
+    path = "openmc_0_0"
+    ev.run_input_script("openmc", control_vars_solver, ind, path)
+    with open("./" + path + "/input_script_output.txt") as fp:
+        Lines = fp.readlines()[0]
+    assert Lines == "[1, 2]\n"
+    os.chdir("../")
+    return
 
 
 def test_get_output_vals():
@@ -102,15 +124,17 @@ def test_name_ind():
     assert control_vars == expected_control_vars
 
 
-def test_render_jinja_template_python():
+def test_render_jinja_template():
     os.chdir("./input_test_files")
     ev = Evaluation()
-    rendered_template = ev.render_jinja_template_python(
+    rendered_template = ev.render_jinja_template(
         script="./input_test_render_jinja_template_python.py",
         control_vars_solver={
             "packing_fraction": 0.01,
             "polynomial_triso": [1, 1, 1, 1],
         },
+        ind=1,
+        solver="openmc"
     )
     print(rendered_template)
     expected_rendered_template = "total_pf = 0.01\npoly_coeff = [1, 1, 1, 1]"
