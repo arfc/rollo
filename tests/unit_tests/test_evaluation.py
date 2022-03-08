@@ -63,7 +63,7 @@ def test_run_input_script():
     ev = Evaluation()
     ev.add_evaluator(
         solver_name="openmc",
-        input_script=["python", "test_run_input_script.py"],
+        input_script=["python", "input_test_run_input_script.py"],
         output_script=["python", "placeholder.py"],
     )
     ind = creator.Ind([1, 1])
@@ -84,7 +84,7 @@ def test_run_execute():
     path = "openmc_0_0"
     os.mkdir(path)
     ev = Evaluation()
-    ev.run_execute([["python", "test_run_execute.py"], [
+    ev.run_execute([["python", "input_test_run_execute.py"], [
                    "rollo-non-existent-executable"]], path)
     with open("./" + path + "/execute_0_output.txt") as fp:
         Lines = fp.readlines()[0]
