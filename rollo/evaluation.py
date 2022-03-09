@@ -13,9 +13,9 @@ class Evaluation:
     """Holds functions that generate and execute the evaluation solver's scripts.
 
     DEAP's (evolutionary algorithm package) fitness evaluator requires an
-    evaluation function to evaluate each individual's fitness values. The
+    evaluation function to evaluate each individual's fitness values. The
     Evaluation class contains a method that creates an evaluation function that
-    runs the nuclear software and returns the required fitness values, defined
+    runs the nuclear software and returns the required fitness values, defined
     in the input file.
 
     Attributes
@@ -35,7 +35,7 @@ class Evaluation:
     """
 
     def __init__(self):
-        self.supported_solvers = ["openmc", "moltres"]
+        self.supported_solvers = ["openmc", "openmc_gc", "moltres"]
         self.input_scripts = {}
         self.output_scripts = {}
         # Developers can add new solvers to self.eval_dict below
@@ -72,8 +72,14 @@ class Evaluation:
             input_evaluators,
             gens,
             parallel_method):
-        """Returns a function that accepts a DEAP individual and returns a
+        """if parallel_method is none or multiprocessing, this function
+        returns a function that accepts a DEAP individual and returns a
         tuple of output values listed in outputs
+
+        if parallel_method is job_control, this function returns a function
+        that accepts a list of DEAP individuals (population) and returns
+        a list of output value tuples. Each tuple corresponds to one
+        individual
 
         Parameters
         ----------
@@ -94,10 +100,26 @@ class Evaluation:
         eval_function : function
             function that runs the evaluation software and returns output values
             output by the software
-
         """
+
         if parallel_method == "job_control":
             def eval_function(pop):
+                """Accepts a list of DEAP individuals (population) and returns
+                a list of output value tuples. Each tuple corresponds to one
+                individual
+
+                Parameters
+                ----------
+                pop : list
+                    List of deap.creator.Ind
+
+                Returns
+                -------
+                list
+                    each index of list contains a tuple of output values from
+                    evaluators ordered by output_dict
+                """
+
                 order_of_solvers = self.solver_order(input_evaluators)
                 control_vars_dict = {}
                 output_vals_dict = OrderedDict()
@@ -147,7 +169,6 @@ class Evaluation:
                 -------
                 tuple
                     output values from evaluators ordered by output_dict
-
                 """
 
                 control_vars = self.name_ind(
@@ -186,6 +207,21 @@ class Evaluation:
             solver,
             control_vars_dict,
             input_evaluators_solver):
+        """Renders input scripts, copies execute scripts, and renders
+        output scripts for parallel_method=job_control
+
+        Parameters
+        ----------
+        pop:
+        solver:
+        control_vars_dict:
+        input_evaluators_solver:
+
+        Returns
+        -------
+        None
+
+        """
         for ind in pop:
             name = str(ind.gen) + "_" + str(ind.num)
             path = solver + "_" + str(ind.gen) + "_" + str(ind.num)

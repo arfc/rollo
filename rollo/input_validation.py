@@ -432,10 +432,13 @@ class InputValidation:
         """
         # evaluators available
         # add to this list if a developer adds a new evaluator
-        available_evaluators = ["openmc", "moltres"]
+        available_evaluators = ["openmc", "openmc_gc", "moltres"]
         # add to this dict if a developers adds a new predefined output
         # for an evaluator
-        pre_defined_outputs = {"openmc": ["keff"]}
+        pre_defined_outputs = {
+            "openmc": ["keff"],
+            "openmc_gc": [],
+            "moltres": []}
 
         # validate evaluators
         self.validate_correct_keys(
