@@ -108,7 +108,7 @@ class Evaluation:
                         pop,
                         solver,
                         control_vars_dict,
-                        input_evaluators["solver"])
+                        input_evaluators[solver])
                     self.run_input_and_execute_and_output_scripts(
                         pop, solver, input_evaluators[solver])
                     all_output_vals = self.get_output_vals_supercomputer(
