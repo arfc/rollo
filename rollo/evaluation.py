@@ -92,7 +92,7 @@ class Evaluation:
             output by the software
 
         """
-        if parallel_type == "supercomputer":
+        if parallel_type == "job_control":
             def eval_function(pop):
                 order_of_solvers = self.solver_order(input_evaluators)
                 control_vars_dict = {}
@@ -111,7 +111,7 @@ class Evaluation:
                         input_evaluators[solver])
                     self.run_input_and_execute_and_output_scripts(
                         pop, solver, input_evaluators[solver])
-                    all_output_vals = self.get_output_vals_supercomputer(
+                    all_output_vals = self.get_output_vals_job_control(
                         output_vals_dict, pop, solver,
                         output_dict, control_vars_dict)
                 # remove files
@@ -197,7 +197,7 @@ class Evaluation:
     def run_input_and_execute_and_output_scripts(
             self, pop, solver, input_evaluators_solver):
         # run input script
-        run_input = self.generate_run_command_supercomputer(
+        run_input = self.generate_run_command_job_control(
             pop=pop,
             solver=solver,
             single_command=self.input_scripts[solver][0] + " " +
@@ -210,13 +210,13 @@ class Evaluation:
                 for exe in executable:
                     single_command += exe + " "
                 single_command += "> execute_" + str(i) + "_out.txt 2>&1"
-                execute_input = self.generate_run_command_supercomputer(
+                execute_input = self.generate_run_command_job_control(
                     pop=pop,
                     solver=solver,
                     single_command=single_command)
                 subprocess.call(execute_input, shell=True)
         # run output script
-        run_output = self.generate_run_command_supercomputer(
+        run_output = self.generate_run_command_job_control(
             pop=pop,
             solver=solver,
             single_command=self.output_scripts[solver][0] + " " +
@@ -224,7 +224,7 @@ class Evaluation:
         subprocess.call(run_output, shell=True)
         return
 
-    def generate_run_command_supercomputer(self, pop, solver, single_command):
+    def generate_run_command_job_control(self, pop, solver, single_command):
         command = ''''''
         count = 0
         for ind in pop:
@@ -239,7 +239,7 @@ class Evaluation:
         command += "wait"
         return command
 
-    def get_output_vals_supercomputer(
+    def get_output_vals_job_control(
             self,
             output_vals_dict,
             pop,

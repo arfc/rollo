@@ -214,7 +214,7 @@ class InputValidation:
         # validation for objective and optimized variable
         self.validate_in_list(
             input_algorithm["parallel"],
-            ["none", "multiprocessing", "supercomputer"],
+            ["none", "multiprocessing", "job_control"],
             "parallel",
         )
         for obj in input_algorithm["objective"]:

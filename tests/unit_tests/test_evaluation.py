@@ -76,7 +76,7 @@ def test_eval_fn_generator():
     assert output_vals == expected_output_vals
 
 
-def test_eval_fn_generator_supercomputer():
+def test_eval_fn_generator_job_control():
     os.chdir("./input_test_files")
     ev = Evaluation()
     ev.add_evaluator(
@@ -110,7 +110,7 @@ def test_eval_fn_generator_supercomputer():
             "moltres": {"keep_files": True, "order": 1},
         },
         gens=1,
-        parallel_type="supercomputer"
+        parallel_type="job_control"
     )
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
@@ -240,14 +240,14 @@ def test_run_input_and_execute_and_output_scripts():
     return
 
 
-def test_generate_run_command_supercomputer():
+def test_generate_run_command_job_control():
     init()
     ind1, ind2 = creator.Ind([1]), creator.Ind([2])
     ind1.gen, ind1.num = 0, 0
     ind2.gen, ind2.num = 0, 1
     pop = [ind1, ind2]
     ev = Evaluation()
-    command = ev.generate_run_command_supercomputer(
+    command = ev.generate_run_command_job_control(
         pop, "openmc", "python hello.py")
     expected_command = "cd openmc_0_0\npython hello.py & \nsleep 1 \n" + \
         "cd ../openmc_0_1\npython hello.py & \nsleep 1 \nwait"
@@ -255,7 +255,7 @@ def test_generate_run_command_supercomputer():
     return
 
 
-def test_get_output_vals_supercomputer():
+def test_get_output_vals_job_control():
     init()
     ind1, ind2 = creator.Ind([1]), creator.Ind([2])
     ind1.gen, ind1.num = 0, 0
@@ -286,7 +286,7 @@ def test_get_output_vals_supercomputer():
         solver="openmc",
         input_evaluators_solver=input_evaluators_solver
     )
-    all_output_vals = ev.get_output_vals_supercomputer(
+    all_output_vals = ev.get_output_vals_job_control(
         output_vals_dict=output_vals_dict,
         pop=pop,
         solver="openmc",

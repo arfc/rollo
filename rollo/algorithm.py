@@ -42,7 +42,7 @@ class Algorithm(object):
     backend : rollo.backend.Backend
         Contains and manipulates the output backend
     parallel_method : str
-        parallelization method (none, multiprocessing, supercomputer)
+        parallelization method (none, multiprocessing, job_control)
 
     """
 
@@ -133,7 +133,7 @@ class Algorithm(object):
         # evaluate fitness values of initial pop
         invalids = [ind for ind in pop if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
-        if self.parallel_method == "supercomputer":
+        if self.parallel_method == "job_control":
             fitnesses = self.toolbox.evaluate(pop)
         else:
             fitnesses = list(self.toolbox.map(self.toolbox.evaluate, pop))
@@ -174,7 +174,7 @@ class Algorithm(object):
         # evaluate fitness of newly created pop for inds with invalid fitness
         invalids = [ind for ind in offspring if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
-        if self.parallel_method == "supercomputer":
+        if self.parallel_method == "job_control":
             fitnesses = self.toolbox.evaluate(list(invalids))
         else:
             fitnesses = list(
