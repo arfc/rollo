@@ -84,6 +84,8 @@ class Evaluation:
             Ordered dict of output variables as keys and solvers as values
         input_evaluators : dict
             evaluators sub-dictionary from input file
+        gens: int
+            total generations in simulation (defined in input file)
 
         Returns
         -------
@@ -281,6 +283,21 @@ class Evaluation:
         return
 
     def solver_order(self, input_evaluators):
+        """Returns a list with solver name at its order index
+
+        Parameters
+        ----------
+        input_evaluators : dict
+            evaluators sub-dictionary from input file
+
+        Returns
+        -------
+        list
+            list with solver name at its order index
+            e.g. if openmc solver order = 0 and moltres solver order = 1, the
+            returned list looks like ["openmc", "moltres"]
+
+        """
         order = [None] * len(input_evaluators)
         for solver in input_evaluators:
             order[input_evaluators[solver]["order"]] = solver
