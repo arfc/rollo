@@ -109,7 +109,8 @@ class Evaluation:
                         solver,
                         control_vars_dict,
                         input_evaluators["solver"])
-                    self.run_input_and_execute_and_output_scripts()
+                    self.run_input_and_execute_and_output_scripts(
+                        pop, solver, input_evaluators[solver])
                     all_output_vals = self.get_output_vals_supercomputer()
 
                 return all_output_vals  # list of tuples
@@ -179,15 +180,34 @@ class Evaluation:
             self.generate_output_script(path, solver)
         return
 
-    def run_input_and_execute_and_output_scripts(self, pop, solver):
+    def run_input_and_execute_and_output_scripts(
+            self, pop, solver, input_evaluators_solver):
         # run input script
         run_input = self.generate_run_command_supercomputer(
             pop=pop,
             solver=solver,
             single_command=self.input_scripts[solver][0] + " " +
-            self.input_scripts[solver][1] + " > input_script_out.txt")
+            self.input_scripts[solver][1] + " > input_script_out.txt 2>&1")
         subprocess.call(run_input, shell=True)
-        # run execute script
+        # run execute script if exists
+        if "execute" in input_evaluators_solver:
+            for i, executable in enumerate(input_evaluators_solver["execute"]):
+                single_command = ""
+                for exe in executable:
+                    single_command += exe + " "
+                single_command += "> execute_" + str(i) + "_out.txt 2>&1"
+                execute_input = self.generate_run_command_supercomputer(
+                    pop=pop,
+                    solver=solver,
+                    single_command=single_command)
+                subprocess.call(execute_input, shell=True)
+        # run output script
+        run_output = self.generate_run_command_supercomputer(
+            pop=pop,
+            solver=solver,
+            single_command=self.output_scripts[solver][0] + " " +
+            self.output_scripts[solver][1] + " > output_script_out.txt 2>&1")
+        subprocess.call(run_output, shell=True)
         return
 
     def generate_run_command_supercomputer(self, pop, solver, single_command):

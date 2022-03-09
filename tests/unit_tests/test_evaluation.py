@@ -122,6 +122,65 @@ def test_create_input_execute_output_scripts():
     return
 
 
+def test_run_input_and_execute_and_output_scripts():
+    init()
+    os.chdir("./input_test_files")
+    control_vars_dict = {
+        "0_0": {
+            "hi": 1, "hi2": 2}, "0_1": {
+            "hi": 3, "hi2": 4}}
+    ind1, ind2 = creator.Ind([1]), creator.Ind([2])
+    ind1.gen, ind1.num = 0, 0
+    ind2.gen, ind2.num = 0, 1
+    pop = [ind1, ind2]
+    ev = Evaluation()
+    ev.add_evaluator(
+        solver_name="openmc",
+        input_script=["python", "input_test_run_input_script.py"],
+        output_script=["python", "input_test_evaluation_get_output_vals.py"],
+    )
+    input_evaluators_solver = {"execute": [
+        ["python", "input_test_run_execute.py"], ["rollo-non-existent-executable"]]}
+    ev.create_input_execute_output_scripts(
+        pop=pop,
+        solver="openmc",
+        control_vars_dict=control_vars_dict,
+        input_evaluators_solver=input_evaluators_solver)
+    ev.run_input_and_execute_and_output_scripts(
+        pop=pop,
+        solver="openmc",
+        input_evaluators_solver=input_evaluators_solver
+    )
+    with open("./openmc_0_0/input_script_out.txt") as fp:
+        Lines = fp.readlines()[0]
+    assert Lines == "[1, 2]\n"
+    with open("./openmc_0_1/input_script_out.txt") as fp:
+        Lines = fp.readlines()[0]
+    assert Lines == "[3, 4]\n"
+    with open("./openmc_0_0/execute_0_out.txt") as fp:
+        Lines = fp.readlines()[0]
+    assert Lines == "[5, 6]\n"
+    with open("./openmc_0_1/execute_0_out.txt") as fp:
+        Lines = fp.readlines()[0]
+    assert Lines == "[5, 6]\n"
+    with open("./openmc_0_0/execute_1_out.txt") as fp:
+        Lines = fp.readlines()[0]
+    assert "not found" and "rollo-non-existent-executable" in Lines
+    with open("./openmc_0_1/execute_1_out.txt") as fp:
+        Lines = fp.readlines()[0]
+    assert "not found" and "rollo-non-existent-executable" in Lines
+    with open("./openmc_0_0/output_script_out.txt") as fp:
+        Lines = fp.readline()
+    assert Lines == "{'random': 3}\n"
+    with open("./openmc_0_1/output_script_out.txt") as fp:
+        Lines = fp.readline()
+    assert Lines == "{'random': 3}\n"
+    shutil.rmtree("./openmc_0_0")
+    shutil.rmtree("./openmc_0_1")
+    os.chdir("../")
+    return
+
+
 def test_generate_run_command_supercomputer():
     init()
     ind1, ind2 = creator.Ind([1]), creator.Ind([2])
