@@ -116,8 +116,8 @@ def test_create_input_execute_output_scripts():
     with open("./openmc_0_1/input_test_evaluation_get_output_vals.py") as fp:
         Lines = fp.readline()
     assert Lines == 'print({"random": 3})\n'
-    shutil.rmtree("openmc_0_0")
-    shutil.rmtree("openmc_0_1")
+    shutil.rmtree("./openmc_0_0")
+    shutil.rmtree("./openmc_0_1")
     os.chdir("../")
     return
 
