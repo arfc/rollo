@@ -256,7 +256,7 @@ class Evaluation:
                 path,
                 output_dict,
                 control_vars_dict[name])
-            all_output_vals.append(output_vals_dict[name])
+            all_output_vals.append(tuple(output_vals_dict[name]))
         return all_output_vals
 
     def run_input_script_serial(self, solver, control_vars_solver, ind, path):

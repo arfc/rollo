@@ -12,6 +12,8 @@ if os.path.exists("./input_test_files/openmc_0_1"):
     shutil.rmtree("./input_test_files/openmc_0_1")
 if os.path.exists("./input_test_files/moltres_0_0"):
     shutil.rmtree("./input_test_files/moltres_0_0")
+if os.path.exists("./input_test_files/moltres_0_1"):
+    shutil.rmtree("./input_test_files/moltres_0_1")
 
 
 def init():
@@ -72,6 +74,63 @@ def test_eval_fn_generator():
     shutil.rmtree("./moltres_0_0")
     os.chdir("../")
     assert output_vals == expected_output_vals
+
+
+def test_eval_fn_generator_supercomputer():
+    os.chdir("./input_test_files")
+    ev = Evaluation()
+    ev.add_evaluator(
+        solver_name="openmc",
+        input_script=[
+            "python",
+            "input_test_eval_fn_generator_openmc_template.py"],
+        output_script=[
+            "python",
+            "input_test_eval_fn_generator_openmc_output.py"],
+    )
+    ev.add_evaluator(
+        solver_name="moltres", input_script=[
+            "python", "input_test_render_jinja_template_python.py"], output_script=[
+            "python", "input_test_evaluation_get_output_vals_moltres.py"], )
+    eval_function = ev.eval_fn_generator(
+        control_dict=OrderedDict(
+            {"packing_fraction": ["openmc", 1],
+                "polynomial_triso": ["openmc", 4]}
+        ),
+        output_dict=OrderedDict(
+            {
+                "packing_fraction": "openmc",
+                "keff": "openmc",
+                "max_temp": "moltres",
+                "num_batches": "openmc",
+            }
+        ),
+        input_evaluators={
+            "openmc": {"keep_files": True, "order": 0},
+            "moltres": {"keep_files": True, "order": 1},
+        },
+        gens=1,
+        parallel_type="supercomputer"
+    )
+    creator.create("obj", base.Fitness, weights=(-1.0,))
+    creator.create("Ind", list, fitness=creator.obj)
+    ind1, ind2 = creator.Ind(
+        [0.03, 1, 1, 1, 1]), creator.Ind([0.03, 1, 1, 1, 1])
+    ind1.gen, ind1.num = 0, 0
+    ind2.gen, ind2.num = 0, 1
+    pop = [ind1, ind2]
+    output_vals = eval_function(pop)
+    print(output_vals)
+    expected_output_vals = [tuple([0.03, output_vals[0][1], 1000, 10]), tuple([
+        0.03, output_vals[1][1], 1000, 10])]
+    print(expected_output_vals)
+    shutil.rmtree("./openmc_0_0")
+    shutil.rmtree("./moltres_0_0")
+    shutil.rmtree("./openmc_0_1")
+    shutil.rmtree("./moltres_0_1")
+    os.chdir("../")
+    assert output_vals == expected_output_vals
+    return
 
 
 def test_create_input_execute_output_scripts():
@@ -238,7 +297,7 @@ def test_get_output_vals_supercomputer():
             }
         ),
         control_vars_dict=control_vars_dict)
-    expected_output_vals = [[1, 3], [3, 3]]
+    expected_output_vals = [tuple([1, 3]), tuple([3, 3])]
     assert all_output_vals == expected_output_vals
     shutil.rmtree("./openmc_0_0")
     shutil.rmtree("./openmc_0_1")
