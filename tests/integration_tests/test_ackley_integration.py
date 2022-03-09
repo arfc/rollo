@@ -33,14 +33,14 @@ def test_ackley_integration():
     return
 
 
-def test_ackley_integration_supercomputer():
+def test_ackley_integration_job_control():
 
     creator.create("obj", base.Fitness, weights=(1.0,))
     creator.create("Ind", list, fitness=creator.obj)
 
     os.chdir("./input_test_files")
     subprocess.call(
-        "python ../../../rollo -i input_test_ackley_supercomputer.json",
+        "python ../../../rollo -i input_test_ackley_job_control.json",
         shell=True)
     os.chdir("../")
     with open("./input_test_files/checkpoint.pkl", "rb") as cp_file:
@@ -50,6 +50,3 @@ def test_ackley_integration_supercomputer():
     assert min(logbook["outputs"][-1])[0] < 0.5
     os.remove("./input_test_files/checkpoint.pkl")
     return
-
-
-test_ackley_integration_supercomputer()
