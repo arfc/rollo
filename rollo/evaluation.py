@@ -90,9 +90,9 @@ class Evaluation:
             Ordered dict of output variables as keys and solvers as values
         input_evaluators : dict
             evaluators sub-dictionary from input file
-        gens: int
+        gens : int
             total generations in simulation (defined in input file)
-        parallel_method: str
+        parallel_method : str
             parallelization method (none, multiprocessing, job_control)
 
         Returns
@@ -111,7 +111,7 @@ class Evaluation:
                 Parameters
                 ----------
                 pop : list
-                    List of deap.creator.Ind
+                    list of deap.creator.Ind
 
                 Returns
                 -------
@@ -162,7 +162,7 @@ class Evaluation:
                 Parameters
                 ----------
                 ind : deap.creator.Ind
-                    Created in `rollo.toolbox_generator.ToolboxGenerator`. It is
+                    created in `rollo.toolbox_generator.ToolboxGenerator`. It is
                     a list with special attributes.
 
                 Returns
@@ -212,7 +212,8 @@ class Evaluation:
 
         Parameters
         ----------
-        pop:
+        pop : list
+            list of deap.creator.Ind
         solver:
         control_vars_dict:
         input_evaluators_solver:
