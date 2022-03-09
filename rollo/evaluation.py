@@ -225,6 +225,9 @@ class Evaluation:
         command += "wait"
         return command
 
+    def get_output_vals_supercomputer(self,):
+        return
+
     def run_input_script_serial(self, solver, control_vars_solver, ind, path):
         self.render_input_script(solver, control_vars_solver, ind, path)
         self.subprocess_call(
@@ -324,14 +327,14 @@ class Evaluation:
         """
 
         if self.output_scripts[solver]:
-            # copy rendered output script into a new file in the particular
-            # solver's run
             self.generate_output_script(path, solver)
-            # enter directory for this particular solver's run
             # run the output script
-            execute = self.output_scripts[solver][0] + \
-                " " + self.output_scripts[solver][1]
-            self.subprocess_call(path, "./output_script_out.txt", execute)
+            self.subprocess_call(
+                path,
+                "./output_script_out.txt",
+                self.output_scripts[solver][0] +
+                " " +
+                self.output_scripts[solver][1])
             # return the output script's printed dictionary into a variable
             with open("./" + path + "/output_script_out.txt") as fp:
                 firstline = fp.readlines()[0]
