@@ -149,7 +149,7 @@ class Evaluation:
                         self.run_execute_serial(
                             input_evaluators[solver]["execute"], path)
                     # get output values
-                    output_vals = self.get_output_vals(
+                    output_vals = self.run_output_script_serial(
                         output_vals, solver, output_dict, control_vars, path
                     )
                     # remove files
@@ -296,7 +296,7 @@ class Evaluation:
         os.chdir("../")
         return
 
-    def get_output_vals(
+    def run_output_script_serial(
             self,
             output_vals,
             solver,
@@ -335,6 +335,18 @@ class Evaluation:
                 self.output_scripts[solver][0] +
                 " " +
                 self.output_scripts[solver][1])
+            output_vals = self.get_output_vals(
+                output_vals, solver, path, output_dict, control_vars)
+        return output_vals
+
+    def get_output_vals(
+            self,
+            output_vals,
+            solver,
+            path,
+            output_dict,
+            control_vars):
+        if self.output_scripts[solver]:
             # return the output script's printed dictionary into a variable
             with open("./" + path + "/output_script_out.txt") as fp:
                 firstline = fp.readlines()[0]

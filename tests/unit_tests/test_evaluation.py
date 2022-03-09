@@ -247,7 +247,7 @@ def test_solver_order():
     return
 
 
-def test_get_output_vals():
+def test_run_output_script_serial():
     os.chdir("./input_test_files")
     ev = Evaluation()
     ev.add_evaluator(
@@ -255,7 +255,7 @@ def test_get_output_vals():
         input_script=["python", "placeholder.py"],
         output_script=["python", "input_test_evaluation_get_output_vals.py"],
     )
-    output_vals = ev.get_output_vals(
+    output_vals = ev.run_output_script_serial(
         output_vals=[None] * 4,
         solver="openmc",
         output_dict=OrderedDict(
