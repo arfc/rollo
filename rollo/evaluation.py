@@ -114,7 +114,19 @@ class Evaluation:
                     all_output_vals = self.get_output_vals_supercomputer(
                         output_vals_dict, pop, solver,
                         output_dict, control_vars_dict)
-
+                # remove files
+                if input_evaluators[solver]["keep_files"] == "none":
+                    for ind in pop:
+                        name = str(ind.gen) + "_" + str(ind.num)
+                        path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
+                        shutil.rmtree(path)
+                elif input_evaluators[solver]["keep_files"] == "only_final":
+                    for ind in pop:
+                        if ind.gen < gens - 1:
+                            name = str(ind.gen) + "_" + str(ind.num)
+                            path = solver + "_" + \
+                                str(ind.gen) + "_" + str(ind.num)
+                            shutil.rmtree(path)
                 return all_output_vals  # list of tuples
         else:
             def eval_function(ind):
