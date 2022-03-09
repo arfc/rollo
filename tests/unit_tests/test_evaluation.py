@@ -61,7 +61,7 @@ def test_eval_fn_generator():
             "moltres": {"keep_files": True, "order": 1},
         },
         gens=2,
-        parallel_type="none"
+        parallel_method="none"
     )
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
@@ -110,7 +110,7 @@ def test_eval_fn_generator_job_control():
             "moltres": {"keep_files": True, "order": 1},
         },
         gens=1,
-        parallel_type="job_control"
+        parallel_method="job_control"
     )
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)

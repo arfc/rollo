@@ -71,7 +71,7 @@ class Evaluation:
             output_dict,
             input_evaluators,
             gens,
-            parallel_type):
+            parallel_method):
         """Returns a function that accepts a DEAP individual and returns a
         tuple of output values listed in outputs
 
@@ -86,6 +86,8 @@ class Evaluation:
             evaluators sub-dictionary from input file
         gens: int
             total generations in simulation (defined in input file)
+        parallel_method: str
+            parallelization method (none, multiprocessing, job_control)
 
         Returns
         -------
@@ -94,7 +96,7 @@ class Evaluation:
             output by the software
 
         """
-        if parallel_type == "job_control":
+        if parallel_method == "job_control":
             def eval_function(pop):
                 order_of_solvers = self.solver_order(input_evaluators)
                 control_vars_dict = {}
