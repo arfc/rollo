@@ -6,9 +6,9 @@
     "evaluators": {
         "openmc": {
             "order": 0,
-            "input_script": "input_test_ackley.py",
+            "input_script": ["python", "input_test_ackley.py"],
             "inputs": ["x1", "x2"],
-            "output_script": "input_test_ackley_output.py",
+            "output_script": ["python", "input_test_ackley_output.py"],
             "outputs": ["ackley"],
             "keep_files": "none"
         }

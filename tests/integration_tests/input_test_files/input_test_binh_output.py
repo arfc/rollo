@@ -1,7 +1,7 @@
 import numpy as np
 import ast
 
-file = open("output.txt")
+file = open("input_script_out.txt")
 contents = file.read()
 binh = ast.literal_eval(contents)
 file.close()
