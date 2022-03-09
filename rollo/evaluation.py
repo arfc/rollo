@@ -42,8 +42,7 @@ class Evaluation:
         self.eval_dict = {
             "openmc": OpenMCEvaluation(),
             "openmc_gc": OpenMCEvaluation(),
-            "moltres": MoltresEvaluation(),
-        }
+            "moltres": MoltresEvaluation()}
 
     def add_evaluator(self, solver_name, input_script, output_script):
         """Adds information about an evaluator to the Evaluation class object
@@ -104,7 +103,6 @@ class Evaluation:
         """
 
         if parallel_method == "job_control":
-
             def eval_function(pop):
                 """Accepts a list of DEAP individuals (population) and returns
                 a list of output value tuples. Each tuple corresponds to one
@@ -128,18 +126,20 @@ class Evaluation:
                 for ind in pop:
                     name = str(ind.gen) + "_" + str(ind.num)
                     control_vars_dict[name] = self.name_ind(
-                        ind, control_dict, input_evaluators
-                    )
+                        ind, control_dict, input_evaluators)
                     output_vals_dict[name] = [None] * len(output_dict)
 
                 for solver in order_of_solvers:
                     self.create_input_execute_output_scripts(
-                        pop, solver, control_vars_dict, input_evaluators[solver])
+                        pop,
+                        solver,
+                        control_vars_dict,
+                        input_evaluators[solver])
                     self.run_input_and_execute_and_output_scripts(
-                        pop, solver, input_evaluators[solver]
-                    )
+                        pop, solver, input_evaluators[solver])
                     all_output_vals = self.get_output_vals_job_control(
-                        output_vals_dict, pop, solver, output_dict, control_vars_dict)
+                        output_vals_dict, pop, solver,
+                        output_dict, control_vars_dict)
                 # remove files
                 if input_evaluators[solver]["keep_files"] == "none":
                     for ind in pop:
@@ -154,9 +154,7 @@ class Evaluation:
                                 str(ind.gen) + "_" + str(ind.num)
                             shutil.rmtree(path)
                 return all_output_vals  # list of tuples
-
         else:
-
             def eval_function(ind):
                 """Accepts a DEAP individual and returns a tuple of output values
                 listed in outputs
@@ -184,13 +182,11 @@ class Evaluation:
                     os.mkdir(path)
                     # run input script
                     self.run_input_script_serial(
-                        solver, control_vars[solver], ind, path
-                    )
+                        solver, control_vars[solver], ind, path)
                     # run execute if they exist
                     if "execute" in input_evaluators[solver]:
                         self.run_execute_serial(
-                            input_evaluators[solver]["execute"], path
-                        )
+                            input_evaluators[solver]["execute"], path)
                     # get output values
                     output_vals = self.run_output_script_serial(
                         output_vals, solver, output_dict, control_vars, path
@@ -206,8 +202,11 @@ class Evaluation:
         return eval_function
 
     def create_input_execute_output_scripts(
-        self, pop, solver, control_vars_dict, input_evaluators_solver
-    ):
+            self,
+            pop,
+            solver,
+            control_vars_dict,
+            input_evaluators_solver):
         """Renders input scripts, copies execute scripts, and renders
         output scripts for parallel_method=job_control
 
@@ -237,17 +236,13 @@ class Evaluation:
         return
 
     def run_input_and_execute_and_output_scripts(
-        self, pop, solver, input_evaluators_solver
-    ):
+            self, pop, solver, input_evaluators_solver):
         # run input script
         run_input = self.generate_run_command_job_control(
             pop=pop,
             solver=solver,
-            single_command=self.input_scripts[solver][0]
-            + " "
-            + self.input_scripts[solver][1]
-            + " > input_script_out.txt 2>&1",
-        )
+            single_command=self.input_scripts[solver][0] + " " +
+            self.input_scripts[solver][1] + " > input_script_out.txt 2>&1")
         subprocess.call(run_input, shell=True)
         # run execute script if exists
         if "execute" in input_evaluators_solver:
@@ -257,23 +252,21 @@ class Evaluation:
                     single_command += exe + " "
                 single_command += "> execute_" + str(i) + "_out.txt 2>&1"
                 execute_input = self.generate_run_command_job_control(
-                    pop=pop, solver=solver, single_command=single_command
-                )
+                    pop=pop,
+                    solver=solver,
+                    single_command=single_command)
                 subprocess.call(execute_input, shell=True)
         # run output script
         run_output = self.generate_run_command_job_control(
             pop=pop,
             solver=solver,
-            single_command=self.output_scripts[solver][0]
-            + " "
-            + self.output_scripts[solver][1]
-            + " > output_script_out.txt 2>&1",
-        )
+            single_command=self.output_scripts[solver][0] + " " +
+            self.output_scripts[solver][1] + " > output_script_out.txt 2>&1")
         subprocess.call(run_output, shell=True)
         return
 
     def generate_run_command_job_control(self, pop, solver, single_command):
-        command = """"""
+        command = ''''''
         count = 0
         for ind in pop:
             path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
@@ -288,8 +281,12 @@ class Evaluation:
         return command
 
     def get_output_vals_job_control(
-        self, output_vals_dict, pop, solver, output_dict, control_vars_dict
-    ):
+            self,
+            output_vals_dict,
+            pop,
+            solver,
+            output_dict,
+            control_vars_dict):
         all_output_vals = []
         for ind in pop:
             name = str(ind.gen) + "_" + str(ind.num)
@@ -299,8 +296,7 @@ class Evaluation:
                 solver,
                 path,
                 output_dict,
-                control_vars_dict[name],
-            )
+                control_vars_dict[name])
             all_output_vals.append(tuple(output_vals_dict[name]))
         return all_output_vals
 
@@ -311,8 +307,7 @@ class Evaluation:
             "input_script_out.txt",
             self.input_scripts[solver][0] +
             " " +
-            self.input_scripts[solver][1],
-        )
+            self.input_scripts[solver][1])
         return
 
     def run_execute_serial(self, input_evaluator_solver_execute2, path):
@@ -323,11 +318,7 @@ class Evaluation:
             else:
                 execute = executables[0]
             self.subprocess_call(
-                path,
-                "execute_" +
-                str(i) +
-                "_output.txt",
-                execute)
+                path, "execute_" + str(i) + "_output.txt", execute)
         return
 
     def solver_order(self, input_evaluators):
@@ -356,7 +347,7 @@ class Evaluation:
             script=self.input_scripts[solver][1],
             control_vars_solver=control_vars_solver,
             ind=ind,
-            solver=solver,
+            solver=solver
         )
         os.chdir(path)
         f = open(self.input_scripts[solver][1], "w+")
@@ -384,13 +375,21 @@ class Evaluation:
     def subprocess_call(self, path, out_file, command):
         os.chdir(path)
         with open(out_file, "wb") as output:
-            subprocess.call(command, stdout=output, stderr=output, shell=True)
+            subprocess.call(
+                command,
+                stdout=output,
+                stderr=output,
+                shell=True)
         os.chdir("../")
         return
 
     def run_output_script_serial(
-        self, output_vals, solver, output_dict, control_vars, path
-    ):
+            self,
+            output_vals,
+            solver,
+            output_dict,
+            control_vars,
+            path):
         """Returns a populated list with output values for each solver
 
         Parameters
@@ -422,11 +421,9 @@ class Evaluation:
                 "./output_script_out.txt",
                 self.output_scripts[solver][0] +
                 " " +
-                self.output_scripts[solver][1],
-            )
+                self.output_scripts[solver][1])
             output_vals = self.get_output_vals(
-                output_vals, solver, path, output_dict, control_vars
-            )
+                output_vals, solver, path, output_dict, control_vars)
         return output_vals
 
     def get_output_vals(
@@ -516,13 +513,8 @@ class Evaluation:
                 str(control_vars_solver[var]) + "',"
             # special condition for moltres
         if solver == "moltres":
-            render_str += (
-                "group_constant_dir='../openmc_gc_"
-                + str(ind.gen)
-                + "_"
-                + str(ind.num)
-                + "'"
-            )
+            render_str += "group_constant_dir='../openmc_gc_" + \
+                str(ind.gen) + "_" + str(ind.num) + "'"
         render_str += ")"
         rendered_template = eval(render_str)
 
