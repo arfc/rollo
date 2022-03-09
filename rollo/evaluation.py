@@ -114,6 +114,7 @@ class Evaluation:
                     all_output_vals = self.get_output_vals_supercomputer(
                         output_vals_dict, pop, solver,
                         output_dict, control_vars_dict)
+
                 return all_output_vals  # list of tuples
         else:
             def eval_function(ind):
@@ -233,6 +234,7 @@ class Evaluation:
             solver,
             output_dict,
             control_vars_dict):
+        all_output_vals = []
         for ind in pop:
             name = str(ind.gen) + "_" + str(ind.num)
             path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
@@ -242,7 +244,8 @@ class Evaluation:
                 path,
                 output_dict,
                 control_vars_dict[name])
-        return output_vals_dict
+            all_output_vals.append(output_vals_dict[name])
+        return all_output_vals
 
     def run_input_script_serial(self, solver, control_vars_solver, ind, path):
         self.render_input_script(solver, control_vars_solver, ind, path)

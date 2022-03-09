@@ -227,7 +227,7 @@ def test_get_output_vals_supercomputer():
         solver="openmc",
         input_evaluators_solver=input_evaluators_solver
     )
-    output_vals_dict = ev.get_output_vals_supercomputer(
+    all_output_vals = ev.get_output_vals_supercomputer(
         output_vals_dict=output_vals_dict,
         pop=pop,
         solver="openmc",
@@ -239,9 +239,7 @@ def test_get_output_vals_supercomputer():
         ),
         control_vars_dict=control_vars_dict)
     expected_output_vals = [[1, 3], [3, 3]]
-    for i, ind in enumerate(pop):
-        name = str(ind.gen) + "_" + str(ind.num)
-        assert output_vals_dict[name] == expected_output_vals[i]
+    assert all_output_vals == expected_output_vals
     shutil.rmtree("./openmc_0_0")
     shutil.rmtree("./openmc_0_1")
     os.chdir("../")
