@@ -84,9 +84,9 @@ def test_create_input_execute_output_scripts():
         output_script=["python", "input_test_evaluation_get_output_vals.py"],
     )
     control_vars_dict = {
-        "0_0": {
-            "hi": 1, "hi2": 2}, "0_1": {
-            "hi": 3, "hi2": 4}}
+        "0_0": {"openmc": {"hi": 1, "hi2": 2}},
+        "0_1": {"openmc": {"hi": 3, "hi2": 4}}
+    }
     ind1, ind2 = creator.Ind([1]), creator.Ind([2])
     ind1.gen, ind1.num = 0, 0
     ind2.gen, ind2.num = 0, 1
@@ -126,9 +126,9 @@ def test_run_input_and_execute_and_output_scripts():
     init()
     os.chdir("./input_test_files")
     control_vars_dict = {
-        "0_0": {
-            "hi": 1, "hi2": 2}, "0_1": {
-            "hi": 3, "hi2": 4}}
+        "0_0": {"openmc": {"hi": 1, "hi2": 2}},
+        "0_1": {"openmc": {"hi": 3, "hi2": 4}}
+    }
     ind1, ind2 = creator.Ind([1]), creator.Ind([2])
     ind1.gen, ind1.num = 0, 0
     ind2.gen, ind2.num = 0, 1
@@ -193,6 +193,58 @@ def test_generate_run_command_supercomputer():
     expected_command = "cd openmc_0_0\npython hello.py & \nsleep 1 \n" + \
         "cd ../openmc_0_1\npython hello.py & \nsleep 1 \nwait"
     assert command == expected_command
+    return
+
+
+def test_get_output_vals_supercomputer():
+    init()
+    ind1, ind2 = creator.Ind([1]), creator.Ind([2])
+    ind1.gen, ind1.num = 0, 0
+    ind2.gen, ind2.num = 0, 1
+    pop = [ind1, ind2]
+    ev = Evaluation()
+    os.chdir("./input_test_files")
+    ev.add_evaluator(
+        solver_name="openmc",
+        input_script=["python", "input_test_run_input_script.py"],
+        output_script=["python", "input_test_evaluation_get_output_vals.py"],
+    )
+    output_vals_dict = OrderedDict()
+    control_vars_dict = {
+        "0_0": {"openmc": {"hi": 1, "hi2": 2}},
+        "0_1": {"openmc": {"hi": 3, "hi2": 4}}
+    }
+    output_vals_dict["0_0"] = [None] * 2
+    output_vals_dict["0_1"] = [None] * 2
+    input_evaluators_solver = {}
+    ev.create_input_execute_output_scripts(
+        pop=pop,
+        solver="openmc",
+        control_vars_dict=control_vars_dict,
+        input_evaluators_solver=input_evaluators_solver)
+    ev.run_input_and_execute_and_output_scripts(
+        pop=pop,
+        solver="openmc",
+        input_evaluators_solver=input_evaluators_solver
+    )
+    output_vals_dict = ev.get_output_vals_supercomputer(
+        output_vals_dict=output_vals_dict,
+        pop=pop,
+        solver="openmc",
+        output_dict=OrderedDict(
+            {
+                "hi": "openmc",
+                "random": "openmc",
+            }
+        ),
+        control_vars_dict=control_vars_dict)
+    expected_output_vals = [[1, 3], [3, 3]]
+    for i, ind in enumerate(pop):
+        name = str(ind.gen) + "_" + str(ind.num)
+        assert output_vals_dict[name] == expected_output_vals[i]
+    shutil.rmtree("./openmc_0_0")
+    shutil.rmtree("./openmc_0_1")
+    os.chdir("../")
     return
 
 

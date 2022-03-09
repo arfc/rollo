@@ -111,8 +111,9 @@ class Evaluation:
                         input_evaluators["solver"])
                     self.run_input_and_execute_and_output_scripts(
                         pop, solver, input_evaluators[solver])
-                    all_output_vals = self.get_output_vals_supercomputer()
-
+                    all_output_vals = self.get_output_vals_supercomputer(
+                        output_vals_dict, pop, solver,
+                        output_dict, control_vars_dict)
                 return all_output_vals  # list of tuples
         else:
             def eval_function(ind):
@@ -173,7 +174,7 @@ class Evaluation:
             path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
             os.mkdir(path)
             self.render_input_script(
-                solver, control_vars_dict[name], ind, path)
+                solver, control_vars_dict[name][solver], ind, path)
             if "execute" in input_evaluators_solver:
                 self.generate_execute_scripts(
                     path, input_evaluators_solver["execute"])
@@ -225,8 +226,23 @@ class Evaluation:
         command += "wait"
         return command
 
-    def get_output_vals_supercomputer(self,):
-        return
+    def get_output_vals_supercomputer(
+            self,
+            output_vals_dict,
+            pop,
+            solver,
+            output_dict,
+            control_vars_dict):
+        for ind in pop:
+            name = str(ind.gen) + "_" + str(ind.num)
+            path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
+            output_vals_dict[name] = self.get_output_vals(
+                output_vals_dict[name],
+                solver,
+                path,
+                output_dict,
+                control_vars_dict[name])
+        return output_vals_dict
 
     def run_input_script_serial(self, solver, control_vars_solver, ind, path):
         self.render_input_script(solver, control_vars_solver, ind, path)
