@@ -402,8 +402,7 @@ class Evaluation:
 
         Returns
         -------
-        rendered_template : str
-            rendered evaluator template script
+        None
 
         """
         self.render_input_script(solver, control_vars_solver, ind, path)
@@ -415,9 +414,25 @@ class Evaluation:
             self.input_scripts[solver][1])
         return
 
-    def run_execute_serial(self, input_evaluator_solver_execute2, path):
-        self.generate_execute_scripts(path, input_evaluator_solver_execute2)
-        for i, executables in enumerate(input_evaluator_solver_execute2):
+    def run_execute_serial(self, input_evaluator_solver_execute, path):
+        """copies execute scripts into an individual's directory if the scripts
+        exists then runs it or only the executable
+
+        Parameters
+        ----------
+        input_evaluator_solver_execute : list
+            execute list from specific solver's evaluators sub-sub-dictionary
+            from input file
+        path : str
+            path name
+
+        Returns
+        -------
+        None
+
+        """
+        self.generate_execute_scripts(path, input_evaluator_solver_execute)
+        for i, executables in enumerate(input_evaluator_solver_execute):
             if len(executables) > 1:
                 execute = executables[0] + " " + executables[1]
             else:
@@ -461,9 +476,9 @@ class Evaluation:
         os.chdir("../")
         return
 
-    def generate_execute_scripts(self, path, input_evaluator_solver_execute2):
+    def generate_execute_scripts(self, path, input_evaluator_solver_execute):
         os.chdir(path)
-        for executables in input_evaluator_solver_execute2:
+        for executables in input_evaluator_solver_execute:
             if len(executables) > 1:
                 shutil.copyfile("../" + executables[1], executables[1])
         os.chdir("../")
