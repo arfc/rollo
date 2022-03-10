@@ -208,15 +208,23 @@ class Evaluation:
             control_vars_dict,
             input_evaluators_solver):
         """Renders input scripts, copies execute scripts, and renders
-        output scripts for parallel_method=job_control
+        output scripts for parallel_method=job_control in each
+        individual's directory
 
         Parameters
         ----------
         pop : list
             list of deap.creator.Ind
-        solver:
-        control_vars_dict:
-        input_evaluators_solver:
+        solver : str
+            name of solver
+        control_vars_dict: dict
+            multiple layers of dicts
+            layer 1: gen_ind dir (str)
+            layer 2: solver (str)
+            layer 3: control parameter (str)
+            layer 4: control parameter value (float)
+        input_evaluators_solver: dict
+            specific solver's evaluators sub-sub-dictionary from input file
 
         Returns
         -------
@@ -237,6 +245,30 @@ class Evaluation:
 
     def run_input_and_execute_and_output_scripts(
             self, pop, solver, input_evaluators_solver):
+        """Runs input scripts, execute scripts or executable, and
+        output scripts for parallel_method=job_control in each
+        individual's directory
+
+        Parameters
+        ----------
+        pop : list
+            list of deap.creator.Ind
+        solver : str
+            name of solver
+        control_vars_dict: dict
+            multiple layers of dicts
+            layer 1: gen_ind dir (str)
+            layer 2: solver (str)
+            layer 3: control parameter (str)
+            layer 4: control parameter value (float)
+        input_evaluators_solver: dict
+            specific solver's evaluators sub-sub-dictionary from input file
+
+        Returns
+        -------
+        None
+        """
+
         # run input script
         run_input = self.generate_run_command_job_control(
             pop=pop,
@@ -266,6 +298,31 @@ class Evaluation:
         return
 
     def generate_run_command_job_control(self, pop, solver, single_command):
+        """Generates bash command to run all directories executables
+        for parallel_method=job_control
+
+        Parameters
+        ----------
+        pop : list
+            list of deap.creator.Ind
+        solver : str
+            name of solver
+        control_vars_dict: dict
+            multiple layers of dicts
+            layer 1: gen_ind dir (str)
+            layer 2: solver (str)
+            layer 3: control parameter (str)
+            layer 4: control parameter value (float)
+        input_evaluators_solver: dict
+            specific solver's evaluators sub-sub-dictionary from input file
+
+        Returns
+        -------
+        command : str
+            bash command to run all directories executables for
+            parallel_method=job_control
+        """
+
         command = ''''''
         count = 0
         for ind in pop:
@@ -287,6 +344,36 @@ class Evaluation:
             solver,
             output_dict,
             control_vars_dict):
+        """returns a list of output value tuples. Each tuple corresponds to
+        output values for one individual. The results are in order of the
+        individuals in pop.
+
+        Parameters
+        ----------
+        output_vals_dict : dict
+            layer 1: gen_ind dir (str)
+            layer 2: list of output values requested by rollo input file
+                     in correct order
+        pop : list
+            list of deap.creator.Ind
+        solver : str
+            name of solver
+        output_dict : OrderedDict
+            Ordered dict of output variables as keys and solvers as values
+        control_vars_dict: dict
+            multiple layers of dicts
+            layer 1: gen_ind dir (str)
+            layer 2: solver (str)
+            layer 3: control parameter (str)
+            layer 4: control parameter value (float)
+
+        Returns
+        -------
+        all_output_vals : list
+            each index of list contains a tuple of output values from
+            evaluators ordered by output_dict
+        """
+
         all_output_vals = []
         for ind in pop:
             name = str(ind.gen) + "_" + str(ind.num)
@@ -401,8 +488,10 @@ class Evaluation:
         output_dict : OrderedDict
             Ordered dict of output variables as keys and solvers as values
         control_vars : dict
-            maps the control_dict's variable names to values from ind list to
-            order the output_vals correctly
+            multiple layers of dict
+            layer 1: solver name
+            layer 2: control parameter str
+            layer 3: control parameter value
         path : str
             path name
 
@@ -472,8 +561,10 @@ class Evaluation:
         Returns
         -------
         control_vars : dict
-            maps the control_dict's variable names to values from ind list to
-            order the output_vals correctly
+            multiple layers of dict
+            layer 1: solver name
+            layer 2: control parameter str
+            layer 3: control parameter value
 
         """
 
