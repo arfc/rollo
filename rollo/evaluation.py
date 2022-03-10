@@ -33,6 +33,7 @@ class Evaluation:
         functions to evaluate its output files
 
     """
+
     def __init__(self):
         self.supported_solvers = ["openmc", "openmc_gc", "moltres"]
         self.input_scripts = {}
@@ -388,6 +389,7 @@ class Evaluation:
 
     def run_input_script_serial(self, solver, control_vars_solver, ind, path):
         """Renders an input script into an individual's directory and runs it
+
         Parameters
         ----------
         solver : str
@@ -598,13 +600,14 @@ class Evaluation:
     def render_jinja_template(self, script, control_vars_solver, ind, solver):
         """Renders a jinja2 templated input file. This will be used by solver's
         with a text based interface such as Moltres
+
         Parameters
         ----------
         script : str
             name of evaluator template script
         control_vars_solver : str
             name of evaluation solver software
-            
+
         Returns
         -------
         rendered_template : str
