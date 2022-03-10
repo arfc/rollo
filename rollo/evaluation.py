@@ -156,14 +156,14 @@ class Evaluation:
                 return all_output_vals  # list of tuples
         else:
             def eval_function(ind):
-                """Accepts a DEAP individual and returns a tuple of output values
-                listed in outputs
+                """Accepts a DEAP individual and returns a tuple of output
+                values listed in outputs
 
                 Parameters
                 ----------
                 ind : deap.creator.Ind
-                    created in `rollo.toolbox_generator.ToolboxGenerator`. It is
-                    a list with special attributes.
+                    created in `rollo.toolbox_generator.ToolboxGenerator`.
+                    It is a list with special attributes.
 
                 Returns
                 -------
@@ -194,7 +194,8 @@ class Evaluation:
                     # remove files
                     if input_evaluators[solver]["keep_files"] == "none":
                         shutil.rmtree(path)
-                    elif input_evaluators[solver]["keep_files"] == "only_final":
+                    elif input_evaluators[solver]["keep_files"] == \
+                            "only_final":
                         if ind.gen < gens - 1:
                             shutil.rmtree(path)
                 return tuple(output_vals)
