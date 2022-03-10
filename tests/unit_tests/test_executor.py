@@ -22,18 +22,22 @@ test_input_dict = {
     "evaluators": {
         "openmc": {
             "order": 0,
-            "input_script": ["python", "input_test_eval_fn_generator_openmc_template.py"],
+            "input_script":
+                ["python", "input_test_eval_fn_generator_openmc_template.py"],
             "inputs": ["packing_fraction", "polynomial_triso"],
             "outputs": ["packing_fraction", "keff", "num_batches"],
-            "output_script": ["python", "input_test_eval_fn_generator_openmc_output.py"],
+            "output_script":
+                ["python", "input_test_eval_fn_generator_openmc_output.py"],
             "keep_files": True,
         },
         "moltres": {
             "order": 1,
-            "input_script": ["python", "input_test_render_jinja_template_python.py"],
+            "input_script":
+                ["python", "input_test_render_jinja_template_python.py"],
             "inputs": [],
             "outputs": ["max_temp"],
-            "output_script": ["python", "input_test_evaluation_get_output_vals_moltres.py"],
+            "output_script":
+                ["python", "input_test_evaluation_get_output_vals_moltres.py"],
             "keep_files": True,
         },
     },

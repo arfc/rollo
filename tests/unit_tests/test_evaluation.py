@@ -40,8 +40,10 @@ def test_eval_fn_generator():
             "input_test_eval_fn_generator_openmc_output.py"],
     )
     ev.add_evaluator(
-        solver_name="moltres", input_script=[
-            "python", "input_test_render_jinja_template_python.py"], output_script=[
+        solver_name="moltres",
+        input_script=[
+            "python", "input_test_render_jinja_template_python.py"],
+        output_script=[
             "python", "input_test_evaluation_get_output_vals_moltres.py"], )
     eval_function = ev.eval_fn_generator(
         control_dict=OrderedDict(
@@ -89,8 +91,10 @@ def test_eval_fn_generator_job_control():
             "input_test_eval_fn_generator_openmc_output.py"],
     )
     ev.add_evaluator(
-        solver_name="moltres", input_script=[
-            "python", "input_test_render_jinja_template_python.py"], output_script=[
+        solver_name="moltres",
+        input_script=[
+            "python", "input_test_render_jinja_template_python.py"],
+        output_script=[
             "python", "input_test_evaluation_get_output_vals_moltres.py"], )
     eval_function = ev.eval_fn_generator(
         control_dict=OrderedDict(
@@ -151,7 +155,8 @@ def test_create_input_execute_output_scripts():
     ind2.gen, ind2.num = 0, 1
     pop = [ind1, ind2]
     input_evaluators_solver = {"execute": [
-        ["python", "input_test_run_execute.py"], ["rollo-non-existent-executable"]]}
+        ["python", "input_test_run_execute.py"],
+        ["rollo-non-existent-executable"]]}
     ev.create_input_execute_output_scripts(
         pop=pop,
         solver="openmc",
@@ -199,7 +204,8 @@ def test_run_input_and_execute_and_output_scripts():
         output_script=["python", "input_test_evaluation_get_output_vals.py"],
     )
     input_evaluators_solver = {"execute": [
-        ["python", "input_test_run_execute.py"], ["rollo-non-existent-executable"]]}
+        ["python", "input_test_run_execute.py"],
+        ["rollo-non-existent-executable"]]}
     ev.create_input_execute_output_scripts(
         pop=pop,
         solver="openmc",
