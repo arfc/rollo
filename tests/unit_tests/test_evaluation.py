@@ -170,10 +170,10 @@ def test_create_input_execute_output_scripts():
     assert Lines == "print([3, 4])"
     with open("./openmc_0_0/input_test_run_execute.py") as fp:
         Lines = fp.readline()
-    assert Lines == "print([5, 6])"
+    assert Lines == "print([5, 6])\n"
     with open("./openmc_0_1/input_test_run_execute.py") as fp:
         Lines = fp.readline()
-    assert Lines == "print([5, 6])"
+    assert Lines == "print([5, 6])\n"
     with open("./openmc_0_0/input_test_evaluation_get_output_vals.py") as fp:
         Lines = fp.readline()
     assert Lines == 'print({"random": 3})\n'
@@ -184,6 +184,9 @@ def test_create_input_execute_output_scripts():
     shutil.rmtree("./openmc_0_1")
     os.chdir("../")
     return
+
+
+test_create_input_execute_output_scripts()
 
 
 def test_run_input_and_execute_and_output_scripts():
