@@ -346,7 +346,7 @@ class Evaluation:
             control_vars_dict):
         """returns a list of output value tuples. Each tuple corresponds to
         output values for one individual. The results are in order of the
-        individuals in pop.
+        individuals in pop. For parallel_method=job_control
 
         Parameters
         ----------
@@ -389,6 +389,7 @@ class Evaluation:
 
     def run_input_script_serial(self, solver, control_vars_solver, ind, path):
         """Renders an input script into an individual's directory and runs it
+        for parallel_method=none or multiprocessing
 
         Parameters
         ----------
@@ -416,7 +417,8 @@ class Evaluation:
 
     def run_execute_serial(self, input_evaluator_solver_execute, path):
         """copies execute scripts into an individual's directory if the scripts
-        exists then runs it or only the executable
+        exists then runs it or only the executable for parallel_method=none
+        or multiprocessing
 
         Parameters
         ----------
@@ -463,6 +465,23 @@ class Evaluation:
         return order
 
     def render_input_script(self, solver, control_vars_solver, ind, path):
+        """Renders an input script into an individual's directory
+
+        Parameters
+        ----------
+        solver : str
+            name of solver
+        control_vars_solver : str
+            name of evaluation solver software
+        ind : deap.creator.Ind
+        path : str
+            path name
+
+        Returns
+        -------
+        None
+
+        """
         rendered_script = self.render_jinja_template(
             script=self.input_scripts[solver][1],
             control_vars_solver=control_vars_solver,
@@ -477,6 +496,21 @@ class Evaluation:
         return
 
     def generate_execute_scripts(self, path, input_evaluator_solver_execute):
+        """Copies execute scripts into an individual's directory
+
+        Parameters
+        ----------
+        path : str
+            path name
+        input_evaluator_solver_execute : list
+            execute list from specific solver's evaluators sub-sub-dictionary
+            from input file
+
+        Returns
+        -------
+        None
+
+        """
         os.chdir(path)
         for executables in input_evaluator_solver_execute:
             if len(executables) > 1:
@@ -485,6 +519,20 @@ class Evaluation:
         return
 
     def generate_output_script(self, path, solver):
+        """Copies output script into an individual's directory
+
+        Parameters
+        ----------
+        path : str
+            path name
+        solver : str
+            name of solver
+
+        Returns
+        -------
+        None
+
+        """
         os.chdir(path)
         shutil.copyfile(
             "../" + self.output_scripts[solver][1],
@@ -493,6 +541,22 @@ class Evaluation:
         return
 
     def subprocess_call(self, path, out_file, command):
+        """Runs command in bash
+
+        Parameters
+        ----------
+        path : str
+            path name
+        out_file : str
+            txt file to output command's stderror and stdoutput to
+        command : str
+            bash command to run
+
+        Returns
+        -------
+        None
+
+        """
         os.chdir(path)
         with open(out_file, "wb") as output:
             subprocess.call(
@@ -510,7 +574,8 @@ class Evaluation:
             output_dict,
             control_vars,
             path):
-        """Returns a populated list with output values for each solver
+        """Copies an output script into an individual's directory and runs it
+        and returns a populated list with output values for each solver
 
         Parameters
         ----------
@@ -554,6 +619,30 @@ class Evaluation:
             path,
             output_dict,
             control_vars):
+        """Returns a populated list with output values for each solver
+
+        Parameters
+        ----------
+        output_vals : list
+            empty list of the correct size
+        solver : str
+            name of solver
+        path : str
+            path name
+        output_dict : OrderedDict
+            Ordered dict of output variables as keys and solvers as values
+        control_vars : dict
+            multiple layers of dict
+            layer 1: solver name
+            layer 2: control parameter str
+            layer 3: control parameter value
+
+        Returns
+        -------
+        output_vals : list
+            output values requested by rollo input file in correct order
+
+        """
         if self.output_scripts[solver]:
             # return the output script's printed dictionary into a variable
             with open("./" + path + "/output_script_out.txt") as fp:
