@@ -33,7 +33,6 @@ class Evaluation:
         functions to evaluate its output files
 
     """
-
     def __init__(self):
         self.supported_solvers = ["openmc", "openmc_gc", "moltres"]
         self.input_scripts = {}
@@ -56,8 +55,8 @@ class Evaluation:
             input script name
         output_script : str
             optional output script name
-        """
 
+        """
         self.input_scripts[solver_name] = input_script
         try:
             self.output_scripts[solver_name] = output_script
@@ -100,8 +99,8 @@ class Evaluation:
         eval_function : function
             function that runs the evaluation software and returns output values
             output by the software
-        """
 
+        """
         if parallel_method == "job_control":
             def eval_function(pop):
                 """Accepts a list of DEAP individuals (population) and returns
@@ -118,8 +117,8 @@ class Evaluation:
                 list
                     each index of list contains a tuple of output values from
                     evaluators ordered by output_dict
-                """
 
+                """
                 order_of_solvers = self.solver_order(input_evaluators)
                 control_vars_dict = {}
                 output_vals_dict = OrderedDict()
@@ -169,8 +168,8 @@ class Evaluation:
                 -------
                 tuple
                     output values from evaluators ordered by output_dict
-                """
 
+                """
                 control_vars = self.name_ind(
                     ind, control_dict, input_evaluators)
                 output_vals = [None] * len(output_dict)
@@ -267,8 +266,8 @@ class Evaluation:
         Returns
         -------
         None
-        """
 
+        """
         # run input script
         run_input = self.generate_run_command_job_control(
             pop=pop,
@@ -321,8 +320,8 @@ class Evaluation:
         command : str
             bash command to run all directories executables for
             parallel_method=job_control
-        """
 
+        """
         command = ''''''
         count = 0
         for ind in pop:
@@ -372,8 +371,8 @@ class Evaluation:
         all_output_vals : list
             each index of list contains a tuple of output values from
             evaluators ordered by output_dict
-        """
 
+        """
         all_output_vals = []
         for ind in pop:
             name = str(ind.gen) + "_" + str(ind.num)
@@ -388,6 +387,23 @@ class Evaluation:
         return all_output_vals
 
     def run_input_script_serial(self, solver, control_vars_solver, ind, path):
+        """Renders an input script into an individual's directory and runs it
+        Parameters
+        ----------
+        solver : str
+            name of solver
+        control_vars_solver : str
+            name of evaluation solver software
+        ind : deap.creator.Ind
+        path : str
+            path name
+
+        Returns
+        -------
+        rendered_template : str
+            rendered evaluator template script
+
+        """
         self.render_input_script(solver, control_vars_solver, ind, path)
         self.subprocess_call(
             path,
@@ -501,7 +517,6 @@ class Evaluation:
             output values requested by rollo input file in correct order
 
         """
-
         if self.output_scripts[solver]:
             self.generate_output_script(path, solver)
             # run the output script
@@ -567,7 +582,6 @@ class Evaluation:
             layer 3: control parameter value
 
         """
-
         control_vars = {}
         for solver in input_evaluators:
             control_vars[solver] = {}
@@ -590,6 +604,7 @@ class Evaluation:
             name of evaluator template script
         control_vars_solver : str
             name of evaluation solver software
+            
         Returns
         -------
         rendered_template : str
