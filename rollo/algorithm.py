@@ -121,7 +121,7 @@ class Algorithm(object):
 
         Returns
         -------
-        list
+        pop : list
             list of deap.creator.Ind with fitnesses evaluated
 
         """
@@ -160,14 +160,14 @@ class Algorithm(object):
 
         Returns
         -------
-        list
+        pop : list
             list of deap.creator.Ind for new generation
 
         """
         print("Entering generation " + str(gen) + "...")
         offspring = self.apply_mating_operator(pop)
         offspring = self.apply_mutation_operator(offspring)
-        # define pop's gen, ind num
+        # define offspring's gen, ind num
         for i, ind in enumerate(offspring):
             ind.gen = gen
             ind.num = i
@@ -188,6 +188,7 @@ class Algorithm(object):
                 fitness_vals.append(fitness[i])
             ind.fitness.values = tuple(fitness_vals)
             ind.output = fitness
+        # expand population before applying selection operator
         pop = self.apply_selection_operator(pop + offspring)
         pop = self.constraint_obj.apply_constraints(pop)
         self.backend.update_backend(pop, gen, copy_invalids, random.getstate())
