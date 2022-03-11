@@ -93,7 +93,8 @@ class Executor(object):
         )
         alg.generate()
         t1 = time.time()
-        print("Total time in simulation " + str(t1 - t0) + " seconds")
+        print("Total time in simulation " +
+              str(round(t1 - t0, 2)) + " seconds")
         return
 
     def read_input_file(self):
