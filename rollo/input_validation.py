@@ -1,5 +1,6 @@
 from jsonschema import validate
 from rollo.special_variables import SpecialVariables
+import logging
 
 
 class InputValidation:
@@ -98,6 +99,11 @@ class InputValidation:
             a = input_dict[variable]
         except KeyError:
             input_dict[variable] = default_val
+            logging.warning(
+                " ROLLO added default for variable: " +
+                str(variable) +
+                ", default value = " +
+                str(default_val))
         return input_dict
 
     def validate(self):
