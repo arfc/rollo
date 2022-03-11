@@ -44,12 +44,8 @@ class Executor(object):
     def __init__(self, input_file, checkpoint_file=None, verbrose=False):
         self.input_file = input_file
         self.checkpoint_file = checkpoint_file
-        root = logging.getLogger()
-        handler = logging.StreamHandler(sys.stdout)
         if verbrose:
-            handler.setLevel(logging.INFO)
-            root.setLevel(level=logging.INFO)
-        root.addHandler(handler)
+            logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
     def execute(self):
         """Executes rollo simulation to generate reactor designs. \n
