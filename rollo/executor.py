@@ -36,12 +36,14 @@ class Executor(object):
         Name of input file
     checkpoint_file : str
         Name of checkpoint file
+    verbrose : bool
 
     """
 
-    def __init__(self, input_file, checkpoint_file=None):
+    def __init__(self, input_file, checkpoint_file=None, verbrose=False):
         self.input_file = input_file
         self.checkpoint_file = checkpoint_file
+        self.verbrose = verbrose
 
     def execute(self):
         """Executes rollo simulation to generate reactor designs. \n
