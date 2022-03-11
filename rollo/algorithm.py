@@ -1,7 +1,8 @@
 from .backend import BackEnd
 import random
-import warnings
 import sys
+import logging
+import time
 
 
 class Algorithm(object):
@@ -90,8 +91,9 @@ class Algorithm(object):
                 pool = multiprocessing.Pool()
                 self.toolbox.register("map", pool.map)
             except BaseException:
-                warnings.warn(
-                    "multiprocessing_on_dill failed to import, rollo will run serially."
+                logging.warning(
+                    " multiprocessing_on_dill failed to import, rollo will" +
+                    " run serially. parallel method = none"
                 )
                 pass
         if self.cp_file:
@@ -134,9 +136,19 @@ class Algorithm(object):
         invalids = [ind for ind in pop if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
         if self.parallel_method == "job_control":
+            logging.warning(" parallel method = job_control")
             fitnesses = self.toolbox.evaluate(pop)
         else:
+            logging.warning(" parallel method = none")
+            start_time = time.time()
             fitnesses = list(self.toolbox.map(self.toolbox.evaluate, pop))
+            end_time = time.time()
+            logging.info(" Generation: " +
+                         str(0) +
+                         ", Evaluation Total Runtime: " +
+                         str(round(end_time -
+                                   start_time, 2)) +
+                         " seconds")
         # assign fitness values to individuals
         for ind, fitness in zip(pop, fitnesses):
             fitness_vals = []
@@ -177,10 +189,18 @@ class Algorithm(object):
         if self.parallel_method == "job_control":
             fitnesses = self.toolbox.evaluate(list(invalids))
         else:
+            start_time = time.time()
             fitnesses = list(
                 self.toolbox.map(
                     self.toolbox.evaluate,
                     list(invalids)))
+            end_time = time.time()
+            logging.info(" Generation: " +
+                         str(gen) +
+                         ", Evaluation Total Runtime: " +
+                         str(round(end_time -
+                                   start_time, 2)) +
+                         " seconds")
         # assign fitness values to individuals
         for ind, fitness in zip(invalids, fitnesses):
             fitness_vals = []

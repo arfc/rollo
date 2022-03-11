@@ -1,5 +1,5 @@
 import operator
-import warnings
+import logging
 import random
 
 
@@ -126,7 +126,8 @@ class Constraints(object):
         final_pop = [self.toolbox.clone(ind) for ind in new_pop]
         while len(final_pop) < len(pop):
             final_pop.append(self.toolbox.clone(random.choice(new_pop)))
-        warnings.warn(
+        logging.warning(
+            " " +
             str(len(pop) - len(new_pop)) +
             " out of " +
             str(len(pop)) +
