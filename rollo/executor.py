@@ -8,6 +8,7 @@ import json
 import time
 from collections import OrderedDict
 import logging
+import sys
 
 
 class Executor(object):
@@ -43,8 +44,11 @@ class Executor(object):
     def __init__(self, input_file, checkpoint_file=None, verbrose=False):
         self.input_file = input_file
         self.checkpoint_file = checkpoint_file
+        root = logging.getLogger()
+        handler = logging.StreamHandler(sys.stdout)
         if verbrose:
-            logging.basicConfig(level=logging.INFO)
+            handler.setLevel(logging.INFO)
+        root.addHandler(handler)
 
     def execute(self):
         """Executes rollo simulation to generate reactor designs. \n
