@@ -48,6 +48,7 @@ class Executor(object):
         handler = logging.StreamHandler(sys.stdout)
         if verbrose:
             handler.setLevel(logging.INFO)
+            root.setLevel(level=logging.INFO)
         root.addHandler(handler)
 
     def execute(self):
