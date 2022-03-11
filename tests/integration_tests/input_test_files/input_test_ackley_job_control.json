@@ -18,8 +18,8 @@
         "objective": ["min"],
         "weight": [1.0],
         "optimized_variable": ["ackley"],
-        "pop_size": 4,
-        "generations": 2,
+        "pop_size": 100,
+        "generations": 10,
         "parallel": "job_control"
     }
 }
