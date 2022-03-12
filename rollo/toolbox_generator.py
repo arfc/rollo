@@ -1,5 +1,4 @@
 from deap import base, creator, tools
-from rollo.special_variables import SpecialVariables
 import random
 
 
@@ -48,16 +47,13 @@ class ToolboxGenerator(object):
         creator.create("Ind", list, fitness=creator.obj)
         toolbox = base.Toolbox()
         # register control variables + individual
-        sv = SpecialVariables()
-        special_control_vars = sv.special_variables
         for var in input_ctrl_vars:
-            if var not in special_control_vars:
-                var_dict = input_ctrl_vars[var]
-                toolbox.register(
-                    var,
-                    random.uniform,
-                    var_dict["min"],
-                    var_dict["max"])
+            var_dict = input_ctrl_vars[var]
+            toolbox.register(
+                var,
+                random.uniform,
+                var_dict["min"],
+                var_dict["max"])
         toolbox.register(
             "individual",
             self.individual_values,
@@ -110,19 +106,10 @@ class ToolboxGenerator(object):
 
         var_dict = {}
         input_vals = []
-        sv = SpecialVariables()
-        special_control_vars = sv.special_variables
         for var in control_dict:
-            if var in special_control_vars:
-                # this func must return a list
-                method = getattr(sv, var + "_values")
-                result = method(input_ctrl_vars[var], var_dict)
-                input_vals += result
-                var_dict[var] = result
-            else:
-                result = getattr(toolbox, var)()
-                input_vals += [result]
-                var_dict[var] = result
+            result = getattr(toolbox, var)()
+            input_vals += [result]
+            var_dict[var] = result
         return creator.Ind(input_vals)
 
     def min_max_list(self, control_dict, input_ctrl_vars):
