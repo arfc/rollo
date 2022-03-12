@@ -16,7 +16,7 @@ test_input_dict = {
             "input_script":
                 ["python", "input_test_eval_fn_generator_openmc_template.py"],
             "inputs": ["packing_fraction"],
-            "outputs": ["packing_fraction", "keff", "num_batches"],
+            "outputs": ["packing_fraction", "num_batches"],
             "output_script":
                 ["python", "input_test_eval_fn_generator_openmc_output.py"],
             "keep_files": True,
@@ -32,11 +32,11 @@ test_input_dict = {
             "keep_files": True,
         },
     },
-    "constraints": {"keff": {"operator": [">"], "constrained_val": [1]}},
+    "constraints": {},
     "algorithm": {
         "objective": ["max", "min"],
-        "weight": [1.0, 1.0],
-        "optimized_variable": ["keff", "packing_fraction"],
+        "weight": [1.0],
+        "optimized_variable": ["packing_fraction"],
         "pop_size": 100,
         "generations": 10,
         "parallel": "none",
@@ -62,7 +62,6 @@ def test_organize_input_output():
     )
     expected_output_dict = OrderedDict(
         {
-            "keff": "openmc",
             "packing_fraction": "openmc",
             "num_batches": "openmc",
             "max_temp": "moltres",
@@ -95,11 +94,11 @@ def test_load_evaluator():
         ),
     )
     creator.create("Ind", list, fitness=creator.obj)
-    ind = creator.Ind([0.03, 1, 1, 1, 1])
+    ind = creator.Ind([0.03])
     ind.gen = 0
     ind.num = 0
     output_vals = eval_function(ind)
-    expected_output_vals = tuple([output_vals[0], 0.03, 10, 1000])
+    expected_output_vals = tuple([0.03, 10, 1000])
     shutil.rmtree("./openmc_0_0")
     shutil.rmtree("./moltres_0_0")
     os.chdir("../")
