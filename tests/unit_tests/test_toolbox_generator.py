@@ -95,23 +95,18 @@ def test_setup():
 def test_individual_values():
     tg = ToolboxGenerator()
     ctrl_dict = OrderedDict(
-        {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
+        {"packing_fraction": ["openmc", 1]}
     )
-    poly_dict = test_input_dict["control_variables"]["polynomial_triso"]
     toolbox = base.Toolbox()
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
     toolbox.register("packing_fraction", random.uniform, 0.005, 0.1)
-    toolbox.register("polynomial_triso", random.uniform, 1, 1)
     ind_values = tg.individual_values(
         test_input_dict["control_variables"], ctrl_dict, toolbox
     )
     assert isinstance(ind_values, creator.Ind)
     assert ind_values[0] >= 0.005
     assert ind_values[0] <= 0.1
-    for i in range(1, 4):
-        ind_values[i] >= -1
-        ind_values[i] <= 1
 
 
 def test_min_max_list():
