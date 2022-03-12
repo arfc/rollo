@@ -9,22 +9,13 @@ from rollo.constraints import Constraints
 test_input_dict = {
     "control_variables": {
         "packing_fraction": {"min": 0.005, "max": 0.1},
-        "polynomial_triso": {
-            "order": 3,
-            "min": 1,
-            "max": 1,
-            "radius": 4235e-5,
-            "volume": 10,
-            "slices": 10,
-            "height": 10,
-        },
     },
     "evaluators": {
         "openmc": {
             "order": 0,
             "input_script":
                 ["python", "input_test_eval_fn_generator_openmc_template.py"],
-            "inputs": ["packing_fraction", "polynomial_triso"],
+            "inputs": ["packing_fraction"],
             "outputs": ["packing_fraction", "keff", "num_batches"],
             "output_script":
                 ["python", "input_test_eval_fn_generator_openmc_output.py"],
@@ -67,7 +58,7 @@ def test_organize_input_output():
     e = Executor("input_file_placeholder")
     ctrl_dict, output_dict = e.organize_input_output(test_input_dict)
     expected_ctrl_dict = OrderedDict(
-        {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
+        {"packing_fraction": ["openmc", 1]}
     )
     expected_output_dict = OrderedDict(
         {
@@ -118,7 +109,7 @@ def test_load_evaluator():
 def test_load_toolbox():
     e = Executor("input_file_placeholder")
     ctrl_dict = OrderedDict(
-        {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
+        {"packing_fraction": ["openmc", 1]}
     )
     output_dict = OrderedDict(
         {

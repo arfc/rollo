@@ -4,7 +4,6 @@ from numpy import sin, cos, tan, pi
 
 # Templating
 total_pf = {{packing_fraction}}
-poly_coeff = {{polynomial_triso}}
 
 # Constants
 T_r1 = 2135e-5
@@ -85,12 +84,7 @@ vol_triso = 4 / 3 * pi * T_r5 ** 3
 total_trisos = round(total_pf * total_core_vol / vol_triso)
 dz = 10
 z_vals = np.arange(1, dz + 1)
-z = (
-    poly_coeff[0] * z_vals ** 3 +
-    poly_coeff[1] * z_vals ** 2 +
-    poly_coeff[2] * z_vals +
-    poly_coeff[3]
-)
+z = np.array([1] * dz)
 z_trisos = z / (sum(z)) * total_trisos
 pf_z = z_trisos * vol_triso / (total_core_vol / dz)
 z_thick = z_height / dz
