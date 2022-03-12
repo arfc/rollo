@@ -47,8 +47,7 @@ def test_eval_fn_generator():
             "python", "input_test_evaluation_get_output_vals_moltres.py"], )
     eval_function = ev.eval_fn_generator(
         control_dict=OrderedDict(
-            {"packing_fraction": ["openmc", 1],
-                "polynomial_triso": ["openmc", 4]}
+            {"packing_fraction": ["openmc", 1]}
         ),
         output_dict=OrderedDict(
             {
@@ -142,10 +141,9 @@ def test_create_input_execute_output_scripts():
     os.chdir("./input_test_files")
     ev = Evaluation()
     ev.add_evaluator(
-        solver_name="openmc",
-        input_script=["python", "input_test_run_input_script.py"],
-        output_script=["python", "input_test_evaluation_get_output_vals.py"],
-    )
+        solver_name="openmc", input_script=[
+            "python", "input_test_run_input_script.py"], output_script=[
+            "python", "input_test_create_input_execute_output_scripts.py"], )
     control_vars_dict = {
         "0_0": {"openmc": {"hi": 1, "hi2": 2}},
         "0_1": {"openmc": {"hi": 3, "hi2": 4}}
@@ -174,19 +172,16 @@ def test_create_input_execute_output_scripts():
     with open("./openmc_0_1/input_test_run_execute.py") as fp:
         Lines = fp.readline()
     assert Lines == "print([5, 6])\n"
-    with open("./openmc_0_0/input_test_evaluation_get_output_vals.py") as fp:
+    with open("./openmc_0_0/input_test_create_input_execute_output_scripts.py") as fp:
         Lines = fp.readline()
     assert Lines == 'print({"random": 3})\n'
-    with open("./openmc_0_1/input_test_evaluation_get_output_vals.py") as fp:
+    with open("./openmc_0_1/input_test_create_input_execute_output_scripts.py") as fp:
         Lines = fp.readline()
     assert Lines == 'print({"random": 3})\n'
     shutil.rmtree("./openmc_0_0")
     shutil.rmtree("./openmc_0_1")
     os.chdir("../")
     return
-
-
-test_create_input_execute_output_scripts()
 
 
 def test_run_input_and_execute_and_output_scripts():
@@ -202,10 +197,9 @@ def test_run_input_and_execute_and_output_scripts():
     pop = [ind1, ind2]
     ev = Evaluation()
     ev.add_evaluator(
-        solver_name="openmc",
-        input_script=["python", "input_test_run_input_script.py"],
-        output_script=["python", "input_test_evaluation_get_output_vals.py"],
-    )
+        solver_name="openmc", input_script=[
+            "python", "input_test_run_input_script.py"], output_script=[
+            "python", "input_test_create_input_execute_output_scripts.py"], )
     input_evaluators_solver = {"execute": [
         ["python", "input_test_run_execute.py"],
         ["rollo-non-existent-executable"]]}
@@ -273,10 +267,9 @@ def test_get_output_vals_job_control():
     ev = Evaluation()
     os.chdir("./input_test_files")
     ev.add_evaluator(
-        solver_name="openmc",
-        input_script=["python", "input_test_run_input_script.py"],
-        output_script=["python", "input_test_evaluation_get_output_vals.py"],
-    )
+        solver_name="openmc", input_script=[
+            "python", "input_test_run_input_script.py"], output_script=[
+            "python", "input_test_create_input_execute_output_scripts.py"], )
     output_vals_dict = OrderedDict()
     control_vars_dict = {
         "0_0": {"openmc": {"hi": 1, "hi2": 2}},

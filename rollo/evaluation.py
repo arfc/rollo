@@ -5,8 +5,6 @@ import shutil
 import time
 import jinja2
 from collections import OrderedDict
-from rollo.openmc_evaluation import OpenMCEvaluation
-from rollo.moltres_evaluation import MoltresEvaluation
 import logging
 
 
@@ -21,29 +19,18 @@ class Evaluation:
 
     Attributes
     ----------
-    supported_solvers : list of str
-        list of supported evaluation software
     input_scripts : dict
         key is evaluation software name, value is that evaluation software's
         template input script name
     output_scripts : dict
         key is evaluation software name, value is that evaluation software's
         template output script name
-    eval_dict : dict
-        key is evaluation software name, value is a class containing the
-        functions to evaluate its output files
 
     """
 
     def __init__(self):
-        self.supported_solvers = ["openmc", "openmc_gc", "moltres"]
         self.input_scripts = {}
         self.output_scripts = {}
-        # Developers can add new solvers to self.eval_dict below
-        self.eval_dict = {
-            "openmc": OpenMCEvaluation(),
-            "openmc_gc": OpenMCEvaluation(),
-            "moltres": MoltresEvaluation()}
 
     def add_evaluator(self, solver_name, input_script, output_script):
         """Adds information about an evaluator to the Evaluation class object
@@ -683,12 +670,6 @@ class Evaluation:
                 # if variable is a control variable
                 if var in control_vars[solver]:
                     output_vals[i] = control_vars[solver][var]
-                # if variable's analysis script is pre-defined
-                elif var in self.eval_dict[solver].pre_defined_outputs:
-                    os.chdir(path)
-                    method = getattr(self.eval_dict[solver], "evaluate_" + var)
-                    output_vals[i] = method()
-                    os.chdir("../")
                 # if variable's defined in output script
                 else:
                     output_vals[i] = oup_script_results[var]
