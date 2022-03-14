@@ -34,15 +34,11 @@ class InputValidation:
 
         """
         input_dict = self.input.copy()
-        input_evaluators = {}
-        for solver in input_dict["evaluators"]:
-            input_evaluators[solver] = input_dict["evaluators"][solver]
-            input_evaluators[solver] = self.default_check(
-                input_evaluators[solver], "keep_files", "all"
-            )
         input_algorithm = input_dict["algorithm"]
         input_algorithm = self.default_check(
             input_algorithm, "objective", "min")
+        input_algorithm = self.default_check(
+            input_algorithm, "keep_files", "all")
         input_algorithm = self.default_check(input_algorithm, "weight", [1.0])
         input_algorithm = self.default_check(input_algorithm, "pop_size", 60)
         input_algorithm = self.default_check(
@@ -69,7 +65,6 @@ class InputValidation:
             {"operator": "cxBlend", "alpha": 0.46},
         )
         reloaded_input_dict = input_dict.copy()
-        reloaded_input_dict["evaluators"] = input_evaluators
         reloaded_input_dict["algorithm"] = input_algorithm
         self.input = reloaded_input_dict.copy()
         return
@@ -176,6 +171,7 @@ class InputValidation:
             "type": "object",
             "properties": {
                 "parallel": {"type": "string"},
+                "keep_files": {"type": "string"},
                 "objective": {
                     "type": "array",
                     "items": {"type": "string"},
@@ -204,6 +200,7 @@ class InputValidation:
             ["optimized_variable"],
             [
                 "parallel",
+                "keep_files",
                 "objective",
                 "weight",
                 "pop_size",
@@ -216,11 +213,15 @@ class InputValidation:
             ],
             "algorithm",
         )
-        # validation for objective and optimized variable
         self.validate_in_list(
             input_algorithm["parallel"],
             ["none", "multiprocessing", "job_control"],
             "parallel",
+        )
+        self.validate_in_list(
+            input_algorithm["keep_files"],
+            ["none", "all", "only_final"],
+            "keep_files",
         )
         for obj in input_algorithm["objective"]:
             self.validate_in_list(obj, ["min", "max"], "objective")
@@ -436,8 +437,7 @@ class InputValidation:
                     "output_script": {
                         "type": "array",
                         "items": {"type": "string"},
-                    },
-                    "keep_files": {"type": "string"},
+                    }
                 },
             }
         validate(instance=input_evaluators, schema=schema_evaluators)
@@ -445,13 +445,8 @@ class InputValidation:
             self.validate_correct_keys(
                 input_evaluators[evaluator],
                 ["input_script", "inputs", "outputs", "order"],
-                ["output_script", "keep_files", "execute"],
+                ["output_script", "execute"],
                 "evaluator: " + evaluator,
-            )
-            self.validate_in_list(
-                input_evaluators[evaluator]["keep_files"],
-                ["none", "all", "only_final"],
-                "keep_files",
             )
             # check if outputs are in predefined outputs or inputs, and if not
             # output_script must be defined

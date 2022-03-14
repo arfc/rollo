@@ -19,7 +19,6 @@ test_input_dict = {
             "outputs": ["packing_fraction", "num_batches"],
             "output_script":
                 ["python", "input_test_eval_fn_generator_openmc_output.py"],
-            "keep_files": True,
         },
         "moltres": {
             "order": 1,
@@ -29,7 +28,6 @@ test_input_dict = {
             "outputs": ["max_temp"],
             "output_script":
                 ["python", "input_test_evaluation_get_output_vals_moltres.py"],
-            "keep_files": True,
         },
     },
     "constraints": {},
@@ -40,6 +38,7 @@ test_input_dict = {
         "pop_size": 100,
         "generations": 10,
         "parallel": "none",
+        "keep_files": "none",
         "mutation_probability": 0.5,
         "mating_probability": 0.5,
         "selection_operator": {"operator": "selBest", "inds": 1},
@@ -74,10 +73,8 @@ def test_organize_input_output():
 
 def test_load_evaluator():
     os.chdir("./input_test_files")
-    if os.path.exists("./openmc_0_0"):
-        shutil.rmtree("./openmc_0_0")
-    if os.path.exists("./moltres_0_0"):
-        shutil.rmtree("./moltres_0_0")
+    if os.path.exists("./0_0"):
+        shutil.rmtree("./0_0")
     e = Executor("input_file_placeholder")
     test_control_dict, test_output_dict = e.organize_input_output(
         test_input_dict)
@@ -100,8 +97,6 @@ def test_load_evaluator():
     ind.num = 0
     output_vals = eval_function(ind)
     expected_output_vals = tuple([0.03, 10, 1000])
-    shutil.rmtree("./openmc_0_0")
-    shutil.rmtree("./moltres_0_0")
     os.chdir("../")
     assert output_vals == expected_output_vals
 

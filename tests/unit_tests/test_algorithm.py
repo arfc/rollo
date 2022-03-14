@@ -18,7 +18,7 @@ def init():
     creator.create("Ind", list, fitness=creator.obj)
     toolbox = base.Toolbox()
     toolbox.register("pf", random.uniform, 0, 1)
-    toolbox.register("poly", random.uniform, 1, 2)
+    toolbox.register("variable2", random.uniform, 1, 2)
     toolbox.pop_size = 10
     toolbox.ngen = 10
     toolbox.min_list = [0.0, 1.0, 1.0]
@@ -26,8 +26,8 @@ def init():
 
     def ind_vals():
         pf = toolbox.pf()
-        poly = toolbox.poly()
-        return creator.Ind([pf, poly, pf + poly])
+        variable2 = toolbox.variable2()
+        return creator.Ind([pf, variable2, pf + variable2])
 
     toolbox.register("individual", ind_vals)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
@@ -62,7 +62,7 @@ def init():
 
 
 control_dict = OrderedDict(
-    {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
+    {"packing_fraction": ["openmc"], "variable2": ["openmc", "moltres"]}
 )
 output_dict = OrderedDict(
     {

@@ -6,14 +6,10 @@ from rollo.evaluation import Evaluation
 from collections import OrderedDict
 from deap import base, creator
 
-if os.path.exists("./input_test_files/openmc_0_0"):
-    shutil.rmtree("./input_test_files/openmc_0_0")
-if os.path.exists("./input_test_files/openmc_0_1"):
-    shutil.rmtree("./input_test_files/openmc_0_1")
-if os.path.exists("./input_test_files/moltres_0_0"):
-    shutil.rmtree("./input_test_files/moltres_0_0")
-if os.path.exists("./input_test_files/moltres_0_1"):
-    shutil.rmtree("./input_test_files/moltres_0_1")
+if os.path.exists("./input_test_files/0_0"):
+    shutil.rmtree("./input_test_files/0_0")
+if os.path.exists("./input_test_files/0_1"):
+    shutil.rmtree("./input_test_files/0_1")
 
 
 def init():
@@ -57,11 +53,12 @@ def test_eval_fn_generator():
             }
         ),
         input_evaluators={
-            "openmc": {"keep_files": True, "order": 0},
-            "moltres": {"keep_files": True, "order": 1},
+            "openmc": {"order": 0},
+            "moltres": {"order": 1},
         },
         gens=2,
-        parallel_method="none"
+        parallel_method="none",
+        keep_files="none"
     )
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
@@ -70,8 +67,6 @@ def test_eval_fn_generator():
     ind.num = 0
     output_vals = eval_function(ind)
     expected_output_vals = tuple([0.03, 1000, 10])
-    shutil.rmtree("./openmc_0_0")
-    shutil.rmtree("./moltres_0_0")
     os.chdir("../")
     assert output_vals == expected_output_vals
 
@@ -110,7 +105,8 @@ def test_eval_fn_generator_job_control():
             "moltres": {"keep_files": True, "order": 1},
         },
         gens=1,
-        parallel_method="job_control"
+        parallel_method="job_control",
+        keep_files="none"
     )
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
@@ -123,11 +119,6 @@ def test_eval_fn_generator_job_control():
     print(output_vals)
     expected_output_vals = [tuple([0.03, 1000, 10]), tuple([
         0.03, 1000, 10])]
-    print(expected_output_vals)
-    shutil.rmtree("./openmc_0_0")
-    shutil.rmtree("./moltres_0_0")
-    shutil.rmtree("./openmc_0_1")
-    shutil.rmtree("./moltres_0_1")
     os.chdir("../")
     assert output_vals == expected_output_vals
     return
@@ -136,6 +127,8 @@ def test_eval_fn_generator_job_control():
 def test_create_input_execute_output_scripts():
     init()
     os.chdir("./input_test_files")
+    os.mkdir("0_0")
+    os.mkdir("0_1")
     ev = Evaluation()
     ev.add_evaluator(
         solver_name="openmc", input_script=[
@@ -157,26 +150,26 @@ def test_create_input_execute_output_scripts():
         solver="openmc",
         control_vars_dict=control_vars_dict,
         input_evaluators_solver=input_evaluators_solver)
-    with open("./openmc_0_0/input_test_run_input_script.py") as fp:
+    with open("./0_0/input_test_run_input_script.py") as fp:
         Lines = fp.readline()
     assert Lines == "print([1, 2])"
-    with open("./openmc_0_1/input_test_run_input_script.py") as fp:
+    with open("./0_1/input_test_run_input_script.py") as fp:
         Lines = fp.readline()
     assert Lines == "print([3, 4])"
-    with open("./openmc_0_0/input_test_run_execute.py") as fp:
+    with open("./0_0/input_test_run_execute.py") as fp:
         Lines = fp.readline()
     assert Lines == "print([5, 6])\n"
-    with open("./openmc_0_1/input_test_run_execute.py") as fp:
+    with open("./0_1/input_test_run_execute.py") as fp:
         Lines = fp.readline()
     assert Lines == "print([5, 6])\n"
-    with open("./openmc_0_0/input_test_evaluation_get_output_vals.py") as fp:
+    with open("./0_0/input_test_evaluation_get_output_vals.py") as fp:
         Lines = fp.readline()
     assert Lines == 'print({"random": 3})\n'
-    with open("./openmc_0_1/input_test_evaluation_get_output_vals.py") as fp:
+    with open("./0_1/input_test_evaluation_get_output_vals.py") as fp:
         Lines = fp.readline()
     assert Lines == 'print({"random": 3})\n'
-    shutil.rmtree("./openmc_0_0")
-    shutil.rmtree("./openmc_0_1")
+    shutil.rmtree("./0_0")
+    shutil.rmtree("./0_1")
     os.chdir("../")
     return
 
@@ -184,6 +177,8 @@ def test_create_input_execute_output_scripts():
 def test_run_input_and_execute_and_output_scripts():
     init()
     os.chdir("./input_test_files")
+    os.mkdir("0_0")
+    os.mkdir("0_1")
     control_vars_dict = {
         "0_0": {"openmc": {"hi": 1, "hi2": 2}},
         "0_1": {"openmc": {"hi": 3, "hi2": 4}}
@@ -210,32 +205,32 @@ def test_run_input_and_execute_and_output_scripts():
         solver="openmc",
         input_evaluators_solver=input_evaluators_solver
     )
-    with open("./openmc_0_0/input_script_out.txt") as fp:
+    with open("./0_0/openmc_input_script_out.txt") as fp:
         Lines = fp.readlines()[0]
     assert Lines == "[1, 2]\n"
-    with open("./openmc_0_1/input_script_out.txt") as fp:
+    with open("./0_1/openmc_input_script_out.txt") as fp:
         Lines = fp.readlines()[0]
     assert Lines == "[3, 4]\n"
-    with open("./openmc_0_0/execute_0_out.txt") as fp:
+    with open("./0_0/openmc_execute_0_out.txt") as fp:
         Lines = fp.readlines()[0]
     assert Lines == "[5, 6]\n"
-    with open("./openmc_0_1/execute_0_out.txt") as fp:
+    with open("./0_1/openmc_execute_0_out.txt") as fp:
         Lines = fp.readlines()[0]
     assert Lines == "[5, 6]\n"
-    with open("./openmc_0_0/execute_1_out.txt") as fp:
+    with open("./0_0/openmc_execute_1_out.txt") as fp:
         Lines = fp.readlines()[0]
     assert "not found" and "rollo-non-existent-executable" in Lines
-    with open("./openmc_0_1/execute_1_out.txt") as fp:
+    with open("./0_1/openmc_execute_1_out.txt") as fp:
         Lines = fp.readlines()[0]
     assert "not found" and "rollo-non-existent-executable" in Lines
-    with open("./openmc_0_0/output_script_out.txt") as fp:
+    with open("./0_0/openmc_output_script_out.txt") as fp:
         Lines = fp.readline()
     assert Lines == "{'random': 3}\n"
-    with open("./openmc_0_1/output_script_out.txt") as fp:
+    with open("./0_1/openmc_output_script_out.txt") as fp:
         Lines = fp.readline()
     assert Lines == "{'random': 3}\n"
-    shutil.rmtree("./openmc_0_0")
-    shutil.rmtree("./openmc_0_1")
+    shutil.rmtree("./0_0")
+    shutil.rmtree("./0_1")
     os.chdir("../")
     return
 
@@ -249,8 +244,8 @@ def test_generate_run_command_job_control():
     ev = Evaluation()
     command = ev.generate_run_command_job_control(
         pop, "openmc", "python hello.py")
-    expected_command = "cd openmc_0_0\npython hello.py & \nsleep 1 \n" + \
-        "cd ../openmc_0_1\npython hello.py & \nsleep 1 \nwait"
+    expected_command = "cd 0_0\npython hello.py & \nsleep 1 \n" + \
+        "cd ../0_1\npython hello.py & \nsleep 1 \nwait"
     assert command == expected_command
     return
 
@@ -263,6 +258,8 @@ def test_get_output_vals_job_control():
     pop = [ind1, ind2]
     ev = Evaluation()
     os.chdir("./input_test_files")
+    os.mkdir("0_0")
+    os.mkdir("0_1")
     ev.add_evaluator(
         solver_name="openmc", input_script=[
             "python", "input_test_run_input_script.py"], output_script=[
@@ -298,15 +295,15 @@ def test_get_output_vals_job_control():
         control_vars_dict=control_vars_dict)
     expected_output_vals = [tuple([1, 3]), tuple([3, 3])]
     assert all_output_vals == expected_output_vals
-    shutil.rmtree("./openmc_0_0")
-    shutil.rmtree("./openmc_0_1")
+    shutil.rmtree("./0_0")
+    shutil.rmtree("./0_1")
     os.chdir("../")
     return
 
 
 def test_run_input_script_serial():
     os.chdir("./input_test_files")
-    path = "openmc_0_0"
+    path = "0_0"
     os.mkdir(path)
     ev = Evaluation()
     ev.add_evaluator(
@@ -321,7 +318,7 @@ def test_run_input_script_serial():
     ind.num = 0
     control_vars_solver = {"hi": 1, "hi2": 2}
     ev.run_input_script_serial("openmc", control_vars_solver, ind, path)
-    with open("./" + path + "/input_script_out.txt") as fp:
+    with open("./" + path + "/openmc_input_script_out.txt") as fp:
         Lines = fp.readlines()[0]
     assert Lines == "[1, 2]\n"
     shutil.rmtree(path)
@@ -331,15 +328,15 @@ def test_run_input_script_serial():
 
 def test_run_execute_serial():
     os.chdir("./input_test_files")
-    path = "openmc_0_0"
+    path = "0_0"
     os.mkdir(path)
     ev = Evaluation()
     ev.run_execute_serial([["python", "input_test_run_execute.py"], [
         "rollo-non-existent-executable"]], path, "openmc")
-    with open("./" + path + "/execute_0_output.txt") as fp:
+    with open("./" + path + "/openmc_execute_0_output.txt") as fp:
         Lines = fp.readlines()[0]
     assert Lines == "[5, 6]\n"
-    with open("./" + path + "/execute_1_output.txt") as fp:
+    with open("./" + path + "/openmc_execute_1_output.txt") as fp:
         Lines = fp.readlines()[0]
     assert "not found" and "rollo-non-existent-executable" in Lines
     shutil.rmtree(path)
@@ -414,7 +411,6 @@ def test_render_jinja_template():
         ind=1,
         solver="openmc"
     )
-    print(rendered_template)
-    expected_rendered_template = "total_pf = 0.01\nvariable2 = 1"
+    expected_rendered_template = "variable2 = 1"
     os.chdir("../")
     assert rendered_template == expected_rendered_template

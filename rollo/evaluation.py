@@ -59,7 +59,8 @@ class Evaluation:
             output_dict,
             input_evaluators,
             gens,
-            parallel_method):
+            parallel_method,
+            keep_files):
         """if parallel_method is none or multiprocessing, this function
         returns a function that accepts a DEAP individual and returns a
         tuple of output values listed in outputs
@@ -113,10 +114,11 @@ class Evaluation:
                 control_vars_dict = {}
                 output_vals_dict = OrderedDict()
                 for ind in pop:
-                    name = str(ind.gen) + "_" + str(ind.num)
-                    control_vars_dict[name] = self.name_ind(
+                    path = str(ind.gen) + "_" + str(ind.num)
+                    control_vars_dict[path] = self.name_ind(
                         ind, control_dict, input_evaluators)
-                    output_vals_dict[name] = [None] * len(output_dict)
+                    output_vals_dict[path] = [None] * len(output_dict)
+                    os.mkdir(path)
 
                 for solver in order_of_solvers:
                     self.create_input_execute_output_scripts(
@@ -130,17 +132,14 @@ class Evaluation:
                         output_vals_dict, pop, solver,
                         output_dict, control_vars_dict)
                 # remove files
-                if input_evaluators[solver]["keep_files"] == "none":
+                if keep_files == "none":
                     for ind in pop:
-                        name = str(ind.gen) + "_" + str(ind.num)
-                        path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
+                        path = str(ind.gen) + "_" + str(ind.num)
                         shutil.rmtree(path)
-                elif input_evaluators[solver]["keep_files"] == "only_final":
+                elif keep_files == "only_final":
                     for ind in pop:
                         if ind.gen < gens - 1:
-                            name = str(ind.gen) + "_" + str(ind.num)
-                            path = solver + "_" + \
-                                str(ind.gen) + "_" + str(ind.num)
+                            path = str(ind.gen) + "_" + str(ind.num)
                             shutil.rmtree(path)
                 end_time = time.time()
                 logging.info(" Generation: " +
@@ -171,11 +170,10 @@ class Evaluation:
                     ind, control_dict, input_evaluators)
                 output_vals = [None] * len(output_dict)
                 order_of_solvers = self.solver_order(input_evaluators)
+                path = str(ind.gen) + "_" + str(ind.num)
+                os.mkdir(path)
 
                 for solver in order_of_solvers:
-                    # path name for solver's run
-                    path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
-                    os.mkdir(path)
                     # run input script
                     self.run_input_script_serial(
                         solver, control_vars[solver], ind, path)
@@ -187,13 +185,14 @@ class Evaluation:
                     output_vals = self.run_output_script_serial(
                         output_vals, solver, output_dict, control_vars, path
                     )
-                    # remove files
-                    if input_evaluators[solver]["keep_files"] == "none":
+
+                # remove files
+                if keep_files == "none":
+                    shutil.rmtree(path)
+                elif keep_files == "only_final":
+                    if ind.gen < gens - 1:
                         shutil.rmtree(path)
-                    elif input_evaluators[solver]["keep_files"] == \
-                            "only_final":
-                        if ind.gen < gens - 1:
-                            shutil.rmtree(path)
+
                 return tuple(output_vals)
         return eval_function
 
@@ -228,11 +227,9 @@ class Evaluation:
 
         """
         for ind in pop:
-            name = str(ind.gen) + "_" + str(ind.num)
-            path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
-            os.mkdir(path)
+            path = str(ind.gen) + "_" + str(ind.num)
             self.render_input_script(
-                solver, control_vars_dict[name][solver], ind, path)
+                solver, control_vars_dict[path][solver], ind, path)
             if "execute" in input_evaluators_solver:
                 self.generate_execute_scripts(
                     path, input_evaluators_solver["execute"])
@@ -269,8 +266,12 @@ class Evaluation:
         run_input = self.generate_run_command_job_control(
             pop=pop,
             solver=solver,
-            single_command=self.input_scripts[solver][0] + " " +
-            self.input_scripts[solver][1] + " > input_script_out.txt 2>&1")
+            single_command=self.input_scripts[solver][0] +
+            " " +
+            self.input_scripts[solver][1] +
+            " > " +
+            solver +
+            "_input_script_out.txt 2>&1")
         start_time = time.time()
         subprocess.call(run_input, shell=True)
         end_time = time.time()
@@ -282,7 +283,8 @@ class Evaluation:
                 single_command = ""
                 for exe in executable:
                     single_command += exe + " "
-                single_command += "> execute_" + str(i) + "_out.txt 2>&1"
+                single_command += "> " + solver + \
+                    "_execute_" + str(i) + "_out.txt 2>&1"
                 execute_input = self.generate_run_command_job_control(
                     pop=pop,
                     solver=solver,
@@ -302,8 +304,12 @@ class Evaluation:
         run_output = self.generate_run_command_job_control(
             pop=pop,
             solver=solver,
-            single_command=self.output_scripts[solver][0] + " " +
-            self.output_scripts[solver][1] + " > output_script_out.txt 2>&1")
+            single_command=self.output_scripts[solver][0] +
+            " " +
+            self.output_scripts[solver][1] +
+            " > " +
+            solver +
+            "_output_script_out.txt 2>&1")
         start_time = time.time()
         subprocess.call(run_output, shell=True)
         end_time = time.time()
@@ -340,7 +346,7 @@ class Evaluation:
         command = ''''''
         count = 0
         for ind in pop:
-            path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
+            path = str(ind.gen) + "_" + str(ind.num)
             if count == 0:
                 command += "cd " + path + "\n"
             else:
@@ -390,15 +396,14 @@ class Evaluation:
         """
         all_output_vals = []
         for ind in pop:
-            name = str(ind.gen) + "_" + str(ind.num)
-            path = solver + "_" + str(ind.gen) + "_" + str(ind.num)
-            output_vals_dict[name] = self.get_output_vals(
-                output_vals_dict[name],
+            path = str(ind.gen) + "_" + str(ind.num)
+            output_vals_dict[path] = self.get_output_vals(
+                output_vals_dict[path],
                 solver,
                 path,
                 output_dict,
-                control_vars_dict[name])
-            all_output_vals.append(tuple(output_vals_dict[name]))
+                control_vars_dict[path])
+            all_output_vals.append(tuple(output_vals_dict[path]))
         return all_output_vals
 
     def run_input_script_serial(self, solver, control_vars_solver, ind, path):
@@ -423,7 +428,7 @@ class Evaluation:
         self.render_input_script(solver, control_vars_solver, ind, path)
         self.subprocess_call(
             path,
-            "input_script_out.txt",
+            solver + "_input_script_out.txt",
             self.input_scripts[solver][0] +
             " " +
             self.input_scripts[solver][1])
@@ -456,8 +461,7 @@ class Evaluation:
             else:
                 execute = executables[0]
             self.subprocess_call(
-                path, "execute_" + str(i) + "_output.txt", execute)
-            end_time = time.time()
+                path, solver + "_execute_" + str(i) + "_output.txt", execute)
         return
 
     def solver_order(self, input_evaluators):
@@ -621,7 +625,7 @@ class Evaluation:
             # run the output script
             self.subprocess_call(
                 path,
-                "./output_script_out.txt",
+                "./" + solver + "_output_script_out.txt",
                 self.output_scripts[solver][0] +
                 " " +
                 self.output_scripts[solver][1])
@@ -662,7 +666,7 @@ class Evaluation:
         """
         if self.output_scripts[solver]:
             # return the output script's printed dictionary into a variable
-            with open("./" + path + "/output_script_out.txt") as fp:
+            with open("./" + path + "/" + solver + "_output_script_out.txt") as fp:
                 firstline = fp.readlines()[0]
             oup_script_results = ast.literal_eval(firstline)
         for i, var in enumerate(output_dict):

@@ -196,9 +196,10 @@ class Executor(object):
             )
         parallel_type = input_dict["algorithm"]["parallel"]
         gens = input_dict["algorithm"]["generations"]
+        keep_files = input_dict["algorithm"]["keep_files"]
         evaluator_fn = evaluator.eval_fn_generator(
             control_dict, output_dict, input_dict["evaluators"],
-            gens, parallel_type)
+            gens, parallel_type, keep_files)
         return evaluator_fn
 
     def load_toolbox(
