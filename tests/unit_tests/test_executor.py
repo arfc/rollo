@@ -15,7 +15,7 @@ test_input_dict = {
             "order": 0,
             "input_script":
                 ["python", "input_test_eval_fn_generator_openmc_template.py"],
-            "inputs": ["packing_fraction"],
+            "inputs": ["packing_fraction", "variable2"],
             "outputs": ["packing_fraction", "num_batches"],
             "output_script":
                 ["python", "input_test_eval_fn_generator_openmc_output.py"],
@@ -25,7 +25,7 @@ test_input_dict = {
             "order": 1,
             "input_script":
                 ["python", "input_test_render_jinja_template_python.py"],
-            "inputs": [],
+            "inputs": ["variable2"],
             "outputs": ["max_temp"],
             "output_script":
                 ["python", "input_test_evaluation_get_output_vals_moltres.py"],
@@ -58,7 +58,8 @@ def test_organize_input_output():
     e = Executor("input_file_placeholder")
     ctrl_dict, output_dict = e.organize_input_output(test_input_dict)
     expected_ctrl_dict = OrderedDict(
-        {"packing_fraction": ["openmc", 1]}
+        {"packing_fraction": ["openmc"],
+         "variable2": ["openmc", "moltres"]}
     )
     expected_output_dict = OrderedDict(
         {

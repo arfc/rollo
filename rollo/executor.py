@@ -130,7 +130,6 @@ class Executor(object):
 
         """
 
-        input_ctrl_vars = input_dict["control_variables"]
         input_evaluators = input_dict["evaluators"]
         input_algorithm = input_dict["algorithm"]
 
@@ -138,7 +137,10 @@ class Executor(object):
         control_vars = OrderedDict()
         for solver in input_evaluators:
             for var in input_evaluators[solver]["inputs"]:
-                control_vars[var] = [solver, 1]
+                if var in control_vars:
+                    control_vars[var].append(solver)
+                else:
+                    control_vars[var] = [solver]
 
         # define output variables dict
         output_vars = OrderedDict()
