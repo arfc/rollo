@@ -699,12 +699,10 @@ class Evaluation:
             layer 3: control parameter value
 
         """
-        print(ind)
         control_vars = {}
         for solver in input_evaluators:
             control_vars[solver] = {}
         for i, var in enumerate(control_dict):
-            print(i, var)
             for solver in control_dict[var]:
                 print(control_vars[solver])
                 control_vars[solver][var] = ind[i]

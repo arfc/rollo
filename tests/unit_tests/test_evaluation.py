@@ -47,7 +47,7 @@ def test_eval_fn_generator():
             "python", "input_test_evaluation_get_output_vals_moltres.py"], )
     eval_function = ev.eval_fn_generator(
         control_dict=OrderedDict(
-            {"packing_fraction": ["openmc", 1]}
+            {"packing_fraction": ["openmc"], "variable2": ["openmc", "moltres"]}
         ),
         output_dict=OrderedDict(
             {
@@ -65,7 +65,7 @@ def test_eval_fn_generator():
     )
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
-    ind = creator.Ind([0.03])
+    ind = creator.Ind([0.03, 1])
     ind.gen = 0
     ind.num = 0
     output_vals = eval_function(ind)
@@ -96,7 +96,7 @@ def test_eval_fn_generator_job_control():
             "python", "input_test_evaluation_get_output_vals_moltres.py"], )
     eval_function = ev.eval_fn_generator(
         control_dict=OrderedDict(
-            {"packing_fraction": ["openmc", 1]}
+            {"packing_fraction": ["openmc"], "variable2": ["openmc", "moltres"]}
         ),
         output_dict=OrderedDict(
             {
@@ -115,7 +115,7 @@ def test_eval_fn_generator_job_control():
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
     ind1, ind2 = creator.Ind(
-        [0.03]), creator.Ind([0.03])
+        [0.03, 1]), creator.Ind([0.03, 1])
     ind1.gen, ind1.num = 0, 0
     ind2.gen, ind2.num = 0, 1
     pop = [ind1, ind2]
