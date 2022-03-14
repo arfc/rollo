@@ -734,11 +734,6 @@ class Evaluation:
         for var in control_vars_solver:
             render_str += str(var) + "='" + \
                 str(control_vars_solver[var]) + "',"
-            # special condition for moltres
-        if solver == "moltres":
-            render_str += "group_constant_dir='../openmc_gc_" + \
-                str(ind.gen) + "_" + str(ind.num) + "'"
         render_str += ")"
         rendered_template = eval(render_str)
-
         return rendered_template

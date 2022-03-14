@@ -414,3 +414,6 @@ def test_render_jinja_template():
     expected_rendered_template = "variable2 = 1"
     os.chdir("../")
     assert rendered_template == expected_rendered_template
+
+
+test_render_jinja_template()
