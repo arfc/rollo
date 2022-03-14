@@ -95,7 +95,7 @@ def test_load_evaluator():
         ),
     )
     creator.create("Ind", list, fitness=creator.obj)
-    ind = creator.Ind([0.03])
+    ind = creator.Ind([0.03, 1])
     ind.gen = 0
     ind.num = 0
     output_vals = eval_function(ind)

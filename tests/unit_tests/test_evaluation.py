@@ -388,16 +388,16 @@ def test_run_output_script_serial():
 def test_name_ind():
     ev = Evaluation()
     control_vars = ev.name_ind(
-        ind=[0.01, 1, 1, 1, 1],
+        ind=[0.01, 1],
         control_dict=OrderedDict(
-            {"packing_fraction": ["openmc", 1],
-                "polynomial_triso": ["moltres", 4]}
+            {"packing_fraction": ["openmc"],
+             "variable2": ["openmc", "moltres"]}
         ),
         input_evaluators=["openmc", "moltres"],
     )
     expected_control_vars = {
-        "openmc": {"packing_fraction": 0.01},
-        "moltres": {"polynomial_triso": [1, 1, 1, 1]},
+        "openmc": {"packing_fraction": 0.01, "variable2": 1},
+        "moltres": {"variable2": 1},
     }
     assert control_vars == expected_control_vars
 
