@@ -704,7 +704,6 @@ class Evaluation:
             control_vars[solver] = {}
         for i, var in enumerate(control_dict):
             for solver in control_dict[var]:
-                print(control_vars[solver])
                 control_vars[solver][var] = ind[i]
         return control_vars
 

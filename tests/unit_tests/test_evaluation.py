@@ -409,12 +409,12 @@ def test_render_jinja_template():
         script="./input_test_render_jinja_template_python.py",
         control_vars_solver={
             "packing_fraction": 0.01,
-            "polynomial_triso": [1, 1, 1, 1],
+            "variable2": 1,
         },
         ind=1,
         solver="openmc"
     )
     print(rendered_template)
-    expected_rendered_template = "total_pf = 0.01\npoly_coeff = [1, 1, 1, 1]"
+    expected_rendered_template = "total_pf = 0.01\nvariable2 = 1"
     os.chdir("../")
     assert rendered_template == expected_rendered_template
