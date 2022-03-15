@@ -9,8 +9,7 @@
             "input_script": ["python", "input_test_binh.py"],
             "inputs": ["x1", "x2"],
             "output_script": ["python", "input_test_binh_output.py"],
-            "outputs": ["f1", "f2"],
-            "keep_files": "none"
+            "outputs": ["f1", "f2"]
         }
     },
     "constraints": {},
@@ -21,6 +20,7 @@
         "pop_size": 120,
         "generations": 5,
         "parallel": "job_control",
+        "keep_files": "none", 
         "mutation_probability": 0.23,
         "mating_probability": 0.90,
         "selection_operator": {
