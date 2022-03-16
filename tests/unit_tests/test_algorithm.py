@@ -5,46 +5,61 @@ import random
 import os
 from collections import OrderedDict
 
-creator.create(
-    "obj",
-    base.Fitness,
-    weights=(
-        1.0,
-        -1.0,
-    ),
-)
-creator.create("Ind", list, fitness=creator.obj)
-toolbox = base.Toolbox()
-toolbox.register("pf", random.uniform, 0, 1)
-toolbox.register("poly", random.uniform, 1, 2)
-toolbox.pop_size = 10
-toolbox.ngen = 10
-toolbox.min_list = [0.0, 1.0, 1.0]
-toolbox.max_list = [1.0, 2.0, 3.0]
 
+def init():
+    creator.create(
+        "obj",
+        base.Fitness,
+        weights=(
+            1.0,
+            -1.0,
+        ),
+    )
+    creator.create("Ind", list, fitness=creator.obj)
+    toolbox = base.Toolbox()
+    toolbox.register("pf", random.uniform, 0, 1)
+    toolbox.register("poly", random.uniform, 1, 2)
+    toolbox.pop_size = 10
+    toolbox.ngen = 10
+    toolbox.min_list = [0.0, 1.0, 1.0]
+    toolbox.max_list = [1.0, 2.0, 3.0]
 
-def ind_vals():
-    pf = toolbox.pf()
-    poly = toolbox.poly()
-    return creator.Ind([pf, poly, pf + poly])
+    def ind_vals():
+        pf = toolbox.pf()
+        poly = toolbox.poly()
+        return creator.Ind([pf, poly, pf + poly])
 
+    toolbox.register("individual", ind_vals)
+    toolbox.register("population", tools.initRepeat, list, toolbox.individual)
+    k = 5
+    toolbox.register("select", tools.selBest, k=k)
+    toolbox.register("mate", tools.cxUniform, indpb=1.0)
+    toolbox.register(
+        "mutate",
+        tools.mutPolynomialBounded,
+        eta=0.5,
+        indpb=1.0,
+        low=[0.0, 1.0, 1.0],
+        up=[1.0, 2.0, 3.0],
+    )
+    toolbox.cxpb = 1.0
+    toolbox.mutpb = 1.0
+    toolbox.objs = 2
 
-toolbox.register("individual", ind_vals)
-toolbox.register("population", tools.initRepeat, list, toolbox.individual)
-k = 5
-toolbox.register("select", tools.selBest, k=k)
-toolbox.register("mate", tools.cxUniform, indpb=1.0)
-toolbox.register(
-    "mutate",
-    tools.mutPolynomialBounded,
-    eta=0.5,
-    indpb=1.0,
-    low=[0.0, 1.0, 1.0],
-    up=[1.0, 2.0, 3.0],
-)
-toolbox.cxpb = 1.0
-toolbox.mutpb = 1.0
-toolbox.objs = 2
+    def evaluator_fn(ind):
+        return tuple([ind[0] + ind[1], 5])
+
+    toolbox.register("evaluate", evaluator_fn)
+
+    test_constraints = Constraints(
+        output_dict=OrderedDict({"total": "openmc", "random": "openmc"}),
+        input_constraints={
+            "total": {"operator": [">", "<"], "constrained_val": [1.5, 2.5]}
+        },
+        toolbox=toolbox,
+    )
+    return toolbox, test_constraints
+
 
 control_dict = OrderedDict(
     {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
@@ -59,21 +74,8 @@ output_dict = OrderedDict(
 )
 
 
-def evaluator_fn(ind):
-    return tuple([ind[0] + ind[1], 5])
-
-
-toolbox.register("evaluate", evaluator_fn)
-test_constraints = Constraints(
-    output_dict=OrderedDict({"total": "openmc", "random": "openmc"}),
-    input_constraints={
-        "total": {"operator": [">", "<"], "constrained_val": [1.5, 2.5]}
-    },
-    toolbox=toolbox,
-)
-
-
 def test_generate():
+    toolbox, test_constraints = init()
     a = Algorithm(
         deap_toolbox=toolbox,
         constraint_obj=test_constraints,
@@ -99,6 +101,7 @@ def test_generate():
 
 
 def test_initialize_pop():
+    toolbox, test_constraints = init()
     a = Algorithm(
         deap_toolbox=toolbox,
         constraint_obj=test_constraints,
@@ -130,6 +133,7 @@ def test_initialize_pop():
 
 
 def test_apply_algorithm_ngen():
+    toolbox, test_constraints = init()
     a = Algorithm(
         deap_toolbox=toolbox,
         constraint_obj=test_constraints,
@@ -159,6 +163,7 @@ def test_apply_algorithm_ngen():
 
 
 def test_apply_selection_operator():
+    toolbox, test_constraints = init()
     a = Algorithm(
         deap_toolbox=toolbox,
         constraint_obj=test_constraints,
@@ -181,6 +186,7 @@ def test_apply_selection_operator():
 
 
 def test_apply_mating_operator():
+    toolbox, test_constraints = init()
     a = Algorithm(
         deap_toolbox=toolbox,
         constraint_obj=test_constraints,
@@ -201,6 +207,7 @@ def test_apply_mating_operator():
 
 
 def test_apply_mutation_operator():
+    toolbox, test_constraints = init()
     a = Algorithm(
         deap_toolbox=toolbox,
         constraint_obj=test_constraints,
