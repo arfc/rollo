@@ -13,9 +13,6 @@ from deap import base, creator, tools
 import deap.benchmarks.tools as bt
 import numpy as np
 
-if os.path.exists("./input_test_files/checkpoint.pkl"):
-    os.remove("./input_test_files/checkpoint.pkl")
-
 
 def test_binh_hypervolume():
 
@@ -38,30 +35,4 @@ def test_binh_hypervolume():
         first_front_only=True)[0]
     ref = np.array([120, 50])
     hypervol = bt.hypervolume(non_dom, ref)
-    os.remove("./input_test_files/checkpoint.pkl")
-    assert hypervol > 4200
-
-
-def test_binh_hypervolume_job_control():
-
-    creator.create("obj", base.Fitness, weights=(-1.0, -1.0))
-    creator.create("Ind", list, fitness=creator.obj)
-
-    os.chdir("./input_test_files")
-    subprocess.call(
-        "python ../../../rollo -i input_test_binh_job_control.json",
-        shell=True)
-    os.chdir("../")
-    with open("./input_test_files/checkpoint.pkl", "rb") as cp_file:
-        cp = pickle.load(cp_file)
-
-    results = cp["all"]
-    final_pop = results["populations"][-1]
-    non_dom = tools.sortNondominated(
-        final_pop,
-        k=len(final_pop),
-        first_front_only=True)[0]
-    ref = np.array([120, 50])
-    hypervol = bt.hypervolume(non_dom, ref)
-    os.remove("./input_test_files/checkpoint.pkl")
     assert hypervol > 4200
