@@ -171,7 +171,7 @@ class Algorithm(object):
         for i, ind in enumerate(offspring):
             ind.gen = gen
             ind.num = i
-        # evaluate fitness of newly created pop for inds with invalid fitness
+        # evaluate fitness of newly created inds in offspring
         invalids = [ind for ind in offspring if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
         if self.parallel_method == "job_control":
