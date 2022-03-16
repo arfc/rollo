@@ -115,7 +115,7 @@ class Evaluation:
 
                 Returns
                 -------
-                list
+                all_output_vals : list of tuple
                     each index of list contains a tuple of output values from
                     evaluators ordered by output_dict
 
