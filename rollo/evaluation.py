@@ -703,8 +703,8 @@ class Evaluation:
         return control_vars
 
     def render_jinja_template(self, script, control_vars_solver, ind, solver):
-        """Renders a jinja2 templated input file. This will be used by solver's
-        with a text based interface such as Moltres
+        """Renders a jinja2 templated input file. This will be used by solvers
+        with text-based interfaces such as Moltres
 
         Parameters
         ----------
