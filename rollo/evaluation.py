@@ -647,7 +647,7 @@ class Evaluation:
         if self.output_scripts[solver]:
             # return the output script's printed dictionary into a variable
             with open("./" + path + "/output_script_out.txt") as fp:
-                firstline = fp.readlines()[0]
+                firstline = fp.readline()
             oup_script_results = ast.literal_eval(firstline)
         for i, var in enumerate(output_dict):
             if output_dict[var] == solver:
