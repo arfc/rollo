@@ -216,7 +216,7 @@ class Evaluation:
         ----------
         pop : list
             list of deap.creator.Ind
-        solver : str
+        solver : {'openmc', 'openmc_gc', 'moltres'}
             name of solver
         control_vars_dict: dict
             multiple layers of dicts
