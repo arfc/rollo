@@ -625,7 +625,7 @@ class Evaluation:
         Parameters
         ----------
         output_vals : list
-            empty list of the correct size
+            list of Nones with length corresponding to number of output values
         solver : str
             name of solver
         path : str
