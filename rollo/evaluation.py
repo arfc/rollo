@@ -92,8 +92,8 @@ class Evaluation:
             evaluators sub-dictionary from input file
         gens : int
             total generations in simulation (defined in input file)
-        parallel_method : str
-            parallelization method (none, multiprocessing, job_control)
+        parallel_method : {'none', 'multiprocessing', 'job_control'}
+            parallelization method
 
         Returns
         -------
@@ -216,7 +216,7 @@ class Evaluation:
         ----------
         pop : list
             list of deap.creator.Ind
-        solver : {'openmc', 'openmc_gc', 'moltres'}
+        solver : str
             name of solver
         control_vars_dict: dict
             multiple layers of dicts
