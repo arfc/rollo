@@ -20,6 +20,6 @@
         "optimized_variable": ["ackley"],
         "pop_size": 100,
         "generations": 10,
-        "parallel": "none"
+        "parallel": "job_control"
     }
 }
