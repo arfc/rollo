@@ -42,7 +42,7 @@ class Algorithm(object):
     backend : rollo.backend.Backend
         Contains and manipulates the output backend
     parallel_method : {'none', 'multiprocessing', 'job_control'}
-        parallelization method (none, multiprocessing, job_control)
+        parallelization method
 
     """
 
