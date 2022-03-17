@@ -93,8 +93,8 @@ class Evaluation:
             evaluators sub-dictionary from input file
         gens : int
             total generations in simulation (defined in input file)
-        parallel_method : str
-            parallelization method (none, multiprocessing, job_control)
+        parallel_method : {'none', 'multiprocessing', 'job_control'}
+            parallelization method
 
         Returns
         -------
@@ -116,7 +116,7 @@ class Evaluation:
 
                 Returns
                 -------
-                list
+                all_output_vals : list of tuple
                     each index of list contains a tuple of output values from
                     evaluators ordered by output_dict
 
@@ -654,7 +654,7 @@ class Evaluation:
         Parameters
         ----------
         output_vals : list
-            empty list of the correct size
+            list of Nones with length corresponding to number of output values
         solver : str
             name of solver
         path : str
@@ -676,7 +676,7 @@ class Evaluation:
         if self.output_scripts[solver]:
             # return the output script's printed dictionary into a variable
             with open("./" + path + "/output_script_out.txt") as fp:
-                firstline = fp.readlines()[0]
+                firstline = fp.readline()
             oup_script_results = ast.literal_eval(firstline)
         for i, var in enumerate(output_dict):
             if output_dict[var] == solver:
@@ -732,8 +732,8 @@ class Evaluation:
         return control_vars
 
     def render_jinja_template(self, script, control_vars_solver, ind, solver):
-        """Renders a jinja2 templated input file. This will be used by solver's
-        with a text based interface such as Moltres
+        """Renders a jinja2 templated input file. This will be used by solvers
+        with text-based interfaces such as Moltres
 
         Parameters
         ----------
