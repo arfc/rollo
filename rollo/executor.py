@@ -37,7 +37,7 @@ class Executor(object):
         Name of input file
     checkpoint_file : str
         Name of checkpoint file
-    verbrose : bool
+    verbose : bool
 
     """
 
