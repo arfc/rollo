@@ -291,11 +291,13 @@ class Evaluation:
                      str(round(end_time - start_time, 2)) + " seconds")
         # run execute script if exists
         if "execute" in input_evaluators_solver:
-            for i, executable in enumerate(input_evaluators_solver["execute"]):
+            for execute_index, executable in enumerate(
+                    input_evaluators_solver["execute"]):
                 single_command = ""
                 for exe in executable:
                     single_command += exe + " "
-                single_command += "> execute_" + str(i) + "_out.txt 2>&1"
+                single_command += "> execute_" + \
+                    str(execute_index) + "_out.txt 2>&1"
                 execute_input = self.generate_run_command_job_control(
                     pop=pop,
                     solver=solver,
@@ -306,7 +308,7 @@ class Evaluation:
                 logging.info(" Solver: " +
                              solver +
                              ", Execute " +
-                             str(i) +
+                             str(execute_index) +
                              " Runtime: " +
                              str(round(end_time -
                                        start_time, 2)) +
