@@ -18,7 +18,7 @@ Command line flags:
 | ----------- | ----------- | ----------- |
 | -i | name of input file | Yes |
 | -c| name of checkpoint file | No |
-| -v| verbrose output (only include the flag) | No |
+| -v| verbose output (only include the flag) | No |
 
 The checkpoint file holds the results from the ROLLO simulation and also acts 
 as a restart file. Thus, if a ROLLO simulation ends prematurely, the checkpoint 
