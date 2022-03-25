@@ -7,6 +7,7 @@ import jinja2
 from collections import OrderedDict
 from rollo.openmc_evaluation import OpenMCEvaluation
 from rollo.moltres_evaluation import MoltresEvaluation
+import logging
 
 
 class Evaluation:
@@ -120,6 +121,7 @@ class Evaluation:
                     evaluators ordered by output_dict
 
                 """
+                start_time = time.time()
                 order_of_solvers = self.solver_order(input_evaluators)
                 control_vars_dict = {}
                 output_vals_dict = OrderedDict()
@@ -153,6 +155,13 @@ class Evaluation:
                             path = solver + "_" + \
                                 str(ind.gen) + "_" + str(ind.num)
                             shutil.rmtree(path)
+                end_time = time.time()
+                logging.info(" Generation: " +
+                             str(pop[0].gen) +
+                             ", Evaluation Total Runtime: " +
+                             str(round(end_time -
+                                       start_time, 2)) +
+                             " seconds")
                 return all_output_vals  # list of tuples
         else:
             def eval_function(ind):
@@ -186,7 +195,7 @@ class Evaluation:
                     # run execute if they exist
                     if "execute" in input_evaluators[solver]:
                         self.run_execute_serial(
-                            input_evaluators[solver]["execute"], path)
+                            input_evaluators[solver]["execute"], path, solver)
                     # get output values
                     output_vals = self.run_output_script_serial(
                         output_vals, solver, output_dict, control_vars, path
@@ -199,7 +208,6 @@ class Evaluation:
                         if ind.gen < gens - 1:
                             shutil.rmtree(path)
                 return tuple(output_vals)
-
         return eval_function
 
     def create_input_execute_output_scripts(
@@ -276,26 +284,46 @@ class Evaluation:
             solver=solver,
             single_command=self.input_scripts[solver][0] + " " +
             self.input_scripts[solver][1] + " > input_script_out.txt 2>&1")
+        start_time = time.time()
         subprocess.call(run_input, shell=True)
+        end_time = time.time()
+        logging.info(" Solver: " + solver + ", Input Script Runtime: " +
+                     str(round(end_time - start_time, 2)) + " seconds")
         # run execute script if exists
         if "execute" in input_evaluators_solver:
-            for i, executable in enumerate(input_evaluators_solver["execute"]):
+            for execute_index, executable in enumerate(
+                    input_evaluators_solver["execute"]):
                 single_command = ""
                 for exe in executable:
                     single_command += exe + " "
-                single_command += "> execute_" + str(i) + "_out.txt 2>&1"
+                single_command += "> execute_" + \
+                    str(execute_index) + "_out.txt 2>&1"
                 execute_input = self.generate_run_command_job_control(
                     pop=pop,
                     solver=solver,
                     single_command=single_command)
+                start_time = time.time()
                 subprocess.call(execute_input, shell=True)
+                end_time = time.time()
+                logging.info(" Solver: " +
+                             solver +
+                             ", Execute Task " +
+                             str(execute_index) +
+                             " Runtime: " +
+                             str(round(end_time -
+                                       start_time, 2)) +
+                             " seconds")
         # run output script
         run_output = self.generate_run_command_job_control(
             pop=pop,
             solver=solver,
             single_command=self.output_scripts[solver][0] + " " +
             self.output_scripts[solver][1] + " > output_script_out.txt 2>&1")
+        start_time = time.time()
         subprocess.call(run_output, shell=True)
+        end_time = time.time()
+        logging.info(" Solver: " + solver + ", Output Script Runtime: " +
+                     str(round(end_time - start_time, 2)) + " seconds")
         return
 
     def generate_run_command_job_control(self, pop, solver, single_command):
@@ -416,7 +444,7 @@ class Evaluation:
             self.input_scripts[solver][1])
         return
 
-    def run_execute_serial(self, input_evaluator_solver_execute, path):
+    def run_execute_serial(self, input_evaluator_solver_execute, path, solver):
         """copies execute scripts into an individual's directory if the scripts
         exists then runs it or only the executable for parallel_method=none
         or multiprocessing
@@ -428,6 +456,8 @@ class Evaluation:
             from input file
         path : str
             path name
+        solver : str
+            name of solver
 
         Returns
         -------
@@ -442,6 +472,7 @@ class Evaluation:
                 execute = executables[0]
             self.subprocess_call(
                 path, "execute_" + str(i) + "_output.txt", execute)
+            end_time = time.time()
         return
 
     def solver_order(self, input_evaluators):

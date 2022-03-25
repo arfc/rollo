@@ -345,7 +345,7 @@ def test_run_execute_serial():
     os.mkdir(path)
     ev = Evaluation()
     ev.run_execute_serial([["python", "input_test_run_execute.py"], [
-        "rollo-non-existent-executable"]], path)
+        "rollo-non-existent-executable"]], path, "openmc")
     with open("./" + path + "/execute_0_output.txt") as fp:
         Lines = fp.readlines()[0]
     assert Lines == "[5, 6]\n"

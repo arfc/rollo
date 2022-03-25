@@ -7,7 +7,8 @@ from rollo.toolbox_generator import ToolboxGenerator
 import json
 import time
 from collections import OrderedDict
-import warnings
+import logging
+import sys
 
 
 class Executor(object):
@@ -36,12 +37,15 @@ class Executor(object):
         Name of input file
     checkpoint_file : str
         Name of checkpoint file
+    verbose : bool
 
     """
 
-    def __init__(self, input_file, checkpoint_file=None):
+    def __init__(self, input_file, checkpoint_file=None, verbose=False):
         self.input_file = input_file
         self.checkpoint_file = checkpoint_file
+        if verbose:
+            logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
     def execute(self):
         """Executes rollo simulation to generate reactor designs. \n
@@ -89,7 +93,8 @@ class Executor(object):
         )
         alg.generate()
         t1 = time.time()
-        print("Total time in simulation " + str(t1 - t0) + " seconds")
+        print("Total time in simulation " +
+              str(round(t1 - t0, 2)) + " seconds")
         return
 
     def read_input_file(self):
@@ -189,7 +194,7 @@ class Executor(object):
                 output_script = solver_dict["output_script"]
             except BaseException:
                 output_script = None
-                warnings.warn("No output script defined for " + solver)
+                logging.warning(" No output script defined for " + solver)
             evaluator.add_evaluator(
                 solver_name=solver,
                 input_script=solver_dict["input_script"],
