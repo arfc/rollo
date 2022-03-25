@@ -18,7 +18,7 @@ def main():
         else:
             cp_file = None
         if "-v" in opts_dict:
-            verbrose = True
+            verbose = True
         else:
             verbrose = False
         new_run = executor.Executor(
