@@ -9,7 +9,7 @@ def main():
     try:
         opts, args = getopt.getopt(argv, "i:c:v")
         if len(opts) == 0:
-            raise Exception("To run rollo: " + msg)
+            raise Exception("To run ROLLO: " + msg)
         opts_dict = {}
         for opt, arg in opts:
             opts_dict[opt] = arg
