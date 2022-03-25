@@ -307,7 +307,7 @@ class Evaluation:
                 end_time = time.time()
                 logging.info(" Solver: " +
                              solver +
-                             ", Execute " +
+                             ", Execute Task " +
                              str(execute_index) +
                              " Runtime: " +
                              str(round(end_time -
