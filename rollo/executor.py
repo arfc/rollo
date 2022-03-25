@@ -41,7 +41,7 @@ class Executor(object):
 
     """
 
-    def __init__(self, input_file, checkpoint_file=None, verbrose=False):
+    def __init__(self, input_file, checkpoint_file=None, verbose=False):
         self.input_file = input_file
         self.checkpoint_file = checkpoint_file
         if verbrose:
