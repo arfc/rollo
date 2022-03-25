@@ -20,7 +20,7 @@ def main():
         if "-v" in opts_dict:
             verbose = True
         else:
-            verbrose = False
+            verbose = False
         new_run = executor.Executor(
             input_file=opts_dict['-i'],
             checkpoint_file=cp_file,
