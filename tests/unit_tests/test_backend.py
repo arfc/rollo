@@ -35,14 +35,14 @@ def init():
 
 
 control_dict = OrderedDict(
-    {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
+    {"packing_fraction": ["evaluator_1", 1], "polynomial_triso": ["evaluator_1", 4]}
 )
 output_dict = OrderedDict(
     {
-        "packing_fraction": "openmc",
-        "keff": "openmc",
-        "num_batches": "openmc",
-        "max_temp": "moltres",
+        "packing_fraction": "evaluator_1",
+        "keff": "evaluator_1",
+        "num_batches": "evaluator_1",
+        "max_temp": "evaluator_2",
     }
 )
 

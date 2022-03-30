@@ -14,11 +14,11 @@ test_input_dict = {
         "openmc": {
             "order": 0,
             "input_script":
-                ["python", "input_test_eval_fn_generator_openmc_template.py"],
+                ["python", "input_test_eval_fn_generator_template.py"],
             "inputs": ["packing_fraction"],
             "outputs": ["packing_fraction", "num_batches"],
             "output_script":
-                ["python", "input_test_eval_fn_generator_openmc_output.py"],
+                ["python", "input_test_eval_fn_generator_output.py"],
             "keep_files": True,
         },
         "moltres": {
@@ -28,7 +28,7 @@ test_input_dict = {
             "inputs": [],
             "outputs": ["max_temp"],
             "output_script":
-                ["python", "input_test_evaluation_get_output_vals_moltres.py"],
+                ["python", "input_test_evaluation_get_output_vals_evaluator2.py"],
             "keep_files": True,
         },
     },

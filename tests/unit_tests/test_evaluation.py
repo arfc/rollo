@@ -34,17 +34,17 @@ def test_eval_fn_generator():
         solver_name="openmc",
         input_script=[
             "python",
-            "input_test_eval_fn_generator_openmc_template.py"],
+            "input_test_eval_fn_generator_template.py"],
         output_script=[
             "python",
-            "input_test_eval_fn_generator_openmc_output.py"],
+            "input_test_eval_fn_generator_output.py"],
     )
     ev.add_evaluator(
         solver_name="moltres",
         input_script=[
             "python", "input_test_render_jinja_template_python.py"],
         output_script=[
-            "python", "input_test_evaluation_get_output_vals_moltres.py"], )
+            "python", "input_test_evaluation_get_output_vals_evaluator2.py"], )
     eval_function = ev.eval_fn_generator(
         control_dict=OrderedDict(
             {"packing_fraction": ["openmc", 1]}
@@ -83,17 +83,17 @@ def test_eval_fn_generator_job_control():
         solver_name="openmc",
         input_script=[
             "python",
-            "input_test_eval_fn_generator_openmc_template.py"],
+            "input_test_eval_fn_generator_template.py"],
         output_script=[
             "python",
-            "input_test_eval_fn_generator_openmc_output.py"],
+            "input_test_eval_fn_generator_output.py"],
     )
     ev.add_evaluator(
         solver_name="moltres",
         input_script=[
             "python", "input_test_render_jinja_template_python.py"],
         output_script=[
-            "python", "input_test_evaluation_get_output_vals_moltres.py"], )
+            "python", "input_test_evaluation_get_output_vals_evaluator2.py"], )
     eval_function = ev.eval_fn_generator(
         control_dict=OrderedDict(
             {"packing_fraction": ["openmc", 1]}
