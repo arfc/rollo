@@ -169,10 +169,12 @@ def test_create_input_execute_output_scripts():
     with open("./evaluator_1_0_1/input_test_run_execute.py") as fp:
         Lines = fp.readline()
     assert Lines == "print([5, 6])\n"
-    with open("./evaluator_1_0_0/input_test_evaluation_get_output_vals.py") as fp:
+    with open("./evaluator_1_0_0/input_test_evaluation_get_output_vals.py") \
+            as fp:
         Lines = fp.readline()
     assert Lines == 'print({"random": 3})\n'
-    with open("./evaluator_1_0_1/input_test_evaluation_get_output_vals.py") as fp:
+    with open("./evaluator_1_0_1/input_test_evaluation_get_output_vals.py") \
+            as fp:
         Lines = fp.readline()
     assert Lines == 'print({"random": 3})\n'
     shutil.rmtree("./evaluator_1_0_0")

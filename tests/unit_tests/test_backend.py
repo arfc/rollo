@@ -35,7 +35,8 @@ def init():
 
 
 control_dict = OrderedDict(
-    {"packing_fraction": ["evaluator_1", 1], "polynomial_triso": ["evaluator_1", 4]}
+    {"packing_fraction": ["evaluator_1", 1],
+     "polynomial_triso": ["evaluator_1", 4]}
 )
 output_dict = OrderedDict(
     {
