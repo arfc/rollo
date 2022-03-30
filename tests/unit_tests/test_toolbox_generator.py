@@ -19,14 +19,14 @@ test_input_dict = {
         },
     },
     "evaluators": {
-        "openmc": {
+        "evaluator_1": {
             "order": 0,
             "input_script": "input_test_eval_fn_generator_template.py",
             "inputs": ["packing_fraction", "polynomial_triso"],
             "outputs": ["packing_fraction", "keff", "num_batches"],
             "output_script": "input_test_eval_fn_generator_output.py",
         },
-        "moltres": {
+        "evaluator_2": {
             "order": 1,
             "input_script": "input_test_render_jinja_template_python.py",
             "inputs": [],
@@ -58,14 +58,14 @@ test_input_dict = {
 def test_setup():
     tg = ToolboxGenerator()
     ctrl_dict = OrderedDict(
-        {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
+        {"packing_fraction": ["evaluator_1", 1], "polynomial_triso": ["evaluator_1", 4]}
     )
     output_dict = OrderedDict(
         {
-            "packing_fraction": "openmc",
-            "keff": "openmc",
-            "num_batches": "openmc",
-            "max_temp": "moltres",
+            "packing_fraction": "evaluator_1",
+            "keff": "evaluator_1",
+            "num_batches": "evaluator_1",
+            "max_temp": "evaluator_2",
         }
     )
 
@@ -95,7 +95,7 @@ def test_setup():
 def test_individual_values():
     tg = ToolboxGenerator()
     ctrl_dict = OrderedDict(
-        {"packing_fraction": ["openmc", 1]}
+        {"packing_fraction": ["evaluator_1", 1]}
     )
     toolbox = base.Toolbox()
     creator.create("obj", base.Fitness, weights=(-1.0,))
@@ -112,7 +112,7 @@ def test_individual_values():
 def test_min_max_list():
     tg = ToolboxGenerator()
     ctrl_dict = OrderedDict(
-        {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
+        {"packing_fraction": ["evaluator_1", 1], "polynomial_triso": ["evaluator_1", 4]}
     )
     min_list, max_list = tg.min_max_list(
         ctrl_dict, test_input_dict["control_variables"]
