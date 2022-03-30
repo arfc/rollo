@@ -28,7 +28,8 @@ test_input_dict = {
             "inputs": [],
             "outputs": ["max_temp"],
             "output_script":
-                ["python", "input_test_evaluation_get_output_vals_evaluator2.py"],
+                ["python",
+                 "input_test_evaluation_get_output_vals_evaluator2.py"],
             "keep_files": True,
         },
     },

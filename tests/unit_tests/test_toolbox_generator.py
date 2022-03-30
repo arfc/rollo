@@ -31,7 +31,8 @@ test_input_dict = {
             "input_script": "input_test_render_jinja_template_python.py",
             "inputs": [],
             "outputs": ["max_temp"],
-            "output_script": "input_test_evaluation_get_output_vals_evaluator2.py",
+            "output_script":
+            "input_test_evaluation_get_output_vals_evaluator2.py",
         },
     },
     "constraints": {"keff": {"operator": ">", "constrained_val": 1}},
@@ -58,7 +59,8 @@ test_input_dict = {
 def test_setup():
     tg = ToolboxGenerator()
     ctrl_dict = OrderedDict(
-        {"packing_fraction": ["evaluator_1", 1], "polynomial_triso": ["evaluator_1", 4]}
+        {"packing_fraction": ["evaluator_1", 1],
+         "polynomial_triso": ["evaluator_1", 4]}
     )
     output_dict = OrderedDict(
         {
@@ -112,7 +114,8 @@ def test_individual_values():
 def test_min_max_list():
     tg = ToolboxGenerator()
     ctrl_dict = OrderedDict(
-        {"packing_fraction": ["evaluator_1", 1], "polynomial_triso": ["evaluator_1", 4]}
+        {"packing_fraction": ["evaluator_1", 1],
+         "polynomial_triso": ["evaluator_1", 4]}
     )
     min_list, max_list = tg.min_max_list(
         ctrl_dict, test_input_dict["control_variables"]
