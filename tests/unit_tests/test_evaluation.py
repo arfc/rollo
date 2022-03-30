@@ -348,7 +348,10 @@ def test_run_execute_serial():
 
 
 def test_solver_order():
-    input_evaluators = {"evaluator_1": {"order": 0}, "evaluator_2": {"order": 1}}
+    input_evaluators = {
+        "evaluator_1": {
+            "order": 0}, "evaluator_2": {
+            "order": 1}}
     ev = Evaluation()
     order = ev.solver_order(input_evaluators)
     assert order == ["evaluator_1", "evaluator_2"]

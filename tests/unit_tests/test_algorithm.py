@@ -52,7 +52,8 @@ def init():
     toolbox.register("evaluate", evaluator_fn)
 
     test_constraints = Constraints(
-        output_dict=OrderedDict({"total": "evaluator_1", "random": "evaluator_1"}),
+        output_dict=OrderedDict({"total": "evaluator_1",
+                                 "random": "evaluator_1"}),
         input_constraints={
             "total": {"operator": [">", "<"], "constrained_val": [1.5, 2.5]}
         },
@@ -62,7 +63,8 @@ def init():
 
 
 control_dict = OrderedDict(
-    {"packing_fraction": ["evaluator_1", 1], "polynomial_triso": ["evaluator_1", 4]}
+    {"packing_fraction": ["evaluator_1", 1],
+     "polynomial_triso": ["evaluator_1", 4]}
 )
 output_dict = OrderedDict(
     {
