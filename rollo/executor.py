@@ -1,6 +1,5 @@
 import rollo
 from rollo.input_validation import InputValidation
-from rollo.special_variables import SpecialVariables
 from rollo.algorithm import Algorithm
 from rollo.constraints import Constraints
 from rollo.toolbox_generator import ToolboxGenerator
@@ -137,16 +136,9 @@ class Executor(object):
 
         # define control variables dict
         control_vars = OrderedDict()
-        sv = SpecialVariables()
-        special_control_vars = sv.special_variables
         for solver in input_evaluators:
             for var in input_evaluators[solver]["inputs"]:
-                if var in special_control_vars:
-                    method = getattr(sv, var + "_num")
-                    num = method(input_ctrl_vars[var])
-                    control_vars[var] = [solver, num]
-                else:
-                    control_vars[var] = [solver, 1]
+                control_vars[var] = [solver, 1]
 
         # define output variables dict
         output_vars = OrderedDict()

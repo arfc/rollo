@@ -1,5 +1,4 @@
 from jsonschema import validate
-from rollo.special_variables import SpecialVariables
 import logging
 
 
@@ -367,65 +366,25 @@ class InputValidation:
             control variables sub-dictionary from input file
 
         """
-        # special control variables with a non-conforming input style defined in
-        # input*** (add file name that has this)
-        # add to this list if a developer adds a special control variable
-        sv = SpecialVariables()
-        special_ctrl_vars = sv.special_variables
-
         # validate regular control variables
         # schema validation
         schema_ctrl_vars = {"type": "object", "properties": {}}
         variables = []
         for var in input_ctrl_vars:
-            if var not in special_ctrl_vars:
-                schema_ctrl_vars["properties"][var] = {
-                    "type": "object",
-                    "properties": {
-                        "max": {"type": "number"},
-                        "min": {"type": "number"},
-                    },
-                }
-                variables.append(var)
+            schema_ctrl_vars["properties"][var] = {
+                "type": "object",
+                "properties": {
+                    "max": {"type": "number"},
+                    "min": {"type": "number"},
+                },
+            }
+            variables.append(var)
         validate(instance=input_ctrl_vars, schema=schema_ctrl_vars)
         # key validation
         for var in variables:
             self.validate_correct_keys(
                 input_ctrl_vars[var], [
                     "min", "max"], [], "control variable: " + var)
-
-        # validate special control variables
-        # add validation here if developer adds new special input variable
-        # polynomial
-        try:
-            input_ctrl_vars_poly = input_ctrl_vars["polynomial_triso"]
-        except KeyError:
-            pass
-        else:
-            # schema validation
-            schema_ctrl_vars_poly = {
-                "type": "object",
-                "properties": {
-                    "order": {"type": "number"},
-                    "min": {"type": "number"},
-                    "max": {"type": "number"},
-                    "radius": {"type": "number"},
-                    "volume": {"type": "number"},
-                    "slices": {"type": "number"},
-                    "height": {"type": "number"},
-                },
-            }
-            validate(
-                instance=input_ctrl_vars_poly,
-                schema=schema_ctrl_vars_poly)
-            # key validation
-            self.validate_correct_keys(
-                input_ctrl_vars_poly,
-                ["order", "min", "max", "radius", "volume", "slices", "height"],
-                [],
-                "control variable: polynomial_triso",
-            )
-        return
 
     def validate_evaluators(self, input_evaluators):
         """Validates the evaluators segment of the JSON input file
@@ -436,22 +395,8 @@ class InputValidation:
             evaluators sub-dictionary from input file
 
         """
-        # evaluators available
-        # add to this list if a developer adds a new evaluator
-        available_evaluators = ["openmc", "openmc_gc", "moltres"]
-        # add to this dict if a developers adds a new predefined output
-        # for an evaluator
-        pre_defined_outputs = {
-            "openmc": ["keff"],
-            "openmc_gc": [],
-            "moltres": []}
 
-        # validate evaluators
-        self.validate_correct_keys(
-            input_evaluators, [], available_evaluators, "evaluators"
-        )
         schema_evaluators = {"type": "object", "properties": {}}
-
         # validate each evaluator
         for evaluator in input_evaluators:
             schema_evaluators["properties"][evaluator] = {
@@ -494,11 +439,11 @@ class InputValidation:
                 ["none", "all", "only_final"],
                 "keep_files",
             )
-            # check if outputs are in predefined outputs or inputs, and if not
-            # output_script must be defined
+            # check if outputs are in inputs, and if not output_script
+            # must be defined
             in_list, which_strings = self.validate_if_in_list(
                 input_evaluators[evaluator]["outputs"],
-                pre_defined_outputs[evaluator] + input_evaluators[evaluator]["inputs"],
+                input_evaluators[evaluator]["inputs"],
             )
             if not in_list:
                 try:
