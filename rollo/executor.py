@@ -36,14 +36,14 @@ class Executor(object):
         Name of input file
     checkpoint_file : str
         Name of checkpoint file
-    verbrose : bool
+    verbose : bool
 
     """
 
-    def __init__(self, input_file, checkpoint_file=None, verbrose=False):
+    def __init__(self, input_file, checkpoint_file=None, verbose=False):
         self.input_file = input_file
         self.checkpoint_file = checkpoint_file
-        if verbrose:
+        if verbose:
             logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
     def execute(self):
