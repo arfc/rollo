@@ -47,7 +47,8 @@ def test_eval_fn_generator():
             "python", "input_test_evaluation_get_output_vals_evaluator2.py"], )
     eval_function = ev.eval_fn_generator(
         control_dict=OrderedDict(
-            {"packing_fraction": ["evaluator_1"], "variable2": ["evaluator_1", "evaluator_2"]}
+            {"packing_fraction": ["evaluator_1"],
+             "variable2": ["evaluator_1", "evaluator_2"]}
         ),
         output_dict=OrderedDict(
             {
@@ -96,7 +97,8 @@ def test_eval_fn_generator_job_control():
             "python", "input_test_evaluation_get_output_vals_evaluator2.py"], )
     eval_function = ev.eval_fn_generator(
         control_dict=OrderedDict(
-            {"packing_fraction": ["evaluator_1"], "variable2": ["evaluator_1", "evaluator_2"]}
+            {"packing_fraction": ["evaluator_1"],
+             "variable2": ["evaluator_1", "evaluator_2"]}
         ),
         output_dict=OrderedDict(
             {

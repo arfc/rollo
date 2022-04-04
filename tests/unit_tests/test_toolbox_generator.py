@@ -79,8 +79,8 @@ def test_setup():
 
 def test_individual_values():
     tg = ToolboxGenerator()
-    ctrl_dict = OrderedDict({"packing_fraction": ["evaluator_1"], "variable2": [
-        "evaluator_1", "evaluator_2"]})
+    ctrl_dict = OrderedDict({"packing_fraction": ["evaluator_1"],
+                             "variable2": ["evaluator_1", "evaluator_2"]})
     toolbox = base.Toolbox()
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
@@ -98,8 +98,8 @@ def test_individual_values():
 
 def test_min_max_list():
     tg = ToolboxGenerator()
-    ctrl_dict = OrderedDict({"packing_fraction": ["evaluator_1"], "variable2": [
-        "evaluator_1", "evaluator_2"]})
+    ctrl_dict = OrderedDict({"packing_fraction": ["evaluator_1"],
+                             "variable2": ["evaluator_1", "evaluator_2"]})
     min_list, max_list = tg.min_max_list(
         ctrl_dict, test_input_dict["control_variables"]
     )
