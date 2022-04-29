@@ -13,7 +13,7 @@ test_input_dict = {
     "evaluators": {
         "evaluator_1": {
             "order": 0,
-            "input_script": "input_test_eval_fn_generator_openmc_template.py",
+            "input_script": "input_test_eval_fn_generator_template.py",
             "inputs": ["packing_fraction", "variable2"],
             "outputs": ["packing_fraction", "keff", "num_batches"],
             "output_script": "input_test_eval_fn_generator_output.py",
