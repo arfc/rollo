@@ -123,8 +123,8 @@ class Executor(object):
         Returns
         -------
         control_vars : OrderedDict
-            Ordered dict of control variables as keys and a list of their
-            solver and count of variables as each value
+            Ordered dict of control variables as keys and a list of
+            solvers that use them as values
         output_vars : OrderedDict
             Ordered dict of output variables as keys and solvers as values
 
