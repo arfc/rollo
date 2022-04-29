@@ -136,11 +136,11 @@ class Executor(object):
         # define control variables dict
         control_vars = OrderedDict()
         for solver in input_evaluators:
-            for var in input_evaluators[solver]["inputs"]:
-                if var in control_vars:
-                    control_vars[var].append(solver)
+            for solver_input in input_evaluators[solver]["inputs"]:
+                if solver_input in control_vars:
+                    control_vars[solver_input].append(solver)
                 else:
-                    control_vars[var] = [solver]
+                    control_vars[solver_input] = [solver]
 
         # define output variables dict
         output_vars = OrderedDict()
@@ -148,15 +148,15 @@ class Executor(object):
         # find optimized variable
         var_to_solver = {}
         for solver in input_evaluators:
-            for var in input_evaluators[solver]["outputs"]:
-                var_to_solver[var] = solver
+            for solver_output in input_evaluators[solver]["outputs"]:
+                var_to_solver[solver_output] = solver
         for opt_var in optimized_variable:
             output_vars[opt_var] = var_to_solver[opt_var]
         # put in the rest of the output variables
         for solver in input_evaluators:
-            for var in input_evaluators[solver]["outputs"]:
-                if var not in optimized_variable:
-                    output_vars[var] = solver
+            for solver_output in input_evaluators[solver]["outputs"]:
+                if solver_output not in optimized_variable:
+                    output_vars[solver_output] = solver
 
         return control_vars, output_vars
 
