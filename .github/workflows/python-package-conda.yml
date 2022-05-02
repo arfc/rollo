@@ -25,7 +25,7 @@ jobs:
     - name: Install dependencies
       run: |
         conda env update --file environment.yml --name base
-        mamba install -c conda-forge openmc
+        conda install -c conda-forge openmc
         python setup.py install --user 
     - name: Set up environment
       run: | 
