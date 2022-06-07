@@ -488,7 +488,7 @@ class Evaluation:
 
         Parameters
         ----------
-        solver : st
+        solver : str
             name of solver
         control_vars_solver : str
             name of evaluation solver software
