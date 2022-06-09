@@ -3,18 +3,20 @@
 ============
 User's Guide
 ============
-Welcome to the **ROLLO** User's Guide! This tutorial will guide you through the essential aspects of using **ROLLO** to perform simulations.
+Welcome to the **ROLLO** User's Guide! This tutorial will guide you through the 
+essential aspects of using **ROLLO** to perform optimization simulations.
 
 --------------------------
 Running a ROLLO Simulation
 --------------------------
 
-When you build and install **ROLLO**, you will have a **ROLLO** executable in your system. 
-To run a **ROLLO** simulation, you put this into the command line: 
+When you build and install **ROLLO**, you will have a **ROLLO** executable in your 
+system. 
+To run a **ROLLO** simulation, enter these commands in a terminal:  
 
 .. code-block:: sh
   
-  python -m rollo -i <input file> -c <checkpoint file>
+  python -m rollo -i <input file> -c <checkpoint file> -v
   
 .. list-table::
    :widths: 10 25 15
@@ -29,6 +31,9 @@ To run a **ROLLO** simulation, you put this into the command line:
    * - -c
      - name of checkpoint file
      - no
+   * - -v
+     - turns on verbose output (only include the flag)
+     - no 
      
 The checkpoint file holds the results from the ROLLO simulation and also acts 
 as a restart file. Thus, if a ROLLO simulation ends prematurely, the checkpoint 
@@ -47,7 +52,11 @@ For each input file, the user must define four sections: `control_variables`,
 ^^^^^^^^^^^^^^^^^
 Control Variables
 ^^^^^^^^^^^^^^^^^
-Control variables are parameters the genetic algorithm will vary. For each control variable, the user must specify its minimum and maximum values. The `control_variables` section of the **ROLLO** input file should look something like this: 
+Control variables are parameters the genetic algorithm will vary. 
+For each control variable, the user must specify its minimum and maximum values. 
+The user may define any number of control variables. 
+The `control_variables` section of the **ROLLO** input file should look something 
+like this: 
 
 .. code-block:: JSON
 
@@ -56,14 +65,18 @@ Control variables are parameters the genetic algorithm will vary. For each contr
     "variable2": {"min": -1.0, "max": 0.0} 
   }
 
-This demonstrates that control variables, ``variable1`` and ``variable2``, will be varied from 0 to 10 and -1 to 0, respectively.
+This demonstrates that control variables, ``variable1`` and ``variable2``, will be 
+varied from 0 to 10 and -1 to 0, respectively.
 
 ^^^^^^^^^^
 Evaluators
 ^^^^^^^^^^
-Evaluators are the nuclear software **ROLLO** utilizes to calculate objective functions. Presently, only `OpenMC <https://openmc.org/>`_ and `Moltres <https://github.com/arfc/moltres/>`_ evaluators are available in ROLLO. In a single ROLLO input file, a user may define any number of evaluators.
+Evaluators are the nuclear software **ROLLO** utilizes to calculate objective functions. 
+**ROLLO** is nuclear-software agnostic, thus the user may couple any nuclear software.  
+In a single ROLLO input file, a user may define any number of evaluators.
 
-For each evaluator, there are mandatory and optional input parameters. These input parameters are outlined in the following table: 
+For each evaluator, there are mandatory and optional input parameters. 
+These input parameters are outlined in the following table: 
 
 .. list-table::
    :widths: 25 25 25 25
@@ -73,25 +86,33 @@ For each evaluator, there are mandatory and optional input parameters. These inp
      - Type
      - Description
      - Mandatory?
-   * - ``input_script``
+   * - ``order``
      - str
-     - input file template's name for the evaluator software
+     - evaluator's operational order compared to other evaluators (indexed by 0)
      - yes
    * - ``inputs``
      - list of str
      - control variables to be placed into the input file template
+     - yes
+   * - ``input_script``
+     - list of str (2 elements)
+     - first element - executable to run input script, second element - input script template 
      - yes
    * - ``outputs``
      - list of str
      - output variables that the evaluator will return to the genetic algorithm
      - yes
    * - ``output_script``
-     - str
-     - output variables that the evaluator will return to the genetic algorithm
+     - list of str (2 elements)
+      - first element - executable to run output script, second element - input output template 
+     - no
+   * - ``execute``
+     - list of list of str
+     - options 
      - no
    * - ``keep_files``
-     - bool
-     - directs ROLLO to save or not save each evaluations templated input file and output files.
+     - str
+     - options 
      - no
      
 The `evaluators` section of the **ROLLO** input file should look something like this: 
