@@ -4,7 +4,7 @@
 Install Guide
 ===================
 
-The install guide outlines the steps to install **ROLLO** on your machine. 
+The install guide outlines the steps to install **ROLLO** on your computer. 
 
 ----------------------------
 ROLLO Installation with PyPI
@@ -12,6 +12,7 @@ ROLLO Installation with PyPI
 The Python Package Index (PyPI) is a repository of software for the Python 
 programming language. Pip installing ROLLO is the most straightforward way to install 
 it. 
+
 .. code-block:: sh
   
   python -m pip install rollo
@@ -19,13 +20,17 @@ it.
 -----------------------------------------------
 ROLLO Installation with from Source on Mac OS X
 -----------------------------------------------
-All ROLLO source code is hosted on Github <https://github.com/arfc/rollo/>. 
+All ROLLO source code is hosted on `Github <https://github.com/arfc/rollo/>`_. 
 To install ROLLO from source, enter these commands in a terminal: 
+
 .. code-block:: sh
 
   git clone git@github.com:arfc/rollo.git
-  de rollo 
+  cd rollo 
   python setup.py install --user
+
+You must also install the following dependencies individually to successfully use 
+ROLLO that is built from source. 
 
 ------------
 Dependencies
@@ -43,12 +48,7 @@ These are the **ROLLO** dependencies. Most are installed with the **ROLLO** PyPI
 
 5) `Multiprocessing on Dill <https://pypi.org/project/multiprocessing_on_dill/>`_
 
----------------------
-ROLLO Parallelization
----------------------
-Users that want to use `mpi_evals` supercomputer parallelization option (described in ## INSERT ##)
-must install `mpi4py <https://mpi4py.readthedocs.io/en/1.3.1/index.html>`_. Follow your supercomputer/cluster's 
-``mpi4py`` installation process.
+
 
 
 
