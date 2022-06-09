@@ -1,24 +1,17 @@
 from .backend import BackEnd
 import random
-import warnings
 import sys
-
-try:
-    from mpi4py import MPI
-    import dill
-
-    MPI.pickle.__init__(dill.dumps, dill.loads)
-    from mpi4py.futures import MPICommExecutor
-except:
-    warnings.warn(
-        "Failed to import mpi4py. (Only important for parallel method: mpi_evals)"
-    )
+import logging
+import time
 
 
 class Algorithm(object):
-    """Builds and runs Genetic Algorithms.
-
-    This class holds functions to generate a generic genetic algorithm.
+    """The Algorithm class contains methods to initialize and execute the genetic
+    algorithm. It executes a general genetic algorithm framework that uses the
+    hyperparameters defined in the deap_toolbox, applies constraints defined
+    in the constraints_obj, evaluates fitness values using the evaluation
+    function produced by Evaluation contained in the deap_toolbox, and saves
+    all the results with BackEnd.
 
     Parameters
     ----------
@@ -49,8 +42,8 @@ class Algorithm(object):
         Name of checkpoint file
     backend : rollo.backend.Backend
         Contains and manipulates the output backend
-    parallel_method : str
-        parallelization method (none, multiprocessing, mpi_evals)
+    parallel_method : {'none', 'multiprocessing', 'job_control'}
+        parallelization method
 
     """
 
@@ -97,20 +90,11 @@ class Algorithm(object):
 
                 pool = multiprocessing.Pool()
                 self.toolbox.register("map", pool.map)
-            except:
-                warnings.warn(
-                    "multiprocessing_on_dill failed to import, rollo will run serially."
+            except BaseException:
+                logging.warning(
+                    " multiprocessing_on_dill failed to import, rollo will" +
+                    " run serially. parallel method = none"
                 )
-                pass
-        elif self.parallel_method == "mpi_evals":
-            try:
-                if MPI.COMM_WORLD.rank > 0:
-                    while MPI.COMM_WORLD.bcast(None):
-                        with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
-                            pass
-                    sys.exit(0)
-            except:
-                warnings.warn("MPI Failed.")
                 pass
         if self.cp_file:
             self.backend.initialize_checkpoint_backend()
@@ -121,15 +105,12 @@ class Algorithm(object):
             pop = self.initialize_pop(pop)
             self.cp_file = "checkpoint.pkl"
         print(self.backend.results["logbook"])
-        for gen in range(self.backend.results["start_gen"] + 1, self.toolbox.ngen):
+        for gen in range(
+                self.backend.results["start_gen"] + 1,
+                self.toolbox.ngen):
             pop = self.apply_algorithm_ngen(pop, gen)
             print(self.backend.results["logbook"])
         print("rollo Simulation Completed!")
-        if self.parallel_method == "mpi_evals":
-            try:
-                MPI.COMM_WORLD.bcast(False)
-            except:
-                pass
         return pop
 
     def initialize_pop(self, pop):
@@ -142,7 +123,7 @@ class Algorithm(object):
 
         Returns
         -------
-        list
+        pop : list
             list of deap.creator.Ind with fitnesses evaluated
 
         """
@@ -154,16 +135,20 @@ class Algorithm(object):
         # evaluate fitness values of initial pop
         invalids = [ind for ind in pop if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
-        if self.parallel_method == "mpi_evals":
-            try:
-                MPI.COMM_WORLD.bcast(True)
-                with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
-                    fitnesses = executor.map(self.toolbox.evaluate, list(pop))
-            except:
-                warnings.warn("MPI Failed, rollo will run serially.")
-                fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
+        if self.parallel_method == "job_control":
+            logging.warning(" parallel method = job_control")
+            fitnesses = self.toolbox.evaluate(pop)
         else:
-            fitnesses = self.toolbox.map(self.toolbox.evaluate, pop)
+            logging.warning(" parallel method = none")
+            start_time = time.time()
+            fitnesses = list(self.toolbox.map(self.toolbox.evaluate, pop))
+            end_time = time.time()
+            logging.info(" Generation: " +
+                         str(0) +
+                         ", Evaluation Total Runtime: " +
+                         str(round(end_time -
+                                   start_time, 2)) +
+                         " seconds")
         # assign fitness values to individuals
         for ind, fitness in zip(pop, fitnesses):
             fitness_vals = []
@@ -187,31 +172,35 @@ class Algorithm(object):
 
         Returns
         -------
-        list
+        pop : list
             list of deap.creator.Ind for new generation
 
         """
         print("Entering generation " + str(gen) + "...")
-        pop = self.apply_selection_operator(pop)
-        pop = self.apply_mating_operator(pop)
-        pop = self.apply_mutation_operator(pop)
-        # define pop's gen, ind num
-        for i, ind in enumerate(pop):
+        offspring = self.apply_mating_operator(pop)
+        offspring = self.apply_mutation_operator(offspring)
+        # define offspring's gen, ind num
+        for i, ind in enumerate(offspring):
             ind.gen = gen
             ind.num = i
-        # evaluate fitness of newly created pop for inds with invalid fitness
-        invalids = [ind for ind in pop if not ind.fitness.valid]
+        # evaluate fitness of newly created inds in offspring
+        invalids = [ind for ind in offspring if not ind.fitness.valid]
         copy_invalids = [self.toolbox.clone(ind) for ind in invalids]
-        if self.parallel_method == "mpi_evals":
-            try:
-                MPI.COMM_WORLD.bcast(True)
-                with MPICommExecutor(MPI.COMM_WORLD, root=0) as executor:
-                    fitnesses = executor.map(self.toolbox.evaluate, list(invalids))
-            except:
-                warnings.warn("MPI Failed, rollo will run serially.")
-                fitnesses = self.toolbox.map(self.toolbox.evaluate, list(invalids))
+        if self.parallel_method == "job_control":
+            fitnesses = self.toolbox.evaluate(list(invalids))
         else:
-            fitnesses = self.toolbox.map(self.toolbox.evaluate, list(invalids))
+            start_time = time.time()
+            fitnesses = list(
+                self.toolbox.map(
+                    self.toolbox.evaluate,
+                    list(invalids)))
+            end_time = time.time()
+            logging.info(" Generation: " +
+                         str(gen) +
+                         ", Evaluation Total Runtime: " +
+                         str(round(end_time -
+                                   start_time, 2)) +
+                         " seconds")
         # assign fitness values to individuals
         for ind, fitness in zip(invalids, fitnesses):
             fitness_vals = []
@@ -219,6 +208,8 @@ class Algorithm(object):
                 fitness_vals.append(fitness[i])
             ind.fitness.values = tuple(fitness_vals)
             ind.output = fitness
+        # expand population before applying selection operator
+        pop = self.apply_selection_operator(pop + offspring)
         pop = self.constraint_obj.apply_constraints(pop)
         self.backend.update_backend(pop, gen, copy_invalids, random.getstate())
         return pop
@@ -238,12 +229,8 @@ class Algorithm(object):
 
         """
 
-        pre_pop = self.toolbox.select(pop)
-        select_pop = [self.toolbox.clone(ind) for ind in pre_pop]
-        # extend pop length to pop_size
-        while len(select_pop) != self.toolbox.pop_size:
-            select_pop.append(self.toolbox.clone(random.choice(pre_pop)))
-        return select_pop
+        pop = self.toolbox.select(individuals=pop, k=self.toolbox.pop_size)
+        return pop
 
     def apply_mating_operator(self, pop):
         """Applies mating operator to population

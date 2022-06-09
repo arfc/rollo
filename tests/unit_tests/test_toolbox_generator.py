@@ -19,28 +19,32 @@ test_input_dict = {
         },
     },
     "evaluators": {
-        "openmc": {
-            "input_script": "input_test_eval_fn_generator_openmc_template.py",
+        "evaluator_1": {
+            "order": 0,
+            "input_script": "input_test_eval_fn_generator_template.py",
             "inputs": ["packing_fraction", "polynomial_triso"],
             "outputs": ["packing_fraction", "keff", "num_batches"],
-            "output_script": "input_test_eval_fn_generator_openmc_output.py",
+            "output_script": "input_test_eval_fn_generator_output.py",
         },
-        "moltres": {
+        "evaluator_2": {
+            "order": 1,
             "input_script": "input_test_render_jinja_template_python.py",
             "inputs": [],
             "outputs": ["max_temp"],
-            "output_script": "input_test_evaluation_get_output_vals_moltres.py",
+            "output_script":
+            "input_test_evaluation_get_output_vals_evaluator2.py",
         },
     },
     "constraints": {"keff": {"operator": ">", "constrained_val": 1}},
     "algorithm": {
         "objective": ["max", "min"],
+        "weight": [1.0, 1.0],
         "optimized_variable": ["keff", "packing_fraction"],
         "pop_size": 100,
         "generations": 10,
         "mutation_probability": 0.5,
         "mating_probability": 0.5,
-        "selection_operator": {"operator": "selBest", "inds": 1},
+        "selection_operator": {"operator": "selBest"},
         "mutation_operator": {
             "operator": "mutGaussian",
             "indpb": 0.5,
@@ -55,14 +59,15 @@ test_input_dict = {
 def test_setup():
     tg = ToolboxGenerator()
     ctrl_dict = OrderedDict(
-        {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
+        {"packing_fraction": ["evaluator_1", 1],
+         "polynomial_triso": ["evaluator_1", 4]}
     )
     output_dict = OrderedDict(
         {
-            "packing_fraction": "openmc",
-            "keff": "openmc",
-            "num_batches": "openmc",
-            "max_temp": "moltres",
+            "packing_fraction": "evaluator_1",
+            "keff": "evaluator_1",
+            "num_batches": "evaluator_1",
+            "max_temp": "evaluator_2",
         }
     )
 
@@ -77,9 +82,9 @@ def test_setup():
     )
 
     test_toolbox_ind = toolbox.individual()
-    assert type(test_toolbox_ind) == creator.Ind
+    assert isinstance(test_toolbox_ind, creator.Ind)
     test_toolbox_pop = toolbox.population(n=10)
-    assert type(test_toolbox_pop) == list
+    assert isinstance(test_toolbox_pop, list)
     test_toolbox_eval = toolbox.evaluate()
     assert test_toolbox_eval == tuple([1, 1])
     assert toolbox.pop_size == 100
@@ -92,29 +97,25 @@ def test_setup():
 def test_individual_values():
     tg = ToolboxGenerator()
     ctrl_dict = OrderedDict(
-        {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
+        {"packing_fraction": ["evaluator_1", 1]}
     )
-    poly_dict = test_input_dict["control_variables"]["polynomial_triso"]
     toolbox = base.Toolbox()
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
     toolbox.register("packing_fraction", random.uniform, 0.005, 0.1)
-    toolbox.register("polynomial_triso", random.uniform, 1, 1)
     ind_values = tg.individual_values(
         test_input_dict["control_variables"], ctrl_dict, toolbox
     )
-    assert type(ind_values) is creator.Ind
+    assert isinstance(ind_values, creator.Ind)
     assert ind_values[0] >= 0.005
     assert ind_values[0] <= 0.1
-    for i in range(1, 4):
-        ind_values[i] >= -1
-        ind_values[i] <= 1
 
 
 def test_min_max_list():
     tg = ToolboxGenerator()
     ctrl_dict = OrderedDict(
-        {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
+        {"packing_fraction": ["evaluator_1", 1],
+         "polynomial_triso": ["evaluator_1", 4]}
     )
     min_list, max_list = tg.min_max_list(
         ctrl_dict, test_input_dict["control_variables"]
@@ -126,9 +127,9 @@ def test_min_max_list():
 def test_add_selection_operators():
     tg = ToolboxGenerator()
     selection_dict_list = [
-        {"operator": "selTournament", "inds": 5, "tournsize": 2},
-        {"operator": "selNSGA2", "inds": 5},
-        {"operator": "selBest", "inds": 5},
+        {"operator": "selTournament", "tournsize": 2},
+        {"operator": "selNSGA2"},
+        {"operator": "selBest"},
     ]
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
@@ -141,22 +142,19 @@ def test_add_selection_operators():
             toolbox = base.Toolbox()
             toolbox.register("num", random.uniform, -1, 1)
             toolbox.register("individual", f_cycle)
-            toolbox.register("population", tools.initRepeat, list, toolbox.individual)
+            toolbox.register(
+                "population",
+                tools.initRepeat,
+                list,
+                toolbox.individual)
             pop = toolbox.population(n=10)
             toolbox = tg.add_selection_operators(toolbox, selection_dict)
-            expected_inds = []
-            for i, ind in enumerate(pop):
-                if (i % 2) == 0:
-                    ind.fitness.values = (1,)
-                else:
-                    ind.fitness.values = (0,)
-                    expected_inds.append(ind)
-            new_pop = toolbox.select(pop)
+            new_pop = toolbox.select(pop, k=len(pop))
             assert "select" in dir(toolbox)
             if selection_dict["operator"] == "selBest":
-                assert new_pop == expected_inds
+                assert new_pop == pop
             else:
-                assert len(new_pop) == len(expected_inds)
+                assert len(new_pop) == len(pop)
 
 
 def test_add_mutation_operators():
@@ -194,7 +192,8 @@ def test_add_mating_operators():
     toolbox.register("num", random.uniform, -1, 1)
 
     def f_cycle():
-        return creator.Ind([toolbox.num(), toolbox.num(), toolbox.num(), toolbox.num()])
+        return creator.Ind([toolbox.num(), toolbox.num(),
+                           toolbox.num(), toolbox.num()])
 
     toolbox.register("individual", f_cycle)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)

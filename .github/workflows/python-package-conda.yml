@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Add conda to system path
+      run: |
+        # $CONDA is an environment variable pointing to the root of the miniconda directory
+        echo $CONDA/bin >> $GITHUB_PATH
+    - name: Install dependencies
+      run: |
+        conda env update --file environment.yml --name base
+        conda install -c conda-forge openmc
+        python setup.py install --user 
+    - name: Set up environment
+      run: | 
+        cd $HOME
+        wget https://anl.box.com/shared/static/9igk353zpy8fn9ttvtrqgzvw1vtejoz6.xz
+        tar -xvf 9igk353zpy8fn9ttvtrqgzvw1vtejoz6.xz
+        echo "OPENMC_CROSS_SECTIONS=$HOME/endfb71_hdf5/cross_sections.xml" >> $GITHUB_ENV
+    - name: Test with pytest
+      run: |
+        conda install pytest
+        cd tests/unit_tests/
+        pytest test_algorithm.py
+        pytest test_backend.py
+        pytest test_constraints.py
+        pytest test_evaluation.py
+        pytest test_executor.py
+        pytest test_integration_ackley_minimum.py
+        pytest test_toolbox_generator.py

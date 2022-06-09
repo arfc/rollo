@@ -5,7 +5,9 @@ import time
 
 
 class BackEnd(object):
-    """This class contains and manipulates the output backend
+    """The BackEnd class contains methods to save genetic algorithm population
+    results into a pickled checkpoint file and to restart a partially
+    completed genetic algorithm from the checkpoint file.
 
     Parameters
     ----------
@@ -189,9 +191,9 @@ class BackEnd(object):
                         self.input_file["evaluators"][solver]["output_script"], "r"
                     ) as file:
                         evaluator_files[solver + "_output"] = file.read()
-                except:
+                except BaseException:
                     pass
-        except:
+        except BaseException:
             pass
         cp = dict(
             input_file=self.input_file,

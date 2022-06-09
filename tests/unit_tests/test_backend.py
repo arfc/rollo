@@ -4,46 +4,46 @@ import os
 import random
 from collections import OrderedDict
 
-creator.create(
-    "obj",
-    base.Fitness,
-    weights=(
-        1.0,
-        -1.0,
-    ),
-)
-creator.create("Ind", list, fitness=creator.obj)
-toolbox = base.Toolbox()
-toolbox.register("pf", random.uniform, 0, 1)
-toolbox.register("poly", random.uniform, 1, 2)
-toolbox.pop_size = 10
-toolbox.ngen = 10
+
+def init():
+    creator.create(
+        "obj",
+        base.Fitness,
+        weights=(
+            1.0,
+            -1.0,
+        ),
+    )
+    creator.create("Ind", list, fitness=creator.obj)
+    toolbox = base.Toolbox()
+    toolbox.register("pf", random.uniform, 0, 1)
+    toolbox.register("poly", random.uniform, 1, 2)
+    toolbox.pop_size = 10
+    toolbox.ngen = 10
+
+    def ind_vals():
+        pf = toolbox.pf()
+        poly = toolbox.poly()
+        return creator.Ind([pf, poly, pf + poly])
+    toolbox.register("individual", ind_vals)
+    toolbox.register("population", tools.initRepeat, list, toolbox.individual)
+
+    def evaluator_fn(ind):
+        return tuple([ind[0] + ind[1], 5])
+    toolbox.register("evaluate", evaluator_fn)
+    return toolbox
 
 
-def ind_vals():
-    pf = toolbox.pf()
-    poly = toolbox.poly()
-    return creator.Ind([pf, poly, pf + poly])
-
-
-toolbox.register("individual", ind_vals)
-toolbox.register("population", tools.initRepeat, list, toolbox.individual)
-
-
-def evaluator_fn(ind):
-    return tuple([ind[0] + ind[1], 5])
-
-
-toolbox.register("evaluate", evaluator_fn)
 control_dict = OrderedDict(
-    {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
+    {"packing_fraction": ["evaluator_1", 1],
+     "polynomial_triso": ["evaluator_1", 4]}
 )
 output_dict = OrderedDict(
     {
-        "packing_fraction": "openmc",
-        "keff": "openmc",
-        "num_batches": "openmc",
-        "max_temp": "moltres",
+        "packing_fraction": "evaluator_1",
+        "keff": "evaluator_1",
+        "num_batches": "evaluator_1",
+        "max_temp": "evaluator_2",
     }
 )
 
@@ -51,20 +51,29 @@ input_file = {}  # placeholder
 
 
 def test_initialize_new_backend():
+    toolbox = init()
     b = BackEnd(
-        "square_checkpoint.pkl", creator, control_dict, output_dict, input_file, 0
-    )
+        "square_checkpoint.pkl",
+        creator,
+        control_dict,
+        output_dict,
+        input_file,
+        0)
     b.initialize_new_backend()
     assert b.results["start_gen"] == 0
-    assert type(b.results["halloffame"]) == tools.HallOfFame
-    assert type(b.results["logbook"]) == tools.Logbook
-    assert type(b.results["all"]) == dict
+    assert isinstance(b.results["halloffame"], tools.HallOfFame)
+    assert isinstance(b.results["logbook"], tools.Logbook)
+    assert isinstance(b.results["all"], dict)
 
 
 def test_ind_naming():
     b = BackEnd(
-        "square_checkpoint.pkl", creator, control_dict, output_dict, input_file, 0
-    )
+        "square_checkpoint.pkl",
+        creator,
+        control_dict,
+        output_dict,
+        input_file,
+        0)
     ind_dict = b.ind_naming()
     expected_ind_dict = {
         "packing_fraction": 0,
@@ -78,8 +87,12 @@ def test_ind_naming():
 
 def test_output_naming():
     b = BackEnd(
-        "square_checkpoint.pkl", creator, control_dict, output_dict, input_file, 0
-    )
+        "square_checkpoint.pkl",
+        creator,
+        control_dict,
+        output_dict,
+        input_file,
+        0)
     oup_dict = b.output_naming()
     expected_oup_dict = {
         "packing_fraction": 0,
@@ -91,6 +104,7 @@ def test_output_naming():
 
 
 def test_initialize_checkpoint_backend():
+    toolbox = init()
     os.chdir("./input_test_files")
     os.system("python generate_backend_pickle.py")
     os.chdir("../")
@@ -114,12 +128,13 @@ def test_initialize_checkpoint_backend():
         assert ind.fitness.values[0] < 3
     assert b.results["start_gen"] == 0
     assert b.results["halloffame"].items[0] == max(pop, key=lambda x: x[2])
-    assert type(b.results["logbook"]) == tools.Logbook
+    assert isinstance(b.results["logbook"], tools.Logbook)
     assert len(b.results["logbook"]) == 1
     os.remove("./input_test_files/test_checkpoint.pkl")
 
 
 def test_update_backend():
+    toolbox = init()
     os.chdir("./input_test_files")
     os.system("python generate_backend_pickle.py")
     os.chdir("../")
@@ -145,7 +160,8 @@ def test_update_backend():
     rndstate = random.getstate()
     b.update_backend(new_pop, gen, invalids, rndstate)
     pop = b.results["population"]
-    assert b.results["halloffame"].items[0] == max(pop + new_pop, key=lambda x: x[2])
+    assert b.results["halloffame"].items[0] == max(
+        pop + new_pop, key=lambda x: x[2])
     assert len(b.results["logbook"]) == 2
     bb = BackEnd(
         "input_test_files/test_checkpoint.pkl",

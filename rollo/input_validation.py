@@ -1,10 +1,12 @@
 from jsonschema import validate
-from rollo.special_variables import SpecialVariables
+import logging
 
 
 class InputValidation:
-    """This class does the initial validation of the json input file and
-    and evaluation solver's templated input scripts
+    """The InputValidation class contains methods to read and validate the JSON
+    ROLLO input file to ensure the user defined all key parameters. If the
+    user did not, ROLLO raises an exception to tell the user which
+    parameters are missing.
 
     Attributes
     ----------
@@ -16,8 +18,8 @@ class InputValidation:
     def __init__(self, input_dict):
         self.input = input_dict
 
-    def add_all_defaults(self, input_dict):
-        """ Goes through the entire input_dict and adds default inputs if they 
+    def add_all_defaults(self):
+        """Goes through the entire input_dict and adds default inputs if they
         are missing from the input_dict
 
         Parameters
@@ -31,34 +33,49 @@ class InputValidation:
             input file dict with additional missing default inputs
 
         """
+        input_dict = self.input.copy()
         input_evaluators = {}
         for solver in input_dict["evaluators"]:
             input_evaluators[solver] = input_dict["evaluators"][solver]
             input_evaluators[solver] = self.default_check(
-                input_evaluators[solver], "keep_files", True
+                input_evaluators[solver], "keep_files", "all"
             )
         input_algorithm = input_dict["algorithm"]
-        input_algorithm = self.default_check(input_algorithm, "objective", "min")
-        input_algorithm = self.default_check(input_algorithm, "pop_size", 100)
-        input_algorithm = self.default_check(input_algorithm, "generations", 10)
         input_algorithm = self.default_check(
-            input_algorithm, "selection_operator", {"operator": "selBest", "inds": 1}
+            input_algorithm, "objective", "min")
+        input_algorithm = self.default_check(input_algorithm, "weight", [1.0])
+        input_algorithm = self.default_check(input_algorithm, "pop_size", 60)
+        input_algorithm = self.default_check(
+            input_algorithm, "generations", 10)
+        input_algorithm = self.default_check(
+            input_algorithm, "mutation_probability", 0.23
+        )
+        input_algorithm = self.default_check(
+            input_algorithm, "mating_probability", 0.47
+        )
+        input_algorithm = self.default_check(
+            input_algorithm,
+            "selection_operator",
+            {"operator": "selTournament", "tournsize": 5},
         )
         input_algorithm = self.default_check(
             input_algorithm,
             "mutation_operator",
-            {"operator": "mutGaussian", "indpb": 0.5, "mu": 0.5, "sigma": 0.5},
+            {"operator": "mutPolynomialBounded", "eta": 0.23, "indpb": 0.23},
         )
         input_algorithm = self.default_check(
-            input_algorithm, "mating_operator", {"operator": "cxOnePoint"}
+            input_algorithm,
+            "mating_operator",
+            {"operator": "cxBlend", "alpha": 0.46},
         )
         reloaded_input_dict = input_dict.copy()
         reloaded_input_dict["evaluators"] = input_evaluators
         reloaded_input_dict["algorithm"] = input_algorithm
-        return reloaded_input_dict
+        self.input = reloaded_input_dict.copy()
+        return
 
     def default_check(self, input_dict, variable, default_val):
-        """Checks if a single variable is missing from a dict, and adds a 
+        """Checks if a single variable is missing from a dict, and adds a
         default value if it is
 
         Parameters
@@ -81,6 +98,11 @@ class InputValidation:
             a = input_dict[variable]
         except KeyError:
             input_dict[variable] = default_val
+            logging.warning(
+                " ROLLO added default for variable: " +
+                str(variable) +
+                ", default value = " +
+                str(default_val))
         return input_dict
 
     def validate(self):
@@ -158,6 +180,10 @@ class InputValidation:
                     "type": "array",
                     "items": {"type": "string"},
                 },
+                "weight": {
+                    "type": "array",
+                    "items": {"type": "number"},
+                },
                 "optimized_variable": {
                     "type": "array",
                     "items": {"type": "string"},
@@ -179,6 +205,7 @@ class InputValidation:
             [
                 "parallel",
                 "objective",
+                "weight",
                 "pop_size",
                 "generations",
                 "mutation_probability",
@@ -192,7 +219,7 @@ class InputValidation:
         # validation for objective and optimized variable
         self.validate_in_list(
             input_algorithm["parallel"],
-            ["none", "multiprocessing", "mpi_evals"],
+            ["none", "multiprocessing", "job_control"],
             "parallel",
         )
         for obj in input_algorithm["objective"]:
@@ -212,15 +239,6 @@ class InputValidation:
         self.validate_algorithm_operators("mutation", input_algorithm)
         self.validate_algorithm_operators("mating", input_algorithm)
 
-        # k value cannot be larger than pop size
-        if input_algorithm["selection_operator"]["operator"] == "selTournament":
-            if (
-                input_algorithm["selection_operator"]["inds"] >
-                input_algorithm["pop_size"]
-            ):
-                raise Exception("Population size must be larger than inds.")
-        return
-
     def validate_algorithm_operators(self, operator_type, input_algorithm):
         """Validates the genetic algorithm operators
 
@@ -235,14 +253,17 @@ class InputValidation:
 
         deap_operators = {
             "selection": {
-                "selTournament": ["inds", "tournsize"],
-                "selNSGA2": ["inds"],
-                "selBest": ["inds"],
+                "selTournament": ["tournsize"],
+                "selNSGA2": [],
+                "selBest": [],
             },
             "mutation": {
-                "mutPolynomialBounded": ["eta", "indpb"],
-            },
-            "mating": {"cxOnePoint": [], "cxUniform": ["indpb"], "cxBlend": ["alpha"]},
+                "mutPolynomialBounded": [
+                    "eta", "indpb"], },
+            "mating": {
+                "cxOnePoint": [],
+                "cxUniform": ["indpb"],
+                "cxBlend": ["alpha"]},
         }
 
         try:
@@ -255,9 +276,9 @@ class InputValidation:
                 op_op = op["operator"]
             except KeyError:
                 print(
-                    "<Input Validation Error> You must define an operator for the " +
-                    operator_type +
-                    "_operator"
+                    "<Input Validation Error> You must define an operator for "
+                    + operator_type
+                    + "_operator"
                 )
                 raise
             else:
@@ -299,7 +320,10 @@ class InputValidation:
         for evaluator in input_evaluators:
             allowed_constraints += input_evaluators[evaluator]["outputs"]
         for constraint in input_constraints:
-            self.validate_in_list(constraint, allowed_constraints, "Constraints")
+            self.validate_in_list(
+                constraint,
+                allowed_constraints,
+                "Constraints")
         # schema validation
         schema_constraints = {"type": "object", "properties": {}}
         for constraint in input_constraints:
@@ -342,63 +366,25 @@ class InputValidation:
             control variables sub-dictionary from input file
 
         """
-        # special control variables with a non-conforming input style defined in
-        # input*** (add file name that has this)
-        # add to this list if a developer adds a special control variable
-        sv = SpecialVariables()
-        special_ctrl_vars = sv.special_variables
-
         # validate regular control variables
         # schema validation
         schema_ctrl_vars = {"type": "object", "properties": {}}
         variables = []
         for var in input_ctrl_vars:
-            if var not in special_ctrl_vars:
-                schema_ctrl_vars["properties"][var] = {
-                    "type": "object",
-                    "properties": {
-                        "max": {"type": "number"},
-                        "min": {"type": "number"},
-                    },
-                }
-                variables.append(var)
+            schema_ctrl_vars["properties"][var] = {
+                "type": "object",
+                "properties": {
+                    "max": {"type": "number"},
+                    "min": {"type": "number"},
+                },
+            }
+            variables.append(var)
         validate(instance=input_ctrl_vars, schema=schema_ctrl_vars)
         # key validation
         for var in variables:
             self.validate_correct_keys(
-                input_ctrl_vars[var], ["min", "max"], [], "control variable: " + var
-            )
-
-        # validate special control variables
-        # add validation here if developer adds new special input variable
-        # polynomial
-        try:
-            input_ctrl_vars_poly = input_ctrl_vars["polynomial_triso"]
-        except KeyError:
-            pass
-        else:
-            # schema validation
-            schema_ctrl_vars_poly = {
-                "type": "object",
-                "properties": {
-                    "order": {"type": "number"},
-                    "min": {"type": "number"},
-                    "max": {"type": "number"},
-                    "radius": {"type": "number"},
-                    "volume": {"type": "number"},
-                    "slices": {"type": "number"},
-                    "height": {"type": "number"},
-                },
-            }
-            validate(instance=input_ctrl_vars_poly, schema=schema_ctrl_vars_poly)
-            # key validation
-            self.validate_correct_keys(
-                input_ctrl_vars_poly,
-                ["order", "min", "max", "radius", "volume", "slices", "height"],
-                [],
-                "control variable: polynomial_triso",
-            )
-        return
+                input_ctrl_vars[var], [
+                    "min", "max"], [], "control variable: " + var)
 
     def validate_evaluators(self, input_evaluators):
         """Validates the evaluators segment of the JSON input file
@@ -409,25 +395,22 @@ class InputValidation:
             evaluators sub-dictionary from input file
 
         """
-        # evaluators available
-        # add to this list if a developer adds a new evaluator
-        available_evaluators = ["openmc", "moltres"]
-        # add to this dict if a developers adds a new predefined output
-        # for an evaluator
-        pre_defined_outputs = {"openmc": ["keff"]}
 
-        # validate evaluators
-        self.validate_correct_keys(
-            input_evaluators, [], available_evaluators, "evaluators"
-        )
         schema_evaluators = {"type": "object", "properties": {}}
-
         # validate each evaluator
         for evaluator in input_evaluators:
             schema_evaluators["properties"][evaluator] = {
                 "type": "object",
                 "properties": {
-                    "input_script": {"type": "string"},
+                    "order": {"type": "number"},
+                    "input_script": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "execute": {
+                        "type": "array",
+                        "items": {"type": "array"},
+                    },
                     "inputs": {
                         "type": "array",
                         "items": {"type": "string"},
@@ -436,34 +419,43 @@ class InputValidation:
                         "type": "array",
                         "items": {"type": "string"},
                     },
-                    "output_script": {"type": "string"},
-                    "keep_files": {"type": "boolean"},
+                    "output_script": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "keep_files": {"type": "string"},
                 },
             }
         validate(instance=input_evaluators, schema=schema_evaluators)
         for evaluator in input_evaluators:
             self.validate_correct_keys(
                 input_evaluators[evaluator],
-                ["input_script", "inputs", "outputs"],
-                ["output_script", "keep_files"],
+                ["input_script", "inputs", "outputs", "order"],
+                ["output_script", "keep_files", "execute"],
                 "evaluator: " + evaluator,
             )
-            # check if outputs are in predefined outputs or inputs, and if not
-            # output_script must be defined
+            self.validate_in_list(
+                input_evaluators[evaluator]["keep_files"],
+                ["none", "all", "only_final"],
+                "keep_files",
+            )
+            # check if outputs are in inputs, and if not output_script
+            # must be defined
             in_list, which_strings = self.validate_if_in_list(
                 input_evaluators[evaluator]["outputs"],
-                pre_defined_outputs[evaluator] + input_evaluators[evaluator]["inputs"],
+                input_evaluators[evaluator]["inputs"],
             )
             if not in_list:
                 try:
                     a = input_evaluators[evaluator]["output_script"]
                 except KeyError:
                     print(
-                        "<Input Validation Error> You must define an output_script for evaluator: " +
-                        evaluator +
-                        " since the outputs: " +
-                        str(which_strings) +
-                        " are not inputs or pre-defined outputs."
+                        "<Input Validation Error>"
+                        + "You must define an output_script for evaluator: "
+                        + evaluator
+                        + " since the outputs: "
+                        + str(which_strings)
+                        + " are not inputs or pre-defined outputs."
                     )
                     raise
         return
@@ -509,12 +501,12 @@ class InputValidation:
 
         """
         assert variable in accepted_variables, (
-            "<Input Validation Error> variable: " +
-            name +
-            ", only accepts: " +
-            str(accepted_variables) +
-            " not variable: " +
-            variable
+            "<Input Validation Error> variable: "
+            + name
+            + ", only accepts: "
+            + str(accepted_variables)
+            + " not variable: "
+            + variable
         )
         return
 
@@ -542,19 +534,19 @@ class InputValidation:
                 a = dict_to_validate[key]
             for key in dict_to_validate:
                 assert key in combined_key_names, (
-                    "<Input Validation Error> Only " +
-                    str(combined_key_names) +
-                    " are accepted for " +
-                    variable_type +
-                    ", not variable: " +
-                    key
+                    "<Input Validation Error> Only "
+                    + str(combined_key_names)
+                    + " are accepted for "
+                    + variable_type
+                    + ", not variable: "
+                    + key
                 )
         except KeyError:
             print(
-                "<Input Validation Error> " +
-                str(key_names) +
-                " variables must be defined for " +
-                variable_type
+                "<Input Validation Error> "
+                + str(key_names)
+                + " variables must be defined for "
+                + variable_type
             )
             raise
         except AssertionError as error:

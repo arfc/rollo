@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="rollo",
-    version="1.0",
+    version="0.1.1",
     author="Gwendolyn J.Y. Chee",
     author_email="gwendolynchee95@gmail.com",
     description="Reactor Evolutionary Algorithm Optimizer",
@@ -22,9 +22,9 @@ setuptools.setup(
     install_requires=[
         "deap",
         "numpy",
-        "openmc",
         "jsonschema",
         "jinja2",
+        "pytest",
     ],
     entry_points={"console_scripts": ["arfc=rollo.__main__:main"]},
 )

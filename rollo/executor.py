@@ -1,18 +1,27 @@
 import rollo
 from rollo.input_validation import InputValidation
-from rollo.special_variables import SpecialVariables
 from rollo.algorithm import Algorithm
 from rollo.constraints import Constraints
 from rollo.toolbox_generator import ToolboxGenerator
 import json
 import time
 from collections import OrderedDict
+import logging
+import sys
 
 
 class Executor(object):
     """Executes rollo simulation from start to finish.
 
     Instances of this class can be used to perform a rollo run.
+
+    The Executor class drives the ROLLO code execution with the following
+    steps in the execute method:
+    1) User input file validation with InputValidation
+    2) Evaluation function generation with Evaluation class
+    3) DEAP toolbox initialization with ToolboxGenerator class
+    4) Constraint initialization with Constraints class
+    5) Genetic algorithm execution with Algorithm class
 
     Parameters
     ----------
@@ -27,12 +36,15 @@ class Executor(object):
         Name of input file
     checkpoint_file : str
         Name of checkpoint file
+    verbose : bool
 
     """
 
-    def __init__(self, input_file, checkpoint_file=None):
+    def __init__(self, input_file, checkpoint_file=None, verbose=False):
         self.input_file = input_file
         self.checkpoint_file = checkpoint_file
+        if verbose:
+            logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
     def execute(self):
         """Executes rollo simulation to generate reactor designs. \n
@@ -46,10 +58,12 @@ class Executor(object):
         t0 = time.time()
         input_dict = self.read_input_file()
         iv = InputValidation(input_dict)
+        iv.add_all_defaults()
         iv.validate()
-        complete_input_dict = iv.add_all_defaults(input_dict)
+        complete_input_dict = iv.input
         # organize control variables and output dict
-        control_dict, output_dict = self.organize_input_output(complete_input_dict)
+        control_dict, output_dict = self.organize_input_output(
+            complete_input_dict)
         # generate evaluator function
         evaluator_fn = self.load_evaluator(
             control_dict, output_dict, complete_input_dict
@@ -78,7 +92,8 @@ class Executor(object):
         )
         alg.generate()
         t1 = time.time()
-        print("Total time in simulation " + str(t1 - t0) + " seconds")
+        print("Total time in simulation " +
+              str(round(t1 - t0, 2)) + " seconds")
         return
 
     def read_input_file(self):
@@ -96,7 +111,7 @@ class Executor(object):
         return data
 
     def organize_input_output(self, input_dict):
-        """Numbers the control variables and output variables
+        """Labels the control variables and output variables with numbers
         to keep consistency between evaluation, constraints, and algorithm
         classes
 
@@ -109,7 +124,7 @@ class Executor(object):
         -------
         control_vars : OrderedDict
             Ordered dict of control variables as keys and a list of their
-            solver and number of variables as each value
+            solver and count of variables as each value
         output_vars : OrderedDict
             Ordered dict of output variables as keys and solvers as values
 
@@ -121,16 +136,9 @@ class Executor(object):
 
         # define control variables dict
         control_vars = OrderedDict()
-        sv = SpecialVariables()
-        special_control_vars = sv.special_variables
         for solver in input_evaluators:
             for var in input_evaluators[solver]["inputs"]:
-                if var in special_control_vars:
-                    method = getattr(sv, var + "_num")
-                    num = method(input_ctrl_vars[var])
-                    control_vars[var] = [solver, num]
-                else:
-                    control_vars[var] = [solver, 1]
+                control_vars[var] = [solver, 1]
 
         # define output variables dict
         output_vars = OrderedDict()
@@ -176,16 +184,19 @@ class Executor(object):
             solver_dict = input_evaluators[solver]
             try:
                 output_script = solver_dict["output_script"]
-            except:
+            except BaseException:
                 output_script = None
+                logging.warning(" No output script defined for " + solver)
             evaluator.add_evaluator(
                 solver_name=solver,
                 input_script=solver_dict["input_script"],
                 output_script=output_script,
             )
+        parallel_type = input_dict["algorithm"]["parallel"]
+        gens = input_dict["algorithm"]["generations"]
         evaluator_fn = evaluator.eval_fn_generator(
-            control_dict, output_dict, input_dict["evaluators"]
-        )
+            control_dict, output_dict, input_dict["evaluators"],
+            gens, parallel_type)
         return evaluator_fn
 
     def load_toolbox(

@@ -9,38 +9,38 @@ from rollo.constraints import Constraints
 test_input_dict = {
     "control_variables": {
         "packing_fraction": {"min": 0.005, "max": 0.1},
-        "polynomial_triso": {
-            "order": 3,
-            "min": 1,
-            "max": 1,
-            "radius": 4235e-5,
-            "volume": 10,
-            "slices": 10,
-            "height": 10,
-        },
     },
     "evaluators": {
-        "openmc": {
-            "input_script": "input_test_eval_fn_generator_openmc_template.py",
-            "inputs": ["packing_fraction", "polynomial_triso"],
-            "outputs": ["packing_fraction", "keff", "num_batches"],
-            "output_script": "input_test_eval_fn_generator_openmc_output.py",
+        "evaluator_1": {
+            "order": 0,
+            "input_script":
+                ["python", "input_test_eval_fn_generator_template.py"],
+            "inputs": ["packing_fraction"],
+            "outputs": ["packing_fraction", "num_batches"],
+            "output_script":
+                ["python", "input_test_eval_fn_generator_output.py"],
             "keep_files": True,
         },
-        "moltres": {
-            "input_script": "input_test_render_jinja_template_python.py",
+        "evaluator_2": {
+            "order": 1,
+            "input_script":
+                ["python", "input_test_render_jinja_template_python.py"],
             "inputs": [],
             "outputs": ["max_temp"],
-            "output_script": "input_test_evaluation_get_output_vals_moltres.py",
+            "output_script":
+                ["python",
+                 "input_test_evaluation_get_output_vals_evaluator2.py"],
             "keep_files": True,
         },
     },
-    "constraints": {"keff": {"operator": [">"], "constrained_val": [1]}},
+    "constraints": {},
     "algorithm": {
         "objective": ["max", "min"],
-        "optimized_variable": ["keff", "packing_fraction"],
+        "weight": [1.0],
+        "optimized_variable": ["packing_fraction"],
         "pop_size": 100,
         "generations": 10,
+        "parallel": "none",
         "mutation_probability": 0.5,
         "mating_probability": 0.5,
         "selection_operator": {"operator": "selBest", "inds": 1},
@@ -59,14 +59,13 @@ def test_organize_input_output():
     e = Executor("input_file_placeholder")
     ctrl_dict, output_dict = e.organize_input_output(test_input_dict)
     expected_ctrl_dict = OrderedDict(
-        {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
+        {"packing_fraction": ["evaluator_1", 1]}
     )
     expected_output_dict = OrderedDict(
         {
-            "keff": "openmc",
-            "packing_fraction": "openmc",
-            "num_batches": "openmc",
-            "max_temp": "moltres",
+            "packing_fraction": "evaluator_1",
+            "num_batches": "evaluator_1",
+            "max_temp": "evaluator_2",
         }
     )
     assert ctrl_dict == expected_ctrl_dict
@@ -75,12 +74,13 @@ def test_organize_input_output():
 
 def test_load_evaluator():
     os.chdir("./input_test_files")
-    if os.path.exists("./openmc_0_0"):
-        shutil.rmtree("./openmc_0_0")
-    if os.path.exists("./moltres_0_0"):
-        shutil.rmtree("./moltres_0_0")
+    if os.path.exists("./evaluator_1_0_0"):
+        shutil.rmtree("./evaluator_1_0_0")
+    if os.path.exists("./evaluator_2_0_0"):
+        shutil.rmtree("./evaluator_2_0_0")
     e = Executor("input_file_placeholder")
-    test_control_dict, test_output_dict = e.organize_input_output(test_input_dict)
+    test_control_dict, test_output_dict = e.organize_input_output(
+        test_input_dict)
     eval_function = e.load_evaluator(
         control_dict=test_control_dict,
         output_dict=test_output_dict,
@@ -95,13 +95,13 @@ def test_load_evaluator():
         ),
     )
     creator.create("Ind", list, fitness=creator.obj)
-    ind = creator.Ind([0.03, 1, 1, 1, 1])
+    ind = creator.Ind([0.03])
     ind.gen = 0
     ind.num = 0
     output_vals = eval_function(ind)
-    expected_output_vals = tuple([output_vals[0], 0.03, 10, 1000])
-    shutil.rmtree("./openmc_0_0")
-    shutil.rmtree("./moltres_0_0")
+    expected_output_vals = tuple([0.03, 10, 1000])
+    shutil.rmtree("./evaluator_1_0_0")
+    shutil.rmtree("./evaluator_2_0_0")
     os.chdir("../")
     assert output_vals == expected_output_vals
 
@@ -109,14 +109,14 @@ def test_load_evaluator():
 def test_load_toolbox():
     e = Executor("input_file_placeholder")
     ctrl_dict = OrderedDict(
-        {"packing_fraction": ["openmc", 1], "polynomial_triso": ["openmc", 4]}
+        {"packing_fraction": ["evaluator_1", 1]}
     )
     output_dict = OrderedDict(
         {
-            "packing_fraction": "openmc",
-            "keff": "openmc",
-            "num_batches": "openmc",
-            "max_temp": "moltres",
+            "packing_fraction": "evaluator_1",
+            "keff": "evaluator_1",
+            "num_batches": "evaluator_1",
+            "max_temp": "evaluator_2",
         }
     )
 
@@ -131,9 +131,9 @@ def test_load_toolbox():
     )
 
     test_toolbox_ind = toolbox.individual()
-    assert type(test_toolbox_ind) == creator.Ind
+    assert isinstance(test_toolbox_ind, creator.Ind)
     test_toolbox_pop = toolbox.population(n=10)
-    assert type(test_toolbox_pop) == list
+    assert isinstance(test_toolbox_pop, list)
     test_toolbox_eval = toolbox.evaluate()
     assert test_toolbox_eval == tuple([1, 1])
     assert toolbox.pop_size == 100
@@ -145,14 +145,14 @@ def test_load_toolbox():
 def test_load_constraints():
     output_dict = OrderedDict(
         {
-            "packing_fraction": "openmc",
-            "keff": "openmc",
-            "num_batches": "openmc",
-            "max_temp": "moltres",
+            "packing_fraction": "evaluator_1",
+            "keff": "evaluator_1",
+            "num_batches": "evaluator_1",
+            "max_temp": "evaluator_2",
         }
     )
     e = Executor("input_file_placeholder")
     constraint_obj = e.load_constraints(
         output_dict, test_input_dict["constraints"], base.Toolbox()
     )
-    assert type(constraint_obj) == Constraints
+    assert isinstance(constraint_obj, Constraints)

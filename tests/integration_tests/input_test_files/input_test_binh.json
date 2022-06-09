@@ -1,0 +1,39 @@
+{
+    "control_variables": {
+        "x1": {"min": 0, "max": 5},
+        "x2": {"min": 0, "max": 3}
+    },
+    "evaluators": {
+        "openmc": {
+            "order": 0,
+            "input_script": ["python", "input_test_binh.py"],
+            "inputs": ["x1", "x2"],
+            "output_script": ["python", "input_test_binh_output.py"],
+            "outputs": ["f1", "f2"],
+            "keep_files": "none"
+        }
+    },
+    "constraints": {},
+    "algorithm": {
+        "objective": ["min", "min"],
+        "optimized_variable": ["f1", "f2"],
+        "weight": [1, 1],
+        "pop_size": 120,
+        "generations": 5,
+        "parallel": "none",
+        "mutation_probability": 0.23,
+        "mating_probability": 0.90,
+        "selection_operator": {
+            "operator": "selNSGA2"
+        },
+        "mutation_operator": {
+            "operator": "mutPolynomialBounded",
+            "eta": 0.23,
+            "indpb": 0.23
+        },
+        "mating_operator": {
+            "operator": "cxBlend",
+            "alpha": 0.46
+        }
+    }
+}
