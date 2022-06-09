@@ -4,7 +4,28 @@
 Install Guide
 ===================
 
-The install guide outlines the steps to install **ROLLO** on your computer. 
+The install guide outlines the steps to install **ROLLO** on your machine. 
+
+----------------------------
+ROLLO Installation with PyPI
+----------------------------
+The Python Package Index (PyPI) is a repository of software for the Python 
+programming language. Pip installing ROLLO is the most straightforward way to install 
+it. 
+.. code-block:: sh
+  
+  python -m pip install rollo
+
+-----------------------------------------------
+ROLLO Installation with from Source on Mac OS X
+-----------------------------------------------
+All ROLLO source code is hosted on Github <https://github.com/arfc/rollo/>. 
+To install ROLLO from source, enter these commands in a terminal: 
+.. code-block:: sh
+
+  git clone git@github.com:arfc/rollo.git
+  de rollo 
+  python setup.py install --user
 
 ------------
 Dependencies
@@ -21,19 +42,6 @@ These are the **ROLLO** dependencies. Most are installed with the **ROLLO** PyPI
 4) `Jinja2 <https://jinja2docs.readthedocs.io/en/stable/>`_
 
 5) `Multiprocessing on Dill <https://pypi.org/project/multiprocessing_on_dill/>`_
-
-Users must manually install `OpenMC <https://openmc.org/>`_
-
-.. code-block:: sh
-  
-  conda install -c conda-forge openmc
-
-----------------------------
-ROLLO Installation with PyPI
-----------------------------
-.. code-block:: sh
-  
-  python -m pip install rollo
 
 ---------------------
 ROLLO Parallelization
