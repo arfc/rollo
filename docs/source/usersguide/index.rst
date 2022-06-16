@@ -72,7 +72,8 @@ varied from 0 to 10 and -1 to 0, respectively.
 Evaluators
 ^^^^^^^^^^
 Evaluators are the nuclear software **ROLLO** utilizes to calculate objective functions. 
-**ROLLO** is nuclear-software agnostic, thus the user may couple any nuclear software.  
+**ROLLO** is nuclear-software agnostic, thus the user may use any nuclear software as an 
+evaluator.  
 In a single ROLLO input file, a user may define any number of evaluators.
 
 For each evaluator, there are mandatory and optional input parameters. 
@@ -96,7 +97,7 @@ These input parameters are outlined in the following table:
      - yes
    * - ``input_script``
      - list of str (2 elements)
-     - first element - executable to run input script, second element - input script template 
+     - first element executable to run input script, second element input script template 
      - yes
    * - ``outputs``
      - list of str
@@ -104,26 +105,38 @@ These input parameters are outlined in the following table:
      - yes
    * - ``output_script``
      - list of str (2 elements)
-      - first element - executable to run output script, second element - input output template 
+     - first element executable to run output script, second element input output template 
      - no
    * - ``execute``
-     - list of list of str
-     - options 
+     - list of 2-element lists
+     - enables users to run other executables or files beyond the input and output scripts. First element executable to run file, second element file to run
      - no
    * - ``keep_files``
      - str
-     - options 
+     - none, all, only_final
      - no
-     
+
 The `evaluators` section of the **ROLLO** input file should look something like this: 
 
 .. code-block:: JSON
 
   "evaluators": {
     "openmc": { 
-      "input_script": "openmc_inp.py",
-      "output_script": "openmc_output.py",
+      "order": 0,
       "inputs": ["variable1", "variable2"],
-      "outputs": ["output1", "output2"]
+      "input_script": ["python", "openmc_inp.py"],
+      "outputs": ["output1", "output2"],
+      "output_script": ["python", "openmc_output.py"],
+      "keep_files": all,
       }
     } 
+
+^^^^^^^^^^^
+Constraints
+^^^^^^^^^^^
+
+
+^^^^^^^^^^
+Algorithm
+^^^^^^^^^^
+
