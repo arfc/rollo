@@ -36,8 +36,8 @@ test_input_dict = {
     "constraints": {},
     "algorithm": {
         "objective": ["max", "min"],
-        "weight": [1.0],
-        "optimized_variable": ["packing_fraction"],
+        "weight": [1.0, 1.0],
+        "optimized_variable": ["packing_fraction", "max_temp"],
         "pop_size": 100,
         "generations": 10,
         "parallel": "none",
@@ -65,8 +65,8 @@ def test_organize_input_output():
     expected_output_dict = OrderedDict(
         {
             "packing_fraction": "evaluator_1",
-            "num_batches": "evaluator_1",
             "max_temp": "evaluator_2",
+            "num_batches": "evaluator_1",
         }
     )
     assert ctrl_dict == expected_ctrl_dict
@@ -100,7 +100,7 @@ def test_load_evaluator():
     ind.gen = 0
     ind.num = 0
     output_vals = eval_function(ind)
-    expected_output_vals = tuple([0.03, 10, 1000])
+    expected_output_vals = tuple([0.03, 1000, 10])
     shutil.rmtree("./evaluator_1_0_0")
     shutil.rmtree("./evaluator_2_0_0")
     os.chdir("../")
@@ -115,9 +115,9 @@ def test_load_toolbox():
     output_dict = OrderedDict(
         {
             "packing_fraction": "evaluator_1",
+            "max_temp": "evaluator_2",
             "keff": "evaluator_1",
             "num_batches": "evaluator_1",
-            "max_temp": "evaluator_2",
         }
     )
 
