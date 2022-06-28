@@ -1,5 +1,9 @@
 .. _usersguide:
 
+.. image:: ../pics/rollo-logo.png
+  :width: 450
+  :alt: Alternative text
+
 ============
 User's Guide
 ============
@@ -10,7 +14,7 @@ essential aspects of using **ROLLO** to perform optimization simulations.
 Running a ROLLO Simulation
 --------------------------
 
-When you build and install **ROLLO**, you will have a **ROLLO** executable in your 
+After you build and install **ROLLO**, you will have a **ROLLO** executable in your 
 system. 
 To run a **ROLLO** simulation, enter these commands in a terminal:  
 

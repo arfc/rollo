@@ -1,5 +1,9 @@
 .. _install:
 
+.. image:: pics/rollo-logo.png
+  :width: 450
+  :alt: Alternative text
+
 ===================
 Install Guide
 ===================
@@ -36,8 +40,7 @@ ROLLO that is built from source.
 Dependencies
 ------------
 
-These are the **ROLLO** dependencies. Users must individually install each dependency if 
-building from source.  
+These are the **ROLLO** dependencies.
 
 1) `DEAP (Distributed Evolutionary Algorithms in Python) <https://deap.readthedocs.io/en/master/>`_:
 

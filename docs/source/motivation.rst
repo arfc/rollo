@@ -1,5 +1,9 @@
 .. _motivation:
 
+.. image:: pics/rollo-logo.png
+  :width: 450
+  :alt: Alternative text
+
 ===================
 Motivation
 ===================

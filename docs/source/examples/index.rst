@@ -8,4 +8,5 @@ Examples
     :maxdepth: 1
     
     basic 
+    jezebel
     fhr-slab
