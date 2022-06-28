@@ -1,6 +1,6 @@
 .. image:: pics/rollo-logo.png
   :width: 450
-  :alt: Alternative text
+  :alt: rollo-logo
 
 ================================================
 Reactor evOLutionary aLgorithm Optimizer

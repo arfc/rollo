@@ -2,7 +2,7 @@
 
 .. image:: ../pics/rollo-logo.png
   :width: 450
-  :alt: Alternative text
+  :alt: rollo-logo
 
 ============
 User's Guide
@@ -71,20 +71,26 @@ like this:
 
 This demonstrates that control variables, ``variable1`` and ``variable2``, will be 
 varied from 0 to 10 and -1 to 0, respectively.
+For example, in traditional reactor design, a control variable might be fuel 
+enrichment. 
 
 ^^^^^^^^^^
 Evaluators
 ^^^^^^^^^^
-Evaluators are the nuclear software **ROLLO** utilizes to calculate objective functions. 
-**ROLLO** is nuclear-software agnostic, thus the user may use any nuclear software as an 
-evaluator.  
-In a single ROLLO input file, a user may define any number of evaluators.
+Evaluators are the nuclear software **ROLLO** utilizes to calculate objective 
+functions. 
+**ROLLO** is nuclear-software agnostic, and does not have any nuclear software 
+dependencies. 
+Thus the user may use any nuclear software as an evaluator, and it is also up to the 
+user to ensure that the nuclear software and their corresponding executables are 
+correctly installed. 
+In a ROLLO input file, a user may define any number of evaluators.
 
 For each evaluator, there are mandatory and optional input parameters. 
 These input parameters are outlined in the following table: 
 
 .. list-table::
-   :widths: 25 25 25 25
+   :widths: 25 25 30 20
    :header-rows: 1
 
    * - Input Parameter
@@ -92,7 +98,7 @@ These input parameters are outlined in the following table:
      - Description
      - Mandatory?
    * - ``order``
-     - str
+     - int
      - evaluator's operational order compared to other evaluators (indexed by 0)
      - yes
    * - ``inputs``
@@ -100,20 +106,25 @@ These input parameters are outlined in the following table:
      - control variables to be placed into the input file template
      - yes
    * - ``input_script``
-     - list of str (2 elements)
-     - first element executable to run input script, second element input script template 
+     - 2-element list (containing str)
+     - 1st element: executable to run input script, 
+       2nd element: input script template 
      - yes
    * - ``outputs``
      - list of str
      - output variables that the evaluator will return to the genetic algorithm
      - yes
    * - ``output_script``
-     - list of str (2 elements)
-     - first element executable to run output script, second element input output template 
+     - 2-element list (containing str)
+     - 1st element: executable to run output script, 
+       2nd element: output script template 
      - no
    * - ``execute``
-     - list of 2-element lists
-     - enables users to run other executables or files beyond the input and output scripts. First element executable to run file, second element file to run
+     - list of 2-element lists (containing str)
+     - enables users to run other executables or files beyond the input and output 
+       scripts. 
+       1st element: executable to run file, 
+       2nd element: file to run
      - no
    * - ``keep_files``
      - str
@@ -128,12 +139,36 @@ The `evaluators` section of the **ROLLO** input file should look something like 
     "openmc": { 
       "order": 0,
       "inputs": ["variable1", "variable2"],
-      "input_script": ["python", "openmc_inp.py"],
+      "input_script": ["python", "input_script.py"],
+      "execute": [["exe1", "exe1_inp.py"], ["exe2", "exe2_inp.py"]],
       "outputs": ["output1", "output2"],
-      "output_script": ["python", "openmc_output.py"],
+      "output_script": ["python", "output_script.py"],
       "keep_files": all,
       }
     } 
+
+**ROLLO** utilizes `Jinja2 <https://jinja2docs.readthedocs.io/en/stable/>`_ 
+templating to insert control variables values into the ``input_script``. 
+Users must include each evaluator's input file template in the same directory as 
+the ROLLO input file. 
+Users must also ensure the template variables correspond to the inputs defined in 
+the corresponding evaluator's section in the ROLLO input file. 
+
+The following code snippets show the template and templated input scripts; 
+once the ``input_script`` is templated, {{variable1}} and {{variable2}} on Lines 3 and 
+4 will be replaced with values selected by the **ROLLO** genetic algorithm. 
+
+.. list-table::
+   :widths: 30 30
+   :header-rows: 1
+
+   * - Template
+     - Templated
+   * - variable1 = {{variable1}} 
+       variable2 = {{variable2}}
+     - variable1 = 3.212
+
+
 
 ^^^^^^^^^^^
 Constraints
