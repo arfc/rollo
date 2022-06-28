@@ -13,9 +13,10 @@ It essentially couples the `DEAP (Distributed Evolutionary Algorithms in Python)
 nuclear software.
 **ROLLO** is nuclear-software agnostic, and designed to easily couple to any software. 
 
-**ROLLO** is developed by members of the `Advanced Reactor and Fuel Cycles Group 
-<http://arfc.github.io/>`_ at the `University of Illinois Urbana-Champaign 
-<https://illinois.edu/>`_.
+**ROLLO**'s source code is hosted on `Github 
+<https://github.com/arfc/rollo/>`_.
+For more information on ROLLO, feel free to post a message on the
+`ROLLO Github Discussions Forum <https://github.com/arfc/rollo/discussions/>`_.
 
 .. only:: html
 
@@ -32,4 +33,5 @@ nuclear software.
    examples/index
    devguide/index
    publications
+   about_us
    license
