@@ -1,5 +1,9 @@
+.. image:: pics/rollo-logo.png
+  :width: 450
+  :alt: Alternative text
+
 ================================================
-ROLLO (Reactor evOLutionary aLgorithm Optimizer)
+Reactor evOLutionary aLgorithm Optimizer
 ================================================
 
 **ROLLO** is an open-source Python package that applies evolutionary algorithm 

@@ -36,7 +36,8 @@ ROLLO that is built from source.
 Dependencies
 ------------
 
-These are the **ROLLO** dependencies. Most are installed with the **ROLLO** PyPI install below. 
+These are the **ROLLO** dependencies. Users must individually install each dependency if 
+building from source.  
 
 1) `DEAP (Distributed Evolutionary Algorithms in Python) <https://deap.readthedocs.io/en/master/>`_:
 
