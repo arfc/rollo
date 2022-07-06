@@ -47,7 +47,8 @@ def test_eval_fn_generator():
             "python", "input_test_evaluation_get_output_vals_evaluator2.py"], )
     eval_function = ev.eval_fn_generator(
         control_dict=OrderedDict(
-            {"packing_fraction": ["evaluator_1", 1]}
+            {"packing_fraction": ["evaluator_1"],
+             "variable2": ["evaluator_1", "evaluator_2"]}
         ),
         output_dict=OrderedDict(
             {
@@ -65,7 +66,7 @@ def test_eval_fn_generator():
     )
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
-    ind = creator.Ind([0.03])
+    ind = creator.Ind([0.03, 1])
     ind.gen = 0
     ind.num = 0
     output_vals = eval_function(ind)
@@ -96,7 +97,8 @@ def test_eval_fn_generator_job_control():
             "python", "input_test_evaluation_get_output_vals_evaluator2.py"], )
     eval_function = ev.eval_fn_generator(
         control_dict=OrderedDict(
-            {"packing_fraction": ["evaluator_1", 1]}
+            {"packing_fraction": ["evaluator_1"],
+             "variable2": ["evaluator_1", "evaluator_2"]}
         ),
         output_dict=OrderedDict(
             {
@@ -115,7 +117,7 @@ def test_eval_fn_generator_job_control():
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
     ind1, ind2 = creator.Ind(
-        [0.03]), creator.Ind([0.03])
+        [0.03, 1]), creator.Ind([0.03, 1])
     ind1.gen, ind1.num = 0, 0
     ind2.gen, ind2.num = 0, 1
     pop = [ind1, ind2]
@@ -393,16 +395,16 @@ def test_run_output_script_serial():
 def test_name_ind():
     ev = Evaluation()
     control_vars = ev.name_ind(
-        ind=[0.01, 1, 1, 1, 1],
+        ind=[0.01, 1],
         control_dict=OrderedDict(
-            {"packing_fraction": ["evaluator_1", 1],
-                "polynomial_triso": ["evaluator_2", 4]}
+            {"packing_fraction": ["evaluator_1"],
+             "variable2": ["evaluator_1", "evaluator_2"]}
         ),
         input_evaluators=["evaluator_1", "evaluator_2"],
     )
     expected_control_vars = {
-        "evaluator_1": {"packing_fraction": 0.01},
-        "evaluator_2": {"polynomial_triso": [1, 1, 1, 1]},
+        "evaluator_1": {"packing_fraction": 0.01, "variable2": 1},
+        "evaluator_2": {"variable2": 1},
     }
     assert control_vars == expected_control_vars
 
@@ -414,12 +416,12 @@ def test_render_jinja_template():
         script="./input_test_render_jinja_template_python.py",
         control_vars_solver={
             "packing_fraction": 0.01,
-            "polynomial_triso": [1, 1, 1, 1],
+            "variable2": 1,
         },
         ind=1,
         solver="evaluator_1"
     )
     print(rendered_template)
-    expected_rendered_template = "total_pf = 0.01\npoly_coeff = [1, 1, 1, 1]"
+    expected_rendered_template = "total_pf = 0.01\nvariable2 = 1"
     os.chdir("../")
     assert rendered_template == expected_rendered_template

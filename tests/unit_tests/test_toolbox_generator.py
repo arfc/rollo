@@ -8,28 +8,20 @@ from collections import OrderedDict
 test_input_dict = {
     "control_variables": {
         "packing_fraction": {"min": 0.005, "max": 0.1},
-        "polynomial_triso": {
-            "order": 3,
-            "min": 1,
-            "max": 1,
-            "radius": 4235e-5,
-            "volume": 10,
-            "slices": 10,
-            "height": 10,
-        },
+        "variable2": {"min": 1, "max": 2},
     },
     "evaluators": {
         "evaluator_1": {
             "order": 0,
             "input_script": "input_test_eval_fn_generator_template.py",
-            "inputs": ["packing_fraction", "polynomial_triso"],
+            "inputs": ["packing_fraction", "variable2"],
             "outputs": ["packing_fraction", "keff", "num_batches"],
             "output_script": "input_test_eval_fn_generator_output.py",
         },
         "evaluator_2": {
             "order": 1,
             "input_script": "input_test_render_jinja_template_python.py",
-            "inputs": [],
+            "inputs": ["variable2"],
             "outputs": ["max_temp"],
             "output_script":
             "input_test_evaluation_get_output_vals_evaluator2.py",
@@ -59,16 +51,7 @@ test_input_dict = {
 def test_setup():
     tg = ToolboxGenerator()
     ctrl_dict = OrderedDict(
-        {"packing_fraction": ["evaluator_1", 1],
-         "polynomial_triso": ["evaluator_1", 4]}
-    )
-    output_dict = OrderedDict(
-        {
-            "packing_fraction": "evaluator_1",
-            "keff": "evaluator_1",
-            "num_batches": "evaluator_1",
-            "max_temp": "evaluator_2",
-        }
+        {"packing_fraction": ["openmc"], "variable2": ["openmc", "moltres"]}
     )
 
     def test_evaluator_fn():
@@ -96,32 +79,34 @@ def test_setup():
 
 def test_individual_values():
     tg = ToolboxGenerator()
-    ctrl_dict = OrderedDict(
-        {"packing_fraction": ["evaluator_1", 1]}
-    )
+    ctrl_dict = OrderedDict({"packing_fraction": ["evaluator_1"],
+                             "variable2": ["evaluator_1", "evaluator_2"]})
     toolbox = base.Toolbox()
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
     toolbox.register("packing_fraction", random.uniform, 0.005, 0.1)
+    toolbox.register("variable2", random.uniform, 1, 2)
     ind_values = tg.individual_values(
         test_input_dict["control_variables"], ctrl_dict, toolbox
     )
     assert isinstance(ind_values, creator.Ind)
     assert ind_values[0] >= 0.005
     assert ind_values[0] <= 0.1
+    assert ind_values[1] >= 1
+    assert ind_values[1] <= 2
 
 
 def test_min_max_list():
     tg = ToolboxGenerator()
-    ctrl_dict = OrderedDict(
-        {"packing_fraction": ["evaluator_1", 1],
-         "polynomial_triso": ["evaluator_1", 4]}
-    )
+    ctrl_dict = OrderedDict({"packing_fraction": ["evaluator_1"],
+                             "variable2": ["evaluator_1", "evaluator_2"]})
     min_list, max_list = tg.min_max_list(
         ctrl_dict, test_input_dict["control_variables"]
     )
-    expected_min_list = [0.005, 1, 1, 1, 1]
-    expected_max_list = [0.1, 1, 1, 1, 1]
+    expected_min_list = [0.005, 1]
+    expected_max_list = [0.1, 2]
+    assert min_list == expected_min_list
+    assert max_list == expected_max_list
 
 
 def test_add_selection_operators():
