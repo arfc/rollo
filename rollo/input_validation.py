@@ -431,16 +431,11 @@ class InputValidation:
             self.validate_correct_keys(
                 input_evaluators[evaluator],
                 ["input_script", "inputs", "outputs", "order"],
-                ["output_script", "execute", "keep_files"],
+                ["output_script", "execute"],
                 "evaluator: " + evaluator,
             )
-            self.validate_in_list(
-                input_evaluators[evaluator]["keep_files"],
-                ["none", "all", "only_final"],
-                "keep_files",
-            )
-            # check if outputs are in inputs, and if not output_script
-            # must be defined
+            # check if outputs are in predefined outputs or inputs, and if not
+            # output_script must be defined
             in_list, which_strings = self.validate_if_in_list(
                 input_evaluators[evaluator]["outputs"],
                 input_evaluators[evaluator]["inputs"],
