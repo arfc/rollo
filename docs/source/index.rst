@@ -7,7 +7,7 @@ Reactor evOLutionary aLgorithm Optimizer
 ================================================
 
 **ROLLO** is an open-source Python package that applies evolutionary algorithm 
-techniques to optimize nuclear reactor design. 
+techniques to optimize nuclear reactor design.  
 It essentially couples the `DEAP (Distributed Evolutionary Algorithms in Python) 
 <https://deap.readthedocs.io/en/master/>`_ evolutionary algorithm driver with 
 nuclear software.
