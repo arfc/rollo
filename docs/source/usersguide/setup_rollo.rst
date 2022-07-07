@@ -36,14 +36,14 @@ enrichment.
 ^^^^^^^^^^
 Evaluators
 ^^^^^^^^^^
-Evaluators are the nuclear software **ROLLO** utilizes to calculate objective 
-functions. 
+Evaluators are the nuclear software **ROLLO** utilizes to calculate the objective 
+and constraint values. 
 **ROLLO** is nuclear-software agnostic, and does not have any nuclear software 
 dependencies. 
 Thus the user may use any nuclear software as an evaluator, and it is also up to the 
 user to ensure that the nuclear software and their corresponding executables are 
 correctly installed. 
-In a ROLLO input file, a user may define any number of evaluators.
+In a **ROLLO** input file, a user may define any number of evaluators.
 
 For each evaluator, there are mandatory and optional input parameters. 
 These input parameters are outlined in the following table: 
@@ -85,17 +85,13 @@ These input parameters are outlined in the following table:
        1st element: executable to run file, 
        2nd element: file to run
      - no
-   * - ``keep_files``
-     - str
-     - none, all, only_final
-     - no
 
 The `evaluators` section of the **ROLLO** input file should look something like this: 
 
 .. code-block:: JSON
 
   "evaluators": {
-    "openmc": { 
+    "evaluator_1": { 
       "order": 0,
       "inputs": ["variable1", "variable2"],
       "input_script": ["python", "input_script.py"],
@@ -115,7 +111,7 @@ the corresponding evaluator's section in the ROLLO input file.
 
 The following code snippets show the template and templated input scripts; 
 once the ``input_script`` is templated, {{variable1}} and {{variable2}} on Lines 3 and 
-4 will be replaced with values selected by the **ROLLO** genetic algorithm. 
+4 will be replaced with values selected by **ROLLO**'s genetic algorithm. 
 
 +---------------------------+---------------------------+
 |       Template            |   Templated               |
@@ -132,7 +128,14 @@ output parameter is also an input parameter.
 Second, the user may include an output script that returns the desired output 
 parameter. 
 The output script must include a line that prints a dictionary containing the 
-output parameters' names and their corresponding value as key-value pairs.
+output parameters' names and their corresponding value as key-value pairs: 
+
+.. code-block:: Python
+
+  output1_val = # some logic 
+  output2_val = # some logic 
+
+  print({"output1":output1_val, "output2":output2_val})
 
 ^^^^^^^^^^^
 Constraints
@@ -140,6 +143,17 @@ Constraints
 The user can define constraints on any output parameter. 
 Any individual that does not meet the defined constraints is removed from the 
 population, encouraging the proliferation of individuals that meet the constraints.
+For each constrained parameter, the user lists the ``operator`` and ``constrained_val``. 
+
+The `constraints` section of the **ROLLO** input file with two constraints should look 
+something like this: 
+
+.. code-block:: JSON
+
+  "constraints": {
+    "output1": {"operator": [">=", "<"], "constrained_val": [1.0, 1.5]},
+    "output2": {"operator": ["<"], "constrained_val": [1000]}
+      }
 
 ^^^^^^^^^^
 Algorithm

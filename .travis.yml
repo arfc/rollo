@@ -23,7 +23,8 @@ install:
 - python -m pip install deap
 - python -m pip install jsonschema
 - python -m pip install Jinja2
-- conda install -c conda-forge openmc
+- conda install mamba -n base -c conda-forge
+- mamba create -n openmc-env -c conda-forge openmc
 - python -m pip install rollo
 
 script:

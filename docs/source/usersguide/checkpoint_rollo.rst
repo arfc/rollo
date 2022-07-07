@@ -1,4 +1,4 @@
-.. _setup_rollo:
+.. _checkpoint_rollo:
 
 .. image:: ../pics/rollo-logo.png
   :width: 450
