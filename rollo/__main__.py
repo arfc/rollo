@@ -24,7 +24,7 @@ def main():
         new_run = executor.Executor(
             input_file=opts_dict['-i'],
             checkpoint_file=cp_file,
-            verbrose=verbose)
+            verbose=verbose)
         new_run.execute()
     except getopt.GetoptError:
         raise Exception("To run rollo: " + msg)

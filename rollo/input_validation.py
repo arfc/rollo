@@ -431,7 +431,7 @@ class InputValidation:
             self.validate_correct_keys(
                 input_evaluators[evaluator],
                 ["input_script", "inputs", "outputs", "order"],
-                ["output_script", "execute"],
+                ["output_script", "execute", "keep_files"],
                 "evaluator: " + evaluator,
             )
             self.validate_in_list(
