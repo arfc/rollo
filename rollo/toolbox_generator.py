@@ -136,9 +136,8 @@ class ToolboxGenerator(object):
         min_list = []
         max_list = []
         for var in control_dict:
-            for i in range(control_dict[var][1]):
-                min_list.append(input_ctrl_vars[var]["min"])
-                max_list.append(input_ctrl_vars[var]["max"])
+            min_list.append(input_ctrl_vars[var]["min"])
+            max_list.append(input_ctrl_vars[var]["max"])
         return min_list, max_list
 
     def add_toolbox_operators(

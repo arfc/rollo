@@ -705,13 +705,8 @@ class Evaluation:
         for solver in input_evaluators:
             control_vars[solver] = {}
         for i, var in enumerate(control_dict):
-            if control_dict[var][1] == 1:
-                ind_vars = ind[i]
-            else:
-                ind_vars = []
-                for j in range(control_dict[var][1]):
-                    ind_vars.append(ind[i + j])
-            control_vars[control_dict[var][0]][var] = ind_vars
+            for solver in control_dict[var]:
+                control_vars[solver][var] = ind[i]
         return control_vars
 
     def render_jinja_template(self, script, control_vars_solver, ind, solver):
