@@ -158,22 +158,29 @@ The following code snippets show the template and templated input scripts;
 once the ``input_script`` is templated, {{variable1}} and {{variable2}} on Lines 3 and 
 4 will be replaced with values selected by the **ROLLO** genetic algorithm. 
 
-.. list-table::
-   :widths: 30 30
-   :header-rows: 1
-
-   * - Template
-     - Templated
-   * - variable1 = {{variable1}} 
-       variable2 = {{variable2}}
-     - variable1 = 3.212
++---------------------------+---------------------------+
+|       Template            |   Templated               |
+|.. code-block::            |.. code-block::            |
+|                           |                           |
+| variable1 = {{variable1}  | variable1 = 3.212         |     
+| variable1 = {{variable1}  | variable1 = -0.765        |     
++---------------------------+---------------------------+
 
 
+**ROLLO** uses two methods to return an output variable to the genetic algorithm. 
+First, **ROLLO** will automatically return the input parameter's value if the 
+output parameter is also an input parameter. 
+Second, the user may include an output script that returns the desired output 
+parameter. 
+The output script must include a line that prints a dictionary containing the 
+output parameters' names and their corresponding value as key-value pairs.
 
 ^^^^^^^^^^^
 Constraints
 ^^^^^^^^^^^
-
+The user can define constraints on any output parameter. 
+Any individual that does not meet the defined constraints is removed from the 
+population, encouraging the proliferation of individuals that meet the constraints.
 
 ^^^^^^^^^^
 Algorithm
