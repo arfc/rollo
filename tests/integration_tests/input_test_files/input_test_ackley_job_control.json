@@ -9,7 +9,8 @@
             "input_script": ["python", "input_test_ackley.py"],
             "inputs": ["x1", "x2"],
             "output_script": ["python", "input_test_ackley_output.py"],
-            "outputs": ["ackley"]
+            "outputs": ["ackley"],
+            "keep_files": "none"
         }
     },
     "constraints": {},
@@ -19,7 +20,6 @@
         "optimized_variable": ["ackley"],
         "pop_size": 100,
         "generations": 10,
-        "parallel": "job_control",
-        "keep_files": "none"
+        "parallel": "job_control"
     }
 }

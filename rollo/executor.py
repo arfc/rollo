@@ -36,14 +36,14 @@ class Executor(object):
         Name of input file
     checkpoint_file : str
         Name of checkpoint file
-    verbrose : bool
+    verbose : bool
 
     """
 
-    def __init__(self, input_file, checkpoint_file=None, verbrose=False):
+    def __init__(self, input_file, checkpoint_file=None, verbose=False):
         self.input_file = input_file
         self.checkpoint_file = checkpoint_file
-        if verbrose:
+        if verbose:
             logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
     def execute(self):
@@ -123,8 +123,8 @@ class Executor(object):
         Returns
         -------
         control_vars : OrderedDict
-            Ordered dict of control variables as keys and a list of their
-            solver and count of variables as each value
+            Ordered dict of control variables as keys and a list of
+            solvers that use them as values
         output_vars : OrderedDict
             Ordered dict of output variables as keys and solvers as values
 
@@ -136,11 +136,11 @@ class Executor(object):
         # define control variables dict
         control_vars = OrderedDict()
         for solver in input_evaluators:
-            for var in input_evaluators[solver]["inputs"]:
-                if var in control_vars:
-                    control_vars[var].append(solver)
+            for solver_input in input_evaluators[solver]["inputs"]:
+                if solver_input in control_vars:
+                    control_vars[solver_input].append(solver)
                 else:
-                    control_vars[var] = [solver]
+                    control_vars[solver_input] = [solver]
 
         # define output variables dict
         output_vars = OrderedDict()
@@ -148,15 +148,15 @@ class Executor(object):
         # find optimized variable
         var_to_solver = {}
         for solver in input_evaluators:
-            for var in input_evaluators[solver]["outputs"]:
-                var_to_solver[var] = solver
+            for solver_output in input_evaluators[solver]["outputs"]:
+                var_to_solver[solver_output] = solver
         for opt_var in optimized_variable:
             output_vars[opt_var] = var_to_solver[opt_var]
         # put in the rest of the output variables
         for solver in input_evaluators:
-            for var in input_evaluators[solver]["outputs"]:
-                if var not in optimized_variable:
-                    output_vars[var] = solver
+            for solver_output in input_evaluators[solver]["outputs"]:
+                if solver_output not in optimized_variable:
+                    output_vars[solver_output] = solver
 
         return control_vars, output_vars
 
