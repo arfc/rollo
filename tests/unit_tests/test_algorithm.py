@@ -63,7 +63,8 @@ def init():
 
 
 control_dict = OrderedDict(
-    {"packing_fraction": ["evaluator_1"], "variable2": ["evaluator_1", "evaluator_2"]}
+    {"packing_fraction": ["evaluator_1"],
+     "variable2": ["evaluator_1", "evaluator_2"]}
 )
 output_dict = OrderedDict(
     {

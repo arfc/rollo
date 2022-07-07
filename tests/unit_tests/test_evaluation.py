@@ -11,6 +11,7 @@ if os.path.exists("./input_test_files/0_0"):
 if os.path.exists("./input_test_files/0_1"):
     shutil.rmtree("./input_test_files/0_1")
 
+
 def init():
     creator.create(
         "obj",
@@ -71,6 +72,7 @@ def test_eval_fn_generator():
     os.chdir("../")
     assert output_vals == expected_output_vals
 
+
 def test_eval_fn_generator_job_control():
     os.chdir("./input_test_files")
     ev = Evaluation()
@@ -123,6 +125,7 @@ def test_eval_fn_generator_job_control():
     os.chdir("../")
     assert output_vals == expected_output_vals
     return
+
 
 def test_create_input_execute_output_scripts():
     init()
@@ -325,7 +328,7 @@ def test_run_input_script_serial():
     shutil.rmtree(path)
     os.chdir("../")
     return
-    
+
 
 def test_run_execute_serial():
     os.chdir("./input_test_files")
