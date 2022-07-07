@@ -18,7 +18,7 @@ Control Variables
 Control variables are parameters the genetic algorithm will vary. 
 For each control variable, the user must specify its minimum and maximum values. 
 The user may define any number of control variables. 
-The `control_variables` section of the **ROLLO** input file should look something 
+The `control_variables` section of the **ROLLO** input file looks 
 like this: 
 
 .. code-block:: JSON
@@ -32,6 +32,26 @@ This demonstrates that control variables, ``variable1`` and ``variable2``, will 
 varied from 0 to 10 and -1 to 0, respectively.
 For example, in traditional reactor design, a control variable might be fuel 
 enrichment. 
+
+Variable names must be strings. 
+The following table describes each variable's input parameter sub-requirements: 
+
+.. list-table::
+   :widths: 25 25 30 20
+   :header-rows: 1
+
+   * - Input Parameter
+     - Type
+     - Description
+     - Mandatory?
+   * - ``min``
+     - float
+     - minimum value
+     - yes
+   * - ``max``
+     - float
+     - max value
+     - yes
 
 ^^^^^^^^^^
 Evaluators
@@ -86,7 +106,7 @@ These input parameters are outlined in the following table:
        2nd element: file to run
      - no
 
-The `evaluators` section of the **ROLLO** input file should look something like this: 
+The `evaluators` section of the **ROLLO** input file looks like this: 
 
 .. code-block:: JSON
 
@@ -155,7 +175,96 @@ something like this:
     "output2": {"operator": ["<"], "constrained_val": [1000]}
       }
 
+The following table describes each constrained variable's sub-requirements: 
+
+.. list-table::
+   :widths: 25 25 30 20
+   :header-rows: 1
+
+   * - Input Parameter
+     - Type
+     - Description
+     - Mandatory?
+   * - ``operator``
+     - list of str
+     - operators for constraint
+     - yes
+   * - ``max``
+     - list of floats 
+     - values to constrain (corresponds to operator list)
+     - yes
+
 ^^^^^^^^^^
 Algorithm
 ^^^^^^^^^^
+In the algorithm section, users define the simulation's general settings and the genetic 
+algorithm's hyperparameters. 
+The algorithm section's input parameters are outlined in the following table: 
 
+.. list-table::
+   :widths: 25 25 30 20 20
+   :header-rows: 1
+
+   * - Input Parameter
+     - Type
+     - Description
+     - Mandatory?
+     - Default 
+   * - ``optimized_variable``
+     - list of str
+     - variables to be optimized
+     - yes
+     - x
+   * - ``objective``
+     - list of str
+     - string options include: min or max. each objective corresponds to a variable in ``optimized_variable``
+     - yes
+     - x
+   * - ``pop_size``
+     - int
+     - population size
+     - yes
+     - x
+   * - ``generations``
+     - int
+     - number of generations
+     - yes
+     - x
+   * - ``parallel``
+     - str
+     - options include: none, multiprocessing, job control
+     - yes
+     - none
+   * - ``keep_files``
+     - str
+     - options include: none, multiprocessing, job control
+     - yes
+     - none
+   * - ``mutation_probability``
+     - float
+     - mutation probability value (must be between 0 and 1)
+     - no
+     - 0.23
+   * - ``mating_probability``
+     - float
+     - mating probability value (must be between 0 and 1)
+     - no
+     - 0.47
+   * - ``selection_operator``
+     - dict
+     - options described in Table xx 
+     - no
+     - {"operator": ”selTournament”, ”tournsize”: 5}
+   * - ``mutation_operator``
+     - dict
+     - options described in Table xx 
+     - no
+     - {"operator": "mutPolynomialBounded", "eta": 0.23, "indpb": 0.23}
+   * - ``mating_operator``
+     - dict
+     - options described in Table xx 
+     - no
+     - {"operator": "cxBlend", "alpha": 0.46}
+
+The following table describes the selection, mutation, and mating operators 
+available and their corresponding hyperparameters. 

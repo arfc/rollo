@@ -16,3 +16,4 @@ essential aspects of using **ROLLO** to perform optimization simulations.
     run_rollo 
     setup_rollo
     checkpoint_rollo
+    parallel_rollo
