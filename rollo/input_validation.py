@@ -436,6 +436,7 @@ class InputValidation:
             )
             # check if outputs are in predefined outputs or inputs, and if not
             # output_script must be defined
+            
             in_list, which_strings = self.validate_if_in_list(
                 input_evaluators[evaluator]["outputs"],
                 input_evaluators[evaluator]["inputs"],

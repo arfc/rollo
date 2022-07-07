@@ -11,7 +11,6 @@ if os.path.exists("./input_test_files/0_0"):
 if os.path.exists("./input_test_files/0_1"):
     shutil.rmtree("./input_test_files/0_1")
 
-
 def init():
     creator.create(
         "obj",
@@ -206,6 +205,7 @@ def test_run_input_and_execute_and_output_scripts():
         solver="evaluator_1",
         input_evaluators_solver=input_evaluators_solver
     )
+
     with open("./0_0/evaluator_1_input_script_out.txt") as fp:
         Lines = fp.readlines()[0]
     assert Lines == "[1, 2]\n"

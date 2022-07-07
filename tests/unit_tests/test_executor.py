@@ -100,6 +100,7 @@ def test_load_evaluator():
     ind.num = 0
     output_vals = eval_function(ind)
     expected_output_vals = tuple([0.03, 1000, 10])
+    
     os.chdir("../")
     assert output_vals == expected_output_vals
 
