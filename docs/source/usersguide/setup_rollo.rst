@@ -12,9 +12,9 @@ The **ROLLO** input file is in `JSON <https://www.json.org/json-en.html>`_ forma
 For each input file, the user must define four sections: `control_variables`, 
 `evaluators`, `constraints`, and `algorithm`. 
 
-^^^^^^^^^^^^^^^^^
+-----------------
 Control Variables
-^^^^^^^^^^^^^^^^^
+-----------------
 Control variables are parameters the genetic algorithm will vary. 
 For each control variable, the user must specify its minimum and maximum values. 
 The user may define any number of control variables. 
@@ -53,9 +53,9 @@ The following table describes each variable's input parameter sub-requirements:
      - max value
      - yes
 
-^^^^^^^^^^
+----------
 Evaluators
-^^^^^^^^^^
+----------
 Evaluators are the nuclear software **ROLLO** utilizes to calculate the objective 
 and constraint values. 
 **ROLLO** is nuclear-software agnostic, and does not have any nuclear software 
@@ -157,9 +157,9 @@ output parameters' names and their corresponding value as key-value pairs:
 
   print({"output1":output1_val, "output2":output2_val})
 
-^^^^^^^^^^^
+-----------
 Constraints
-^^^^^^^^^^^
+-----------
 The user can define constraints on any output parameter. 
 Any individual that does not meet the defined constraints is removed from the 
 population, encouraging the proliferation of individuals that meet the constraints.
@@ -189,14 +189,14 @@ The following table describes each constrained variable's sub-requirements:
      - list of str
      - operators for constraint
      - yes
-   * - ``max``
+   * - ``constrained_val``
      - list of floats 
      - values to constrain (corresponds to operator list)
      - yes
 
-^^^^^^^^^^
+----------
 Algorithm
-^^^^^^^^^^
+----------
 In the algorithm section, users define the simulation's general settings and the genetic 
 algorithm's hyperparameters. 
 The algorithm section's input parameters are outlined in the following table: 
@@ -237,7 +237,7 @@ The algorithm section's input parameters are outlined in the following table:
      - none
    * - ``keep_files``
      - str
-     - options include: none, multiprocessing, job control
+     - options include: none, only_final, all
      - yes
      - none
    * - ``mutation_probability``
@@ -266,5 +266,26 @@ The algorithm section's input parameters are outlined in the following table:
      - no
      - {"operator": "cxBlend", "alpha": 0.46}
 
-The following table describes the selection, mutation, and mating operators 
+The following tables describes the selection, mutation, and mating operators 
 available and their corresponding hyperparameters. 
+
+.. list-table::
+   :widths: 25 25 30 20 
+   :header-rows: 1
+
+   * - Selection Operators
+     - Description
+     - Hyperparameters
+     - Description
+   * - ``selTournament``
+     - xx 
+     - ``tournsize``
+     - no. of individuals in each tournament (int)
+   * - ``selNSGA2``
+     - xx
+     - x
+     - x
+   * - ``selBest``
+     - xx
+     - x
+     - x

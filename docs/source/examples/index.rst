@@ -4,13 +4,13 @@
   :width: 450
   :alt: rollo-logo
 
-========
-Examples
-========
+================
+Example Problems
+================
 
 .. toctree::
     :maxdepth: 1
     
-    basic 
+    verification 
     jezebel
     fhr-slab
