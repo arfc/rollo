@@ -27,3 +27,15 @@ Ackley function (taken from `Ackley Function
 .. image:: ../pics/ackley.png
   :width: 450
   :alt: ackley
+
+.. toctree::
+   :hidden:
+   :maxdepth: 0
+   :caption: Getting Started
+
+   /../notebooks/ackley.ipynb
+
+Binh and Korn Function 
+----------------------
+The `Binh and Korn Function <https://link.springer.com/article/10.1007/s10489-017-1074-1>`_ 
+is a two-objective function:
