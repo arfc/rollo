@@ -30,7 +30,7 @@ For more information on ROLLO, feel free to post a message on the
    install
    motivation
    usersguide/index
-   examples/index
+   Examples  <https://github.com/arfc/rollo/wiki/Example-Jupyter-Notebooks/>
    devguide/index
    publications
    about_us

@@ -29,11 +29,9 @@ Ackley function (taken from `Ackley Function
   :alt: ackley
 
 .. toctree::
-   :hidden:
-   :maxdepth: 0
-   :caption: Getting Started
-
-   /../notebooks/ackley.ipynb
+  :maxdepth: 1
+    
+  ackley.ipynb
 
 Binh and Korn Function 
 ----------------------
