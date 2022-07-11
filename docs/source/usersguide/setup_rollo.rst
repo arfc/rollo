@@ -9,12 +9,17 @@ ROLLO Input File Setup
 ======================
 
 The **ROLLO** input file is in `JSON <https://www.json.org/json-en.html>`_ format.
-For each input file, the user must define four sections: `control_variables`, 
-`evaluators`, `constraints`, and `algorithm`. 
+For each input file, the user must define four sections: 
 
------------------
+- :ref:`Control Variables <control_variables>`
+- :ref:`Evaluators <evaluators>`
+- :ref:`Constraints <constraints>`
+- :ref:`Algorithm <algorithm>`
+
+.. _control_variables:
+
 Control Variables
------------------
+=================
 Control variables are parameters the genetic algorithm will vary. 
 For each control variable, the user must specify its minimum and maximum values. 
 The user may define any number of control variables. 
@@ -53,9 +58,10 @@ The following table describes each variable's input parameter sub-requirements:
      - max value
      - yes
 
-----------
+.. _evaluators:
+
 Evaluators
-----------
+==========
 Evaluators are the nuclear software **ROLLO** utilizes to calculate the objective 
 and constraint values. 
 **ROLLO** is nuclear-software agnostic, and does not have any nuclear software 
@@ -117,37 +123,35 @@ The `evaluators` section of the **ROLLO** input file looks like this:
       "input_script": ["python", "input_script.py"],
       "execute": [["exe1", "exe1_inp.py"], ["exe2", "exe2_inp.py"]],
       "outputs": ["output1", "output2"],
-      "output_script": ["python", "output_script.py"],
-      "keep_files": all,
+      "output_script": ["python", "output_script.py"]
       }
     } 
 
 **ROLLO** utilizes `Jinja2 <https://jinja2docs.readthedocs.io/en/stable/>`_ 
 templating to insert control variables values into the ``input_script``. 
 Users must include each evaluator's input file template in the same directory as 
-the ROLLO input file. 
+the **ROLLO** input file. 
 Users must also ensure the template variables correspond to the inputs defined in 
-the corresponding evaluator's section in the ROLLO input file. 
+the corresponding evaluator's section in the **ROLLO** input file. 
 
 The following code snippets show the template and templated input scripts; 
-once the ``input_script`` is templated, {{variable1}} and {{variable2}} on Lines 3 and 
-4 will be replaced with values selected by **ROLLO**'s genetic algorithm. 
+once the ``input_script`` is templated, {{variable1}} and {{variable2}} 
+will be replaced with values selected by **ROLLO**'s genetic algorithm. 
 
-+---------------------------+---------------------------+
-|       Template            |   Templated               |
-|.. code-block::            |.. code-block::            |
-|                           |                           |
-| variable1 = {{variable1}  | variable1 = 3.212         |     
-| variable1 = {{variable1}  | variable1 = -0.765        |     
-+---------------------------+---------------------------+
-
++----------------------------+---------------------------+
+|       Template             |   Templated               |
+|.. code-block::             |.. code-block::            |
+|                            |                           |
+| variable1 = {{variable1}}  | variable1 = 3.212         |     
+| variable1 = {{variable1}}  | variable1 = -0.765        |     
++----------------------------+---------------------------+
 
 **ROLLO** uses two methods to return an output variable to the genetic algorithm. 
 First, **ROLLO** will automatically return the input parameter's value if the 
 output parameter is also an input parameter. 
 Second, the user may include an output script that returns the desired output 
 parameter. 
-The output script must include a line that prints a dictionary containing the 
+The ``output_script`` must include a line that prints a dictionary containing the 
 output parameters' names and their corresponding value as key-value pairs: 
 
 .. code-block:: Python
@@ -157,16 +161,17 @@ output parameters' names and their corresponding value as key-value pairs:
 
   print({"output1":output1_val, "output2":output2_val})
 
------------
+.. _constraints:
+
 Constraints
------------
+===========
 The user can define constraints on any output parameter. 
 Any individual that does not meet the defined constraints is removed from the 
 population, encouraging the proliferation of individuals that meet the constraints.
 For each constrained parameter, the user lists the ``operator`` and ``constrained_val``. 
 
-The `constraints` section of the **ROLLO** input file with two constraints should look 
-something like this: 
+The `constraints` section of the **ROLLO** input file with two constraints looks 
+like this: 
 
 .. code-block:: JSON
 
@@ -174,6 +179,8 @@ something like this:
     "output1": {"operator": [">=", "<"], "constrained_val": [1.0, 1.5]},
     "output2": {"operator": ["<"], "constrained_val": [1000]}
       }
+
+The constraints are 1.0 >= output1 > 1.5 and output2 < 1000. 
 
 The following table describes each constrained variable's sub-requirements: 
 
@@ -194,15 +201,16 @@ The following table describes each constrained variable's sub-requirements:
      - values to constrain (corresponds to operator list)
      - yes
 
-----------
+.. _algorithm:
+
 Algorithm
-----------
+=========
 In the algorithm section, users define the simulation's general settings and the genetic 
 algorithm's hyperparameters. 
 The algorithm section's input parameters are outlined in the following table: 
 
 .. list-table::
-   :widths: 25 25 30 20 20
+   :widths: 20 20 20 20 20
    :header-rows: 1
 
    * - Input Parameter
@@ -214,22 +222,22 @@ The algorithm section's input parameters are outlined in the following table:
      - list of str
      - variables to be optimized
      - yes
-     - x
+     - n/a
    * - ``objective``
      - list of str
      - string options include: min or max. each objective corresponds to a variable in ``optimized_variable``
      - yes
-     - x
+     - n/a
    * - ``pop_size``
      - int
      - population size
      - yes
-     - x
+     - n/a
    * - ``generations``
      - int
      - number of generations
      - yes
-     - x
+     - n/a
    * - ``parallel``
      - str
      - options include: none, multiprocessing, job control
@@ -242,50 +250,126 @@ The algorithm section's input parameters are outlined in the following table:
      - none
    * - ``mutation_probability``
      - float
-     - mutation probability value (must be between 0 and 1)
+     - individual's mutation probability (must be between 0 and 1)
      - no
      - 0.23
    * - ``mating_probability``
      - float
-     - mating probability value (must be between 0 and 1)
+     - individual's mating probability (must be between 0 and 1)
      - no
      - 0.47
    * - ``selection_operator``
      - dict
-     - options described in Table xx 
+     - options described in sections below
      - no
      - {"operator": ”selTournament”, ”tournsize”: 5}
    * - ``mutation_operator``
      - dict
-     - options described in Table xx 
+     - options described in sections below 
      - no
      - {"operator": "mutPolynomialBounded", "eta": 0.23, "indpb": 0.23}
    * - ``mating_operator``
      - dict
-     - options described in Table xx 
+     - options described in sections below
      - no
      - {"operator": "cxBlend", "alpha": 0.46}
 
-The following tables describes the selection, mutation, and mating operators 
+The following sub-sections describe the selection, mutation, and mating operators 
 available and their corresponding hyperparameters. 
 
+Selection Operators 
+-------------------
+There are three options for selection operator: ``selTournament``, ``selBest``, and 
+``selNSGA2``. 
+In tournament selection (``selTournament``), a user-defined number of individuals 
+play in a tournament, and the best individual proceeds to the next population. 
+The tournament repeats until all the population's spots are filled. 
+In best selection (``selBest``), the operator selects a user-defined number of 
+best individuals, and copies are made to keep the population size constant. 
+In NSGA-II selection (``selNSGA2``), the elitist operator selects the best individuals
+from the combination of parent and offspring populations. 
+NSGA-II selection works well for multi-objective optimization.
+
 .. list-table::
-   :widths: 25 25 30 20 
+   :widths: 25 25 25 25
    :header-rows: 1
 
    * - Selection Operators
-     - Description
      - Hyperparameters
      - Description
+     - Type
    * - ``selTournament``
-     - xx 
      - ``tournsize``
-     - no. of individuals in each tournament (int)
-   * - ``selNSGA2``
-     - xx
-     - x
-     - x
+     - no. of individuals in each tournament
+     - int
    * - ``selBest``
-     - xx
-     - x
-     - x
+     - n/a
+     - n/a
+     - n/a
+   * - ``selNSGA2``
+     - n/a
+     - n/a
+     - n/a
+
+Mutation Operators 
+-------------------
+
+There is one option for mutation operator: ``mutPolynomialBounded``. 
+Polynomial bounded mutation (``mutPolynomialBounded``) mutates each individual 
+based on a polynomial distribution. 
+The user also defines the crowding degree of the mutation, eta (a big eta will
+produce a mutant resembling its parent, while a small eta will produce the opposite).
+
++-------------------------+-----------------+---------------------------------+------------------------+
+| Mutation Operators      | Hyperparameters | Description                     | Type                   |
++=========================+=================+=================================+========================+
+| ``mutPolynomialBounded``| ``eta``         | crowding degree of the mutation | float (btwn 0 and 1)   | 
+|                         |                 |                                 |                        |
+|                         | ``indpb``       | independent probability for each| float (btwn 0 and 1)   |      
+|                         |                 | attribute to be mutated         |                        |
++-------------------------+-----------------+---------------------------------+------------------------+
+
+Mating Operators 
+----------------
+
+There are three options for mating operators: ``cxOnePoint``, ``cxUniform``, and 
+``cxBlend``.
+In the single-point crossover (``cxOnePoint``), the operator randomly selects two 
+individuals from the population and a site along the individual's definition.
+For example, if the individual is a list, the operator randomly chooses an element 
+in the list as the cross-site. Then, the attributes on the cross site's right side 
+are exchanged between the two individuals, creating two new offspring individuals. 
+In a uniform crossover (``cxUniform``), the user defines an independent exchange 
+probability for each individual's attribute. 
+In blend crossover (``cxBlend``), the operator creates two offspring (O) individuals 
+based on a linear combination of two-parent (P) individuals using the following 
+equations:
+
+:math:`O_1 = P_1 - \alpha(P_1-P_2)`
+:math:`O_2 = P_2 + \alpha(P_1-P_2)`
+
+where: 
+
+:math:`\alpha =` Extent of the interval in which the new values can be drawn 
+for each attribute on both side of the parents' attributes (user-defined)
+
+.. list-table::
+   :widths: 25 25 25 25
+   :header-rows: 1
+
+   * - Mating Operators
+     - Hyperparameters
+     - Description
+     - Type
+   * - ``cxOnePoint``
+     - n/a
+     - n/a
+     - n/a
+   * - ``cxUniform``
+     - ``indpb``
+     - independent probability for each attribute to be exchanged
+     - float (btwn 0 and 1) 
+   * - ``cxBlend``
+     - ``alpha``
+     - Extent of the interval that the new values can be drawn for each attribute on both sides of the parents' attributes
+     - float (btwn 0 and 1) 

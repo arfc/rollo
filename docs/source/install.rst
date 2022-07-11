@@ -25,6 +25,9 @@ it.
 ROLLO Installation with from Source on Mac OS X
 -----------------------------------------------
 All ROLLO source code is hosted on `Github <https://github.com/arfc/rollo/>`_. 
+You must first install the dependencies below individually to successfully use 
+ROLLO that is built from source. 
+
 To install ROLLO from source, enter these commands in a terminal: 
 
 .. code-block:: sh
@@ -32,9 +35,6 @@ To install ROLLO from source, enter these commands in a terminal:
   git clone git@github.com:arfc/rollo.git
   cd rollo 
   python setup.py install --user
-
-You must also install the following dependencies individually to successfully use 
-ROLLO that is built from source. 
 
 ------------
 Dependencies

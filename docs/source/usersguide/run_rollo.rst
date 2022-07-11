@@ -39,5 +39,6 @@ after each generation.
 The checkpoint file also acts as a restart file.
 If a **ROLLO** simulation ends prematurely, the checkpoint 
 file can be used to restart the code from the most recent generation and 
-continue the simulation. The checkpoint file is described in :ref:`checkpoint_rollo`.
+continue the simulation. Further description can be found in the
+:ref:`checkpoint file section <checkpoint_rollo>`.
 

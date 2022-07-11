@@ -7,7 +7,7 @@
 ============
 User's Guide
 ============
-Welcome to the **ROLLO** User's Guide! This tutorial will guide you through the 
+Welcome to the **ROLLO** User's Guide! These tutorials will guide you through the 
 essential aspects of using **ROLLO** to perform optimization simulations.
 
 .. toctree::
