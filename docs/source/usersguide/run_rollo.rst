@@ -42,3 +42,13 @@ file can be used to restart the code from the most recent generation and
 continue the simulation. Further description can be found in the
 :ref:`checkpoint file section <checkpoint_rollo>`.
 
+ROLLO Terminal Outputs 
+======================
+After each ROLLO generation runs, ROLLO will output the following table: 
+
+.. code-block:: sh
+  
+       	   	     	                                              oup                                              	                    ind                     
+       	   	     	-----------------------------------------------------------------------------------------------	--------------------------------------------
+time   	gen	evals	avg                    	std                    	min                    	max                    	avg         	min         	max         
+103.414	0  	80   	[6.22778046 1.21148372]	[0.62556036 0.09608392]	[5.01839426 1.01527032]	[7.93088365 1.45986427]	[6.22778046]	[5.01839426]	[7.93088365]
