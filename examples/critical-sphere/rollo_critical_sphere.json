@@ -4,27 +4,20 @@
     },
     "evaluators": {
         "openmc": {
-            "input_script": "critical_sphere.py",
+            "order": 0,
+            "input_script": ["python", "critical_sphere.py"],
             "inputs": ["radius"],
             "outputs": ["keff", "radius"],
-            "keep_files": false
+            "output_script": ["python", "get_sphere_keff.py"]
         }
     },
     "constraints": {"keff": {"operator": [">="], "constrained_val": [1.0]}},
     "algorithm": {
         "parallel": "multiprocessing",
+        "keep_files": "none",
         "objective": ["min"],
         "optimized_variable": ["radius"],
         "pop_size": 80,
-        "generations": 10,
-        "mutation_probability": 0.23,
-        "mating_probability": 0.46,
-        "selection_operator": {"operator": "selTournament", "inds": 15, "tournsize": 5},
-        "mutation_operator": {
-            "operator": "mutPolynomialBounded",
-            "eta": 0.23,
-            "indpb": 0.23
-        },
-        "mating_operator": {"operator": "cxBlend", "alpha": 0.46}
+        "generations": 10
     }
 }
