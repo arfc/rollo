@@ -20,12 +20,6 @@ install:
 - conda activate test-environment
 
 - sudo apt-get install python3-sphinx
-- python -m pip install deap
-- python -m pip install jsonschema
-- python -m pip install Jinja2
-- conda install mamba -n base -c conda-forge
-- mamba create -n openmc-env -c conda-forge openmc
-- python -m pip install rollo
 
 script:
   # Use Sphinx to make the html docs
