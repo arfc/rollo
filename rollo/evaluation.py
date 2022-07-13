@@ -667,15 +667,17 @@ class Evaluation:
         """
         if self.output_scripts[solver]:
             # return the output script's printed dictionary into a variable
-            with open("./" + path + "/" + solver + "_output_script_out.txt") as fp:
+            with open("./" + path + "/" + solver + "_output_script_out.txt") \
+                    as fp:
                 lines = fp.readlines()
             for line in lines:
                 try:
                     oup_script_results = ast.literal_eval(line)
-                    if type(oup_script_results) is dict:
+                    if isinstance(oup_script_results, dict):
                         break
-                except: 
-                    pass 
+                except BaseException:
+                    print("ROLLO could not find output parameter dictionary.")
+                    pass
         for i, var in enumerate(output_dict):
             if output_dict[var] == solver:
                 # if variable is a control variable
