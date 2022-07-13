@@ -52,6 +52,7 @@ sub-directories which contain all the evaluator's evaluation files.
 The sub-directories are indexed by generation number and individual number; 
 for generation 3 and individual 5, the directory will be named: ``3_5``. 
 
+The individual refers to each reactor model. 
 In each individual's directory, 
 
 ROLLO Terminal Outputs 

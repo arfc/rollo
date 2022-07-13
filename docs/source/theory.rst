@@ -47,3 +47,10 @@ algorithm. The `Executor` class uses the hyperparameters from the DEAP toolbox,
 applies constraints defined in the `Constraints` object, and calculates objective 
 functions using the evaluation function created by the `Evaluation` object; 
 all the while saving the results using the `BackEnd` class.
+
+This table outlines the classes in the **ROLLO** software and describes each 
+class' purpose. 
+
+.. image:: pics/rollo-classes.png
+  :width: 700
+  :alt: ROLLO Software Class Descriptions
