@@ -22,6 +22,12 @@ restart the simulation from the previous generation.
 Therefore, if you're running a ROLLO simulation with 10 generations and it fails 
 during generation 3, you can restart the ROLLO simulation from generation 2. 
 
+This capability can also be used for running one generation at a time. For example, 
+you're running a large optimization simulation across many nodes on a 
+supercomputer, and don't want to waste compute time if the simulation fails part way 
+through. You can run one generation at a time, increasing the number of generations 
+defined in the input file with each run. 
+
 Results Analysis
 ================
 
@@ -38,15 +44,27 @@ Once loaded into Python, the checkpoint file is a dict.
 The following table describes the keys in the checkpoint file: 
 
 .. list-table::
-   :widths: 25 25 25
+   :widths: 25 75
    :header-rows: 1
 
    * - Checkpoint File Key 
      - Description
-     - Type
    * - ``input_file``
      - a copy of the input file 
-     - str
+   * - ``evaluator_files``
+     - a dict with copies of the evaluators' scripts 
+   * - ``population`` 
+     - the final population (list of reactor model individuals)
+   * - ``generation``
+     - total number of generations (int)
+   * - ``hall of fame``
+     - 
+   * - ``logbook``
+     - 
+   * - ``rndstate`` 
+     -  
+   * - ``all`` 
+     - 
 
 
 
