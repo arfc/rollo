@@ -20,6 +20,7 @@ install:
 - conda activate test-environment
 
 - sudo apt-get install python3-sphinx
+- python3 -m pip install nbsphinx
 
 script:
   # Use Sphinx to make the html docs
