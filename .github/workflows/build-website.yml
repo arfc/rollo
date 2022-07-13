@@ -27,7 +27,8 @@ jobs:
         python3 -m pip install nbsphinx
         python3 -m pip install sphinx_rtd_theme
         python3 -m pip install sphinx_book_theme
-    - name: Build Website
-      run: |
-        make docs/html
+    - name: Sphinx Build
+      uses: ammaraskar/sphinx-action@0.4
+
+        
 
