@@ -10,6 +10,10 @@ Theory and Methodology
 **ROLLO** essentially couples an evolutionary algorithm driver with nuclear 
 software, such as neutron transport and thermal-hydraulics codes, to optimize 
 nuclear reactor design. 
+**ROLLO** uses the `DEAP <https://deap.readthedocs.io/en/master/>`_ python package 
+to drive the evolutionary algorithm optimization process. 
+**ROLLO**is nuclear code-agnostic and does not have dependencies on any nuclear 
+software.
 
 This flowchart outlines ROLLO's evolutionary algorithm optimization process and 
 how the nuclear evaluation software fits in it. 

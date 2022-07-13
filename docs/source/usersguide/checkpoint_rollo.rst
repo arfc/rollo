@@ -58,9 +58,9 @@ The following table describes the keys in the checkpoint file:
    * - ``generation``
      - total number of generations (int)
    * - ``hall of fame``
-     - 
+     - deap.tools.HallOfFame object (`see deap documentation <https://deap.readthedocs.io/en/master/api/tools.html#deap.tools.HallOfFame>`_)
    * - ``logbook``
-     - 
+     - deap.tools.Logbook object (`see deap documentation <https://deap.readthedocs.io/en/master/api/tools.html#logbook>`_)
    * - ``rndstate`` 
      -  
    * - ``all`` 
