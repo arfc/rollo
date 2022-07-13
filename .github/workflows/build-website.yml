@@ -16,19 +16,34 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
-    - name: Add conda to system path
-      run: |
-        # $CONDA is an environment variable pointing to the root of the miniconda directory
-        echo $CONDA/bin >> $GITHUB_PATH
+
     - name: Install dependencies
       run: |
-        conda env update --file environment.yml --name base
         sudo apt-get install python3-sphinx
         python3 -m pip install nbsphinx
         python3 -m pip install sphinx_rtd_theme
         python3 -m pip install sphinx_book_theme
-    - name: Sphinx Build
-      uses: ammaraskar/sphinx-action@0.4
 
-        
+    - name: make the sphinx docs
+      run: |
+        make -C docs clean 
+        # sphinx-apidoc -f -o docs/source . -H Test -e -t docs/source/_templates
+        make -C docs html
 
+    - name: Init new repo in dist folder and commit generated files
+      run: |
+        cd docs/build/html/
+        git init
+        touch .nojekyll
+        git add -A
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -m 'deploy'
+
+    - name: Force push to destination branch
+      uses: ad-m/github-push-action@v0.5.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: gh-pages
+        force: true
+        directory: ./docs/build/html
