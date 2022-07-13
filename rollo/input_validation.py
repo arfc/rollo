@@ -396,22 +396,8 @@ class InputValidation:
             evaluators sub-dictionary from input file
 
         """
-        # evaluators available
-        # add to this list if a developer adds a new evaluator
-        available_evaluators = ["openmc", "openmc_gc", "moltres"]
-        # add to this dict if a developers adds a new predefined output
-        # for an evaluator
-        pre_defined_outputs = {
-            "openmc": ["keff"],
-            "openmc_gc": [],
-            "moltres": []}
 
-        # validate evaluators
-        self.validate_correct_keys(
-            input_evaluators, [], available_evaluators, "evaluators"
-        )
         schema_evaluators = {"type": "object", "properties": {}}
-
         # validate each evaluator
         for evaluator in input_evaluators:
             schema_evaluators["properties"][evaluator] = {
@@ -450,9 +436,10 @@ class InputValidation:
             )
             # check if outputs are in predefined outputs or inputs, and if not
             # output_script must be defined
+
             in_list, which_strings = self.validate_if_in_list(
                 input_evaluators[evaluator]["outputs"],
-                pre_defined_outputs[evaluator] + input_evaluators[evaluator]["inputs"],
+                input_evaluators[evaluator]["inputs"],
             )
             if not in_list:
                 try:

@@ -27,34 +27,35 @@ def test_eval_fn_generator():
     os.chdir("./input_test_files")
     ev = Evaluation()
     ev.add_evaluator(
-        solver_name="openmc",
+        solver_name="evaluator_1",
         input_script=[
             "python",
-            "input_test_eval_fn_generator_openmc_template.py"],
+            "input_test_eval_fn_generator_template.py"],
         output_script=[
             "python",
-            "input_test_eval_fn_generator_openmc_output.py"],
+            "input_test_eval_fn_generator_output.py"],
     )
     ev.add_evaluator(
-        solver_name="moltres",
+        solver_name="evaluator_2",
         input_script=[
             "python", "input_test_render_jinja_template_python.py"],
         output_script=[
-            "python", "input_test_evaluation_get_output_vals_moltres.py"], )
+            "python", "input_test_evaluation_get_output_vals_evaluator2.py"], )
     eval_function = ev.eval_fn_generator(
         control_dict=OrderedDict(
-            {"packing_fraction": ["openmc"], "variable2": ["openmc", "moltres"]}
+            {"packing_fraction": ["evaluator_1"],
+             "variable2": ["evaluator_1", "evaluator_2"]}
         ),
         output_dict=OrderedDict(
             {
-                "packing_fraction": "openmc",
-                "max_temp": "moltres",
-                "num_batches": "openmc",
+                "packing_fraction": "evaluator_1",
+                "max_temp": "evaluator_2",
+                "num_batches": "evaluator_1",
             }
         ),
         input_evaluators={
-            "openmc": {"order": 0},
-            "moltres": {"order": 1},
+            "evaluator_1": {"keep_files": True, "order": 0},
+            "evaluator_2": {"keep_files": True, "order": 1},
         },
         gens=2,
         parallel_method="none",
@@ -67,6 +68,7 @@ def test_eval_fn_generator():
     ind.num = 0
     output_vals = eval_function(ind)
     expected_output_vals = tuple([0.03, 1000, 10])
+
     os.chdir("../")
     assert output_vals == expected_output_vals
 
@@ -75,34 +77,35 @@ def test_eval_fn_generator_job_control():
     os.chdir("./input_test_files")
     ev = Evaluation()
     ev.add_evaluator(
-        solver_name="openmc",
+        solver_name="evaluator_1",
         input_script=[
             "python",
-            "input_test_eval_fn_generator_openmc_template.py"],
+            "input_test_eval_fn_generator_template.py"],
         output_script=[
             "python",
-            "input_test_eval_fn_generator_openmc_output.py"],
+            "input_test_eval_fn_generator_output.py"],
     )
     ev.add_evaluator(
-        solver_name="moltres",
+        solver_name="evaluator_2",
         input_script=[
             "python", "input_test_render_jinja_template_python.py"],
         output_script=[
-            "python", "input_test_evaluation_get_output_vals_moltres.py"], )
+            "python", "input_test_evaluation_get_output_vals_evaluator2.py"], )
     eval_function = ev.eval_fn_generator(
         control_dict=OrderedDict(
-            {"packing_fraction": ["openmc"], "variable2": ["openmc", "moltres"]}
+            {"packing_fraction": ["evaluator_1"],
+             "variable2": ["evaluator_1", "evaluator_2"]}
         ),
         output_dict=OrderedDict(
             {
-                "packing_fraction": "openmc",
-                "max_temp": "moltres",
-                "num_batches": "openmc",
+                "packing_fraction": "evaluator_1",
+                "max_temp": "evaluator_2",
+                "num_batches": "evaluator_1",
             }
         ),
         input_evaluators={
-            "openmc": {"keep_files": True, "order": 0},
-            "moltres": {"keep_files": True, "order": 1},
+            "evaluator_1": {"keep_files": True, "order": 0},
+            "evaluator_2": {"keep_files": True, "order": 1},
         },
         gens=1,
         parallel_method="job_control",
@@ -116,9 +119,9 @@ def test_eval_fn_generator_job_control():
     ind2.gen, ind2.num = 0, 1
     pop = [ind1, ind2]
     output_vals = eval_function(pop)
-    print(output_vals)
     expected_output_vals = [tuple([0.03, 1000, 10]), tuple([
         0.03, 1000, 10])]
+
     os.chdir("../")
     assert output_vals == expected_output_vals
     return
@@ -131,12 +134,12 @@ def test_create_input_execute_output_scripts():
     os.mkdir("0_1")
     ev = Evaluation()
     ev.add_evaluator(
-        solver_name="openmc", input_script=[
+        solver_name="evaluator_1", input_script=[
             "python", "input_test_run_input_script.py"], output_script=[
             "python", "input_test_evaluation_get_output_vals.py"], )
     control_vars_dict = {
-        "0_0": {"openmc": {"hi": 1, "hi2": 2}},
-        "0_1": {"openmc": {"hi": 3, "hi2": 4}}
+        "0_0": {"evaluator_1": {"hi": 1, "hi2": 2}},
+        "0_1": {"evaluator_1": {"hi": 3, "hi2": 4}}
     }
     ind1, ind2 = creator.Ind([1]), creator.Ind([2])
     ind1.gen, ind1.num = 0, 0
@@ -147,7 +150,7 @@ def test_create_input_execute_output_scripts():
         ["rollo-non-existent-executable"]]}
     ev.create_input_execute_output_scripts(
         pop=pop,
-        solver="openmc",
+        solver="evaluator_1",
         control_vars_dict=control_vars_dict,
         input_evaluators_solver=input_evaluators_solver)
     with open("./0_0/input_test_run_input_script.py") as fp:
@@ -180,8 +183,8 @@ def test_run_input_and_execute_and_output_scripts():
     os.mkdir("0_0")
     os.mkdir("0_1")
     control_vars_dict = {
-        "0_0": {"openmc": {"hi": 1, "hi2": 2}},
-        "0_1": {"openmc": {"hi": 3, "hi2": 4}}
+        "0_0": {"evaluator_1": {"hi": 1, "hi2": 2}},
+        "0_1": {"evaluator_1": {"hi": 3, "hi2": 4}}
     }
     ind1, ind2 = creator.Ind([1]), creator.Ind([2])
     ind1.gen, ind1.num = 0, 0
@@ -189,7 +192,7 @@ def test_run_input_and_execute_and_output_scripts():
     pop = [ind1, ind2]
     ev = Evaluation()
     ev.add_evaluator(
-        solver_name="openmc", input_script=[
+        solver_name="evaluator_1", input_script=[
             "python", "input_test_run_input_script.py"], output_script=[
             "python", "input_test_evaluation_get_output_vals.py"], )
     input_evaluators_solver = {"execute": [
@@ -197,36 +200,37 @@ def test_run_input_and_execute_and_output_scripts():
         ["rollo-non-existent-executable"]]}
     ev.create_input_execute_output_scripts(
         pop=pop,
-        solver="openmc",
+        solver="evaluator_1",
         control_vars_dict=control_vars_dict,
         input_evaluators_solver=input_evaluators_solver)
     ev.run_input_and_execute_and_output_scripts(
         pop=pop,
-        solver="openmc",
+        solver="evaluator_1",
         input_evaluators_solver=input_evaluators_solver
     )
-    with open("./0_0/openmc_input_script_out.txt") as fp:
+
+    with open("./0_0/evaluator_1_input_script_out.txt") as fp:
         Lines = fp.readlines()[0]
     assert Lines == "[1, 2]\n"
-    with open("./0_1/openmc_input_script_out.txt") as fp:
+    with open("./0_1/evaluator_1_input_script_out.txt") as fp:
         Lines = fp.readlines()[0]
     assert Lines == "[3, 4]\n"
-    with open("./0_0/openmc_execute_0_out.txt") as fp:
+    with open("./0_0/evaluator_1_execute_0_out.txt") as fp:
         Lines = fp.readlines()[0]
     assert Lines == "[5, 6]\n"
-    with open("./0_1/openmc_execute_0_out.txt") as fp:
+    with open("./0_1/evaluator_1_execute_0_out.txt") as fp:
         Lines = fp.readlines()[0]
     assert Lines == "[5, 6]\n"
-    with open("./0_0/openmc_execute_1_out.txt") as fp:
+    with open("./0_0/evaluator_1_execute_1_out.txt") as fp:
         Lines = fp.readlines()[0]
     assert "not found" and "rollo-non-existent-executable" in Lines
-    with open("./0_1/openmc_execute_1_out.txt") as fp:
+    with open("./0_1/evaluator_1_execute_1_out.txt") as fp:
         Lines = fp.readlines()[0]
     assert "not found" and "rollo-non-existent-executable" in Lines
-    with open("./0_0/openmc_output_script_out.txt") as fp:
+    with open("./0_0/evaluator_1_output_script_out.txt") as fp:
         Lines = fp.readline()
     assert Lines == "{'random': 3}\n"
-    with open("./0_1/openmc_output_script_out.txt") as fp:
+    with open("./0_1/evaluator_1_output_script_out.txt") as fp:
         Lines = fp.readline()
     assert Lines == "{'random': 3}\n"
     shutil.rmtree("./0_0")
@@ -261,35 +265,35 @@ def test_get_output_vals_job_control():
     os.mkdir("0_0")
     os.mkdir("0_1")
     ev.add_evaluator(
-        solver_name="openmc", input_script=[
+        solver_name="evaluator_1", input_script=[
             "python", "input_test_run_input_script.py"], output_script=[
             "python", "input_test_evaluation_get_output_vals.py"], )
     output_vals_dict = OrderedDict()
     control_vars_dict = {
-        "0_0": {"openmc": {"hi": 1, "hi2": 2}},
-        "0_1": {"openmc": {"hi": 3, "hi2": 4}}
+        "0_0": {"evaluator_1": {"hi": 1, "hi2": 2}},
+        "0_1": {"evaluator_1": {"hi": 3, "hi2": 4}}
     }
     output_vals_dict["0_0"] = [None] * 2
     output_vals_dict["0_1"] = [None] * 2
     input_evaluators_solver = {}
     ev.create_input_execute_output_scripts(
         pop=pop,
-        solver="openmc",
+        solver="evaluator_1",
         control_vars_dict=control_vars_dict,
         input_evaluators_solver=input_evaluators_solver)
     ev.run_input_and_execute_and_output_scripts(
         pop=pop,
-        solver="openmc",
+        solver="evaluator_1",
         input_evaluators_solver=input_evaluators_solver
     )
     all_output_vals = ev.get_output_vals_job_control(
         output_vals_dict=output_vals_dict,
         pop=pop,
-        solver="openmc",
+        solver="evaluator_1",
         output_dict=OrderedDict(
             {
-                "hi": "openmc",
-                "random": "openmc",
+                "hi": "evaluator_1",
+                "random": "evaluator_1",
             }
         ),
         control_vars_dict=control_vars_dict)
@@ -307,7 +311,7 @@ def test_run_input_script_serial():
     os.mkdir(path)
     ev = Evaluation()
     ev.add_evaluator(
-        solver_name="openmc",
+        solver_name="evaluator_1",
         input_script=["python", "input_test_run_input_script.py"],
         output_script=["python", "placeholder.py"],
     )
@@ -317,8 +321,8 @@ def test_run_input_script_serial():
     ind.gen = 0
     ind.num = 0
     control_vars_solver = {"hi": 1, "hi2": 2}
-    ev.run_input_script_serial("openmc", control_vars_solver, ind, path)
-    with open("./" + path + "/openmc_input_script_out.txt") as fp:
+    ev.run_input_script_serial("evaluator_1", control_vars_solver, ind, path)
+    with open("./" + path + "/evaluator_1_input_script_out.txt") as fp:
         Lines = fp.readlines()[0]
     assert Lines == "[1, 2]\n"
     shutil.rmtree(path)
@@ -345,10 +349,13 @@ def test_run_execute_serial():
 
 
 def test_solver_order():
-    input_evaluators = {"openmc": {"order": 0}, "moltres": {"order": 1}}
+    input_evaluators = {
+        "evaluator_1": {
+            "order": 0}, "evaluator_2": {
+            "order": 1}}
     ev = Evaluation()
     order = ev.solver_order(input_evaluators)
-    assert order == ["openmc", "moltres"]
+    assert order == ["evaluator_1", "evaluator_2"]
     return
 
 
@@ -357,22 +364,22 @@ def test_run_output_script_serial():
     os.mkdir("./test_evaluation/")
     ev = Evaluation()
     ev.add_evaluator(
-        solver_name="openmc",
+        solver_name="evaluator_1",
         input_script=["python", "placeholder.py"],
         output_script=["python", "input_test_evaluation_get_output_vals.py"],
     )
     output_vals = ev.run_output_script_serial(
         output_vals=[None] * 3,
-        solver="openmc",
+        solver="evaluator_1",
         output_dict=OrderedDict(
             {
-                "packing_fraction": "openmc",
-                "max_temp": "moltres",
-                "random": "openmc",
+                "packing_fraction": "evaluator_1",
+                "max_temp": "evaluator_2",
+                "random": "evaluator_1",
             }
         ),
         control_vars={
-            "openmc": {"packing_fraction": 0.03},
+            "evaluator_1": {"packing_fraction": 0.03},
         },
         path="./test_evaluation/",
     )
@@ -387,14 +394,14 @@ def test_name_ind():
     control_vars = ev.name_ind(
         ind=[0.01, 1],
         control_dict=OrderedDict(
-            {"packing_fraction": ["openmc"],
-             "variable2": ["openmc", "moltres"]}
+            {"packing_fraction": ["evaluator_1"],
+             "variable2": ["evaluator_1", "evaluator_2"]}
         ),
-        input_evaluators=["openmc", "moltres"],
+        input_evaluators=["evaluator_1", "evaluator_2"],
     )
     expected_control_vars = {
-        "openmc": {"packing_fraction": 0.01, "variable2": 1},
-        "moltres": {"variable2": 1},
+        "evaluator_1": {"packing_fraction": 0.01, "variable2": 1},
+        "evaluator_2": {"variable2": 1},
     }
     assert control_vars == expected_control_vars
 
@@ -409,7 +416,7 @@ def test_render_jinja_template():
             "variable2": 1,
         },
         ind=1,
-        solver="openmc"
+        solver="evaluator_1"
     )
     expected_rendered_template = "variable2 = 1"
     os.chdir("../")

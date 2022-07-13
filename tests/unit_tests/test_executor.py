@@ -11,30 +11,33 @@ test_input_dict = {
         "packing_fraction": {"min": 0.005, "max": 0.1},
     },
     "evaluators": {
-        "openmc": {
+        "evaluator_1": {
             "order": 0,
             "input_script":
-                ["python", "input_test_eval_fn_generator_openmc_template.py"],
+                ["python", "input_test_eval_fn_generator_template.py"],
             "inputs": ["packing_fraction", "variable2"],
             "outputs": ["packing_fraction", "num_batches"],
             "output_script":
-                ["python", "input_test_eval_fn_generator_openmc_output.py"],
+                ["python", "input_test_eval_fn_generator_output.py"],
+            "keep_files": True,
         },
-        "moltres": {
+        "evaluator_2": {
             "order": 1,
             "input_script":
                 ["python", "input_test_render_jinja_template_python.py"],
             "inputs": ["variable2"],
             "outputs": ["max_temp"],
             "output_script":
-                ["python", "input_test_evaluation_get_output_vals_moltres.py"],
+                ["python",
+                 "input_test_evaluation_get_output_vals_evaluator2.py"],
+            "keep_files": True,
         },
     },
     "constraints": {},
     "algorithm": {
         "objective": ["max", "min"],
-        "weight": [1.0],
-        "optimized_variable": ["packing_fraction"],
+        "weight": [1.0, 1.0],
+        "optimized_variable": ["packing_fraction", "max_temp"],
         "pop_size": 100,
         "generations": 10,
         "parallel": "none",
@@ -57,14 +60,14 @@ def test_organize_input_output():
     e = Executor("input_file_placeholder")
     ctrl_dict, output_dict = e.organize_input_output(test_input_dict)
     expected_ctrl_dict = OrderedDict(
-        {"packing_fraction": ["openmc"],
-         "variable2": ["openmc", "moltres"]}
+        {"packing_fraction": ["evaluator_1"],
+         "variable2": ["evaluator_1", "evaluator_2"]}
     )
     expected_output_dict = OrderedDict(
         {
-            "packing_fraction": "openmc",
-            "num_batches": "openmc",
-            "max_temp": "moltres",
+            "packing_fraction": "evaluator_1",
+            "max_temp": "evaluator_2",
+            "num_batches": "evaluator_1",
         }
     )
     assert ctrl_dict == expected_ctrl_dict
@@ -96,7 +99,8 @@ def test_load_evaluator():
     ind.gen = 0
     ind.num = 0
     output_vals = eval_function(ind)
-    expected_output_vals = tuple([0.03, 10, 1000])
+    expected_output_vals = tuple([0.03, 1000, 10])
+
     os.chdir("../")
     assert output_vals == expected_output_vals
 
@@ -104,14 +108,14 @@ def test_load_evaluator():
 def test_load_toolbox():
     e = Executor("input_file_placeholder")
     ctrl_dict = OrderedDict(
-        {"packing_fraction": ["openmc", 1]}
+        {"packing_fraction": ["evaluator_1", 1]}
     )
     output_dict = OrderedDict(
         {
-            "packing_fraction": "openmc",
-            "keff": "openmc",
-            "num_batches": "openmc",
-            "max_temp": "moltres",
+            "packing_fraction": "evaluator_1",
+            "max_temp": "evaluator_2",
+            "keff": "evaluator_1",
+            "num_batches": "evaluator_1",
         }
     )
 
@@ -140,10 +144,10 @@ def test_load_toolbox():
 def test_load_constraints():
     output_dict = OrderedDict(
         {
-            "packing_fraction": "openmc",
-            "keff": "openmc",
-            "num_batches": "openmc",
-            "max_temp": "moltres",
+            "packing_fraction": "evaluator_1",
+            "keff": "evaluator_1",
+            "num_batches": "evaluator_1",
+            "max_temp": "evaluator_2",
         }
     )
     e = Executor("input_file_placeholder")

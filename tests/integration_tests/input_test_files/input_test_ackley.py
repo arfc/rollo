@@ -1,3 +1,4 @@
+# ROLLO Input Script Template for input_test_ackley.json
 import numpy as np
 
 x1 = {{x1}}

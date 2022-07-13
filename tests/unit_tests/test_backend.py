@@ -34,15 +34,14 @@ def init():
     return toolbox
 
 
-control_dict = OrderedDict(
-    {"packing_fraction": ["openmc"], "variable2": ["openmc", "moltres"]}
-)
+control_dict = OrderedDict({"packing_fraction": ["evaluator_1"], "variable2": [
+    "evaluator_1", "evaluator_2"]})
 output_dict = OrderedDict(
     {
-        "packing_fraction": "openmc",
-        "keff": "openmc",
-        "num_batches": "openmc",
-        "max_temp": "moltres",
+        "packing_fraction": "evaluator_1",
+        "keff": "evaluator_1",
+        "num_batches": "evaluator_1",
+        "max_temp": "evaluator_2",
     }
 )
 

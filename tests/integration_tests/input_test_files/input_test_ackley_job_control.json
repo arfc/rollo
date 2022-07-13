@@ -4,7 +4,7 @@
         "x2": {"min": -32.768, "max": 32.768}
     },
     "evaluators": {
-        "openmc": {
+        "evaluator_1": {
             "order": 0,
             "input_script": ["python", "input_test_ackley.py"],
             "inputs": ["x1", "x2"],

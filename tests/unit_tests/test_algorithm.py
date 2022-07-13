@@ -52,7 +52,8 @@ def init():
     toolbox.register("evaluate", evaluator_fn)
 
     test_constraints = Constraints(
-        output_dict=OrderedDict({"total": "openmc", "random": "openmc"}),
+        output_dict=OrderedDict({"total": "evaluator_1",
+                                 "random": "evaluator_1"}),
         input_constraints={
             "total": {"operator": [">", "<"], "constrained_val": [1.5, 2.5]}
         },
@@ -62,14 +63,15 @@ def init():
 
 
 control_dict = OrderedDict(
-    {"packing_fraction": ["openmc"], "variable2": ["openmc", "moltres"]}
+    {"packing_fraction": ["evaluator_1"],
+     "variable2": ["evaluator_1", "evaluator_2"]}
 )
 output_dict = OrderedDict(
     {
-        "packing_fraction": "openmc",
-        "keff": "openmc",
-        "num_batches": "openmc",
-        "max_temp": "moltres",
+        "packing_fraction": "evaluator_1",
+        "keff": "evaluator_1",
+        "num_batches": "evaluator_1",
+        "max_temp": "evaluator_2",
     }
 )
 

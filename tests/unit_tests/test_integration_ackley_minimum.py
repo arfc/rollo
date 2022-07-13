@@ -50,10 +50,11 @@ def test_ackley_minimum_check():
     toolbox.min_list = [-32.768, -32.768]
     toolbox.max_list = [32.768, 32.768]
 
-    control_dict = OrderedDict({"x1": ["openmc", 1], "x2": ["openmc", 1]})
+    control_dict = OrderedDict(
+        {"x1": ["evaluator_1", 1], "x2": ["evaluator_1", 1]})
     output_dict = OrderedDict(
         {
-            "output": "openmc",
+            "output": "evaluator_1",
         }
     )
 

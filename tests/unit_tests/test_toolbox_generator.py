@@ -11,19 +11,20 @@ test_input_dict = {
         "variable2": {"min": 1, "max": 2},
     },
     "evaluators": {
-        "openmc": {
+        "evaluator_1": {
             "order": 0,
-            "input_script": "input_test_eval_fn_generator_openmc_template.py",
+            "input_script": "input_test_eval_fn_generator_template.py",
             "inputs": ["packing_fraction", "variable2"],
             "outputs": ["packing_fraction", "keff", "num_batches"],
-            "output_script": "input_test_eval_fn_generator_openmc_output.py",
+            "output_script": "input_test_eval_fn_generator_output.py",
         },
-        "moltres": {
+        "evaluator_2": {
             "order": 1,
             "input_script": "input_test_render_jinja_template_python.py",
             "inputs": ["variable2"],
             "outputs": ["max_temp"],
-            "output_script": "input_test_evaluation_get_output_vals_moltres.py",
+            "output_script":
+            "input_test_evaluation_get_output_vals_evaluator2.py",
         },
     },
     "constraints": {"keff": {"operator": ">", "constrained_val": 1}},
@@ -78,9 +79,8 @@ def test_setup():
 
 def test_individual_values():
     tg = ToolboxGenerator()
-    ctrl_dict = OrderedDict(
-        {"packing_fraction": ["openmc"], "variable2": ["openmc", "moltres"]}
-    )
+    ctrl_dict = OrderedDict({"packing_fraction": ["evaluator_1"],
+                             "variable2": ["evaluator_1", "evaluator_2"]})
     toolbox = base.Toolbox()
     creator.create("obj", base.Fitness, weights=(-1.0,))
     creator.create("Ind", list, fitness=creator.obj)
@@ -98,14 +98,15 @@ def test_individual_values():
 
 def test_min_max_list():
     tg = ToolboxGenerator()
-    ctrl_dict = OrderedDict(
-        {"packing_fraction": ["openmc"], "variable2": ["openmc", "moltres"]}
-    )
+    ctrl_dict = OrderedDict({"packing_fraction": ["evaluator_1"],
+                             "variable2": ["evaluator_1", "evaluator_2"]})
     min_list, max_list = tg.min_max_list(
         ctrl_dict, test_input_dict["control_variables"]
     )
     expected_min_list = [0.005, 1]
     expected_max_list = [0.1, 2]
+    assert min_list == expected_min_list
+    assert max_list == expected_max_list
 
 
 def test_add_selection_operators():

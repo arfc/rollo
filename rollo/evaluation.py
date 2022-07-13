@@ -81,8 +81,8 @@ class Evaluation:
             evaluators sub-dictionary from input file
         gens : int
             total generations in simulation (defined in input file)
-        parallel_method : str
-            parallelization method (none, multiprocessing, job_control)
+        parallel_method : {'none', 'multiprocessing', 'job_control'}
+            parallelization method
 
         Returns
         -------
@@ -104,7 +104,7 @@ class Evaluation:
 
                 Returns
                 -------
-                list
+                all_output_vals : list of tuple
                     each index of list contains a tuple of output values from
                     evaluators ordered by output_dict
 
@@ -279,12 +279,13 @@ class Evaluation:
                      str(round(end_time - start_time, 2)) + " seconds")
         # run execute script if exists
         if "execute" in input_evaluators_solver:
-            for i, executable in enumerate(input_evaluators_solver["execute"]):
+            for execute_index, executable in enumerate(
+                    input_evaluators_solver["execute"]):
                 single_command = ""
                 for exe in executable:
                     single_command += exe + " "
                 single_command += "> " + solver + \
-                    "_execute_" + str(i) + "_out.txt 2>&1"
+                    "_execute_" + str(execute_index) + "_out.txt 2>&1"
                 execute_input = self.generate_run_command_job_control(
                     pop=pop,
                     solver=solver,
@@ -294,8 +295,8 @@ class Evaluation:
                 end_time = time.time()
                 logging.info(" Solver: " +
                              solver +
-                             ", Execute " +
-                             str(i) +
+                             ", Execute Task " +
+                             str(execute_index) +
                              " Runtime: " +
                              str(round(end_time -
                                        start_time, 2)) +
@@ -645,7 +646,7 @@ class Evaluation:
         Parameters
         ----------
         output_vals : list
-            empty list of the correct size
+            list of Nones with length corresponding to number of output values
         solver : str
             name of solver
         path : str
@@ -718,8 +719,8 @@ class Evaluation:
         return control_vars
 
     def render_jinja_template(self, script, control_vars_solver, ind, solver):
-        """Renders a jinja2 templated input file. This will be used by solver's
-        with a text based interface such as Moltres
+        """Renders a jinja2 templated input file. This will be used by solvers
+        with text-based interfaces such as Moltres
 
         Parameters
         ----------
