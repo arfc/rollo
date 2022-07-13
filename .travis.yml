@@ -21,6 +21,7 @@ install:
 
 - sudo apt-get install python3-sphinx
 - python3 -m pip install nbsphinx
+- python3 -m pip install sphinx_rtd_theme
 
 script:
   # Use Sphinx to make the html docs
