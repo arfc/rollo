@@ -44,16 +44,35 @@ continue the simulation. Further description can be found in the
 
 ROLLO Execution
 ===============
-Users will define the **ROLLO** genetic algorithm's number of ``generations`` and 
+Users define the **ROLLO** genetic algorithm's number of ``generations`` and 
 ``population size`` (more description in :ref:`input file algorithm section 
 <algorithm>`).
 During each generation's run, **ROLLO** will create ``population size`` number of 
 sub-directories which contain all the evaluator's evaluation files. 
 The sub-directories are indexed by generation number and individual number; 
 for generation 3 and individual 5, the directory will be named: ``3_5``. 
-
 The individual refers to each reactor model. 
-In each individual's directory, 
+
+In each individual's directory, **ROLLO** will add the templated ``input_script`` 
+file, optional ``execute`` files, and ``output_script`` file. 
+**ROLLO** will then run the ``input_script``, ``execute`` files, and 
+``output_script`` file. 
+All their respective output files will be in the individual directory as well. 
+For each run, **ROLLO** will output a txt file with the terminal output from the run. 
+The txt file is named `evaluator name` _ `file type` _ `out.txt`. Thus, for evaluator 
+named OpenMC and the input script, the txt file will be named 
+``openmc_input_script_out.txt``.
+These terminal outputs assist with debugging and understanding what is happening 
+during a **ROLLO** simulation. 
+
+Users define if they want to keep these directories using the ``keep_files`` 
+parameter (:ref:`input file algorithm section <algorithm>`).
+Users have three options: ``none``, ``only_final``, and ``all``. 
+``none`` deletes each directory once the individual's run is complete, 
+``only_final`` deletes all directories except for the final generation, and 
+``all`` keeps all directories. 
+These options give users the option to save or not save evaluation files based on 
+the storage of their machine. 
 
 ROLLO Terminal Outputs 
 ======================
