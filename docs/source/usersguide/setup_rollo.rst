@@ -127,6 +127,8 @@ The `evaluators` section of the **ROLLO** input file looks like this:
       }
     } 
 
+Evaluators: Input File Templating 
+---------------------------------
 **ROLLO** utilizes `Jinja2 <https://jinja2docs.readthedocs.io/en/stable/>`_ 
 templating to insert control variables values into the ``input_script``. 
 Users must include each evaluator's input file template in the same directory as 
@@ -146,6 +148,8 @@ will be replaced with values selected by **ROLLO**'s genetic algorithm.
 | variable1 = {{variable1}}  | variable1 = -0.765        |     
 +----------------------------+---------------------------+
 
+Evaluators: Returning Output Parameters 
+---------------------------------------
 **ROLLO** uses two methods to return an output variable to the genetic algorithm. 
 First, **ROLLO** will automatically return the input parameter's value if the 
 output parameter is also an input parameter. 

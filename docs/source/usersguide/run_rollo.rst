@@ -27,7 +27,7 @@ To run a **ROLLO** simulation, enter these commands in a terminal:
      - name of input file
      - yes
    * - -c
-     - name of checkpoint file
+     - name of checkpoint restart file
      - no
    * - -v
      - turns on verbose output (only include the flag)
@@ -41,6 +41,18 @@ If a **ROLLO** simulation ends prematurely, the checkpoint
 file can be used to restart the code from the most recent generation and 
 continue the simulation. Further description can be found in the
 :ref:`checkpoint file section <checkpoint_rollo>`.
+
+ROLLO Execution
+===============
+Users will define the **ROLLO** genetic algorithm's number of ``generations`` and 
+``population size`` (more description in :ref:`input file algorithm section 
+<algorithm>`).
+During each generation's run, **ROLLO** will create ``population size`` number of 
+sub-directories which contain all the evaluator's evaluation files. 
+The sub-directories are indexed by generation number and individual number; 
+for generation 3 and individual 5, the directory will be named: ``3_5``. 
+
+In each individual's directory, 
 
 ROLLO Terminal Outputs 
 ======================

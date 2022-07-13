@@ -29,6 +29,7 @@ For more information on ROLLO, feel free to post a message on the
 
    install
    motivation
+   theory
    usersguide/index
    Examples  <https://github.com/arfc/rollo/wiki/Example-Jupyter-Notebooks/>
    devguide/index
