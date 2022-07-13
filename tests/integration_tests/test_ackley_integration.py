@@ -21,7 +21,7 @@ def test_ackley_integration():
 
     os.chdir("./input_test_files")
     subprocess.call(
-        "python ../../../rollo -i input_test_ackley.json",
+        "python -m rollo -i input_test_ackley.json",
         shell=True)
     os.chdir("../")
     with open("./input_test_files/checkpoint.pkl", "rb") as cp_file:

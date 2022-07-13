@@ -41,6 +41,7 @@ test_input_dict = {
         "pop_size": 100,
         "generations": 10,
         "parallel": "none",
+        "keep_files": "none",
         "mutation_probability": 0.5,
         "mating_probability": 0.5,
         "selection_operator": {"operator": "selBest", "inds": 1},
@@ -75,10 +76,8 @@ def test_organize_input_output():
 
 def test_load_evaluator():
     os.chdir("./input_test_files")
-    if os.path.exists("./evaluator_1_0_0"):
-        shutil.rmtree("./evaluator_1_0_0")
-    if os.path.exists("./evaluator_2_0_0"):
-        shutil.rmtree("./evaluator_2_0_0")
+    if os.path.exists("./0_0"):
+        shutil.rmtree("./0_0")
     e = Executor("input_file_placeholder")
     test_control_dict, test_output_dict = e.organize_input_output(
         test_input_dict)
@@ -101,8 +100,7 @@ def test_load_evaluator():
     ind.num = 0
     output_vals = eval_function(ind)
     expected_output_vals = tuple([0.03, 1000, 10])
-    shutil.rmtree("./evaluator_1_0_0")
-    shutil.rmtree("./evaluator_2_0_0")
+
     os.chdir("../")
     assert output_vals == expected_output_vals
 
