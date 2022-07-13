@@ -44,7 +44,7 @@ jobs:
     - name: Force push to destination branch
       uses: ad-m/github-push-action@v0.5.0
       with:
-        pre-build-command: "git config --global --add safe.directory /github/workspace"
+        entryPoint: "git config --global --add safe.directory /github/workspace"
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: gh-pages
         force: true
