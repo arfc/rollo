@@ -44,11 +44,31 @@ continue the simulation. Further description can be found in the
 
 ROLLO Terminal Outputs 
 ======================
-After each ROLLO generation runs, ROLLO will output the following table: 
+After each ROLLO generation runs, ROLLO will output the following table with details about 
+that generation's run. 
 
 .. code-block:: sh
-  
-       	   	     	                                              oup                                              	                    ind                     
-       	   	     	-----------------------------------------------------------------------------------------------	--------------------------------------------
-time   	gen	evals	avg                    	std                    	min                    	max                    	avg         	min         	max         
-103.414	0  	80   	[6.22778046 1.21148372]	[0.62556036 0.09608392]	[5.01839426 1.01527032]	[7.93088365 1.45986427]	[6.22778046]	[5.01839426]	[7.93088365]
+
+                                oup                             	   ind                                           
+                   -------------------------------  ----------------------------------------
+  time  gen evals  avg     std     min     max      avg           min            max                      
+  73.4  0   100    [19.8]  [3.01]  [4.47]  [22.1]   [1.81 -3.97]  [-32.6 -32.0]  [32.1 32.3]
+
+The table below describes each section of the above outputted table: 
+
+.. list-table::
+   :widths: 25 75
+   :header-rows: 1
+
+   * - Heading
+     - Description
+   * - time
+     - Total time taken to run generation in seconds 
+   * - gen
+     - Generation #    
+   * - evals
+     - Total number of individuals evaluated (<= population size defined in input file) 
+   * - oup 
+     - average, standard deviation, minimum value, maximum value of output parameters (objective and constraint values)
+   * - ind 
+     - average, minimum value, maximum value of input parameters (control variables)
