@@ -29,5 +29,5 @@ jobs:
         python3 -m pip install sphinx_book_theme
     - name: Build Website
       run: |
-        make html
+        make docs/html
 
