@@ -676,7 +676,7 @@ class Evaluation:
                     if isinstance(oup_script_results, dict):
                         break
                 except BaseException:
-                    print("ROLLO could not find output parameter dictionary.")
+                    print("ROLLO could not find the output parameter dictionary.")
                     pass
         for i, var in enumerate(output_dict):
             if output_dict[var] == solver:
