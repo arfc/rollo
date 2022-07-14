@@ -35,4 +35,4 @@ For more information on ROLLO, feel free to post a message on the
    devguide/index
    publications
    about_us
-   license
+   License <https://github.com/arfc/rollo/blob/main/LICENSE/>
