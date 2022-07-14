@@ -58,24 +58,46 @@ The following table describes the keys in the checkpoint file:
    * - ``population`` 
      - the final population (list of reactor model individuals)
    * - ``generation``
-     - total number of generations (int)
+     - number of generations (int)
    * - ``hall of fame``
      - deap.tools.HallOfFame object (`see deap documentation <https://deap.readthedocs.io/en/master/api/tools.html#deap.tools.HallOfFame>`_)
    * - ``logbook``
      - deap.tools.Logbook object (`see deap documentation <https://deap.readthedocs.io/en/master/api/tools.html#logbook>`_)
    * - ``rndstate`` 
-     -  random state (used when restarting simulation)
+     -  simulation's random state (used when restarting simulation)
    * - ``all`` [``ind_naming``]
-     - dict, key input parameter name, value: index, corresponds to each individual's input parameter order in ``all`` [``populations``] 
+     - dict, key: input parameter name, value: index, corresponds to each individual's input parameter index in ``all`` [``populations``] 
    * - ``all`` [``oup_naming``]
-     - dict, key output parameter name, value: index, corresponds to each individual's output parameter order in ``all`` [``outputs``] 
+     - dict, key: output parameter name, value: index, corresponds to each individual's output parameter index in ``all`` [``outputs``] 
    * - ``all`` [``populations``]
      - list of populations, each population list contains a list of reactor models individuals
    * - ``all`` [``outputs``]
-     - list of population outputs, each population list contains a list of reactor model individuals output parameters
+     - list of population outputs, each population list contains a list of reactor model individual's output parameters
 
-Each reactor model individual is of xx type and has the following information in it... 
+Each reactor model individual is an Ind class type with attributes and is a simple 
+list (`DEAP Individual class <https://deap.readthedocs.io/en/master/tutorials/basic/part1.html#individual>`_).
+The following code snippet demonstrates a reactor model individual's attributes. 
 
+.. image:: ../pics/ind-demonstrate.png
+  :width: 600
+  :alt: Notebook snippet
+
+Descriptions of the reactor model individual's attributes: 
+
+.. list-table::
+   :widths: 25 75
+   :header-rows: 1
+
+   * - Attribute 
+     - Description
+   * - ``fitness``
+     - fitness tuple holds the objective values. The sign refers to whether the objective is maximize or minimize. 
+   * - ``gen``
+     - generation 
+   * - ``num``
+     - reactor model index in generation
+   * - ``output`` 
+     - tuple of reactor model individual's output parameters
 
 Examples of how to analyze ROLLO results can be found in the `Example Notebooks
 <https://github.com/arfc/rollo/wiki/Example-Jupyter-Notebooks/>`_.
