@@ -8,7 +8,9 @@
 ROLLO Checkpoint File
 ======================
 
-The checkpoint file is a `serialized pickle file <https://docs.python.org/3/library/pickle.html>`_. 
+The checkpoint file is a `serialized pickle file 
+<https://docs.python.org/3/library/pickle.html>`_ and is based on the `DEAP 
+checkpointing system <https://deap.readthedocs.io/en/master/tutorials/advanced/checkpoint.html?highlight=rndstate#checkpointing>`_. 
 
 The checkpoint file holds the **ROLLO** simulation results and acts as a restart 
 file. Thus, if a **ROLLO** simulation ends prematurely, users can use the checkpoint 
@@ -62,11 +64,20 @@ The following table describes the keys in the checkpoint file:
    * - ``logbook``
      - deap.tools.Logbook object (`see deap documentation <https://deap.readthedocs.io/en/master/api/tools.html#logbook>`_)
    * - ``rndstate`` 
-     -  
-   * - ``all`` 
-     - 
+     -  random state (used when restarting simulation)
+   * - ``all`` [``ind_naming``]
+     - dict, key input parameter name, value: index, corresponds to each individual's input parameter order in ``all`` [``populations``] 
+   * - ``all`` [``oup_naming``]
+     - dict, key output parameter name, value: index, corresponds to each individual's output parameter order in ``all`` [``outputs``] 
+   * - ``all`` [``populations``]
+     - list of populations, each population list contains a list of reactor models individuals
+   * - ``all`` [``outputs``]
+     - list of population outputs, each population list contains a list of reactor model individuals output parameters
+
+Each reactor model individual is of xx type and has the following information in it... 
 
 
-
+Examples of how to analyze ROLLO results can be found in the `Example Notebooks
+<https://github.com/arfc/rollo/wiki/Example-Jupyter-Notebooks/>`_.
 
 
