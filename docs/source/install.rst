@@ -21,19 +21,21 @@ it.
   
   python -m pip install rollo
 
------------------------------------------------
-ROLLO Installation with from Source on Mac OS X
------------------------------------------------
-All ROLLO source code is hosted on `Github <https://github.com/arfc/rollo/>`_. 
-You must first install the dependencies below individually to successfully use 
-ROLLO that is built from source. 
+-----------------------------------
+ROLLO Installation with from Source 
+-----------------------------------
+All **ROLLO** source code is hosted on `Github <https://github.com/arfc/rollo/>`_. 
+You must first install the dependencies below to successfully use 
+**ROLLO** that is built from source. 
 
-To install ROLLO from source, enter these commands in a terminal: 
+To install the dependencies and **ROLLO** from source, enter these commands in a 
+terminal: 
 
 .. code-block:: sh
 
   git clone git@github.com:arfc/rollo.git
   cd rollo 
+  pip install -r requirements.txt
   python setup.py install --user
 
 ------------
@@ -52,4 +54,4 @@ These are the **ROLLO** dependencies.
 
 5) `Multiprocessing on Dill <https://pypi.org/project/multiprocessing_on_dill/>`_
 
-
+6) `Pytest <https://docs.pytest.org/en/7.1.x/>`_
