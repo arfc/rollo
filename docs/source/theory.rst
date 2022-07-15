@@ -55,6 +55,42 @@ all the while saving the results using the `BackEnd` class.
 This table outlines the classes in the **ROLLO** software and describes each 
 class' purpose. 
 
-.. image:: pics/rollo-classes.png
-  :width: 700
-  :alt: ROLLO Software Class Descriptions
+.. list-table::
+   :widths: 20 80
+   :header-rows: 1
+
+   * - Class
+     - Description
+   * - `InputValidation`
+     - The `InputValidation` class contains methods to read and validate the JSON 
+       **ROLLO** input file to ensure the user defined all key parameters. If they did 
+       not, **ROLLO** raises an exception to tell the user which parameters are missing.
+   * - `Evaluation`
+     - DEAP's fitness evaluator (as mentioned in Section 4.1.1) requires an evaluation 
+       function to evaluate each individual's fitness values. The `Evaluation` class 
+       contains a method that creates an evaluation function that runs the nuclear 
+       software and returns the required fitness values defined in the input file.
+   * - `ToolboxGenerator`
+     - The `ToolboxGenerator` class initializes DEAP's toolbox and creator modules 
+       with genetic algorithm hyperparameters defined in the input file.
+   * - `Constraints`
+     - The `Constraints` class contains methods to initialize constraints defined in 
+       the input file and applies the constraints by removing individuals that do not 
+       meet the constraint.
+   * - `BackEnd`
+     - The `BackEnd` class contains methods to save genetic algorithm population 
+       results into a pickled checkpoint file and to restart a partially completed 
+       genetic algorithm from the checkpoint file.
+   * - `Algorithm`
+     - The `Algorithm` class contains methods to initialize and execute the genetic 
+       algorithm. It executes a general genetic algorithm framework that uses the 
+       hyperparameters defined in the `ToolboxGenerator`, applies constraints defined 
+       in `Constraints`, evaluates fitness values using the evaluation function 
+       produced by `Evaluation`, and saves all the results with `BackEnd`.
+   * - `Executor`
+     - The Executor class drives the **ROLLO** code execution with the following steps:
+       1) User input file validation with InputValidation, 
+       2) Evaluation function generation with Evaluation, 
+       3) DEAP toolbox initialization with ToolboxGenerator,
+       4) Constraint initialization with Constraints, 
+       5) Genetic algorithm execution with Algorithm
