@@ -10,7 +10,7 @@ Reactor evOLutionary aLgorithm Optimizer
 techniques to optimize nuclear reactor design.  
 It essentially couples the `DEAP (Distributed Evolutionary Algorithms in Python) 
 <https://deap.readthedocs.io/en/master/>`_ evolutionary algorithm driver with 
-nuclear software.
+nuclear software, such as neutron transport and thermal-hydraulics codes.
 **ROLLO** is nuclear-software agnostic, and designed to easily couple to any software. 
 
 **ROLLO**'s source code is hosted on `Github 
