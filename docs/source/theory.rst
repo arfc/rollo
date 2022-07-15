@@ -37,12 +37,12 @@ When the user runs a **ROLLO** input file, the `Executor` class drives **ROLLO**
 execution from beginning to end. The Executor calls `InputValidation`` to parse 
 the input file to ensure that the user defined all mandatory parameters and used the 
 correct formatting. Next, it initializes an `Evaluation` object based on the 
-``evaluators`` specifications in the input file. It uses the `Evaluation`` object to 
+``evaluators`` specifications in the input file. It uses the `Evaluation` object to 
 create a function that will run each evaluator software with the desired input 
 parameters and return the output parameters calculated by the evaluator software. 
 Next, it uses the `ToolboxGenerator` to create an initialized DEAP toolbox object 
 based on the input file's ``algorithm`` specifications. The `ToolboxGenerator` 
-object accepts the `Evaluation` object and registers it as the toolbox's 'evaluate' 
+object accepts the `Evaluation` object and registers it as the toolbox's `evaluate`
 tool. Then, it initializes a `Constraints` object to contain constraints 
 specified in the input file. Next, the `Executor` initializes an `Algorithm` object 
 that accepts the initialized DEAP toolbox and `Constraints` object. Finally, the 

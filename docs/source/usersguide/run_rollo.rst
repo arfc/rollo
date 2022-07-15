@@ -58,9 +58,9 @@ file, optional ``execute`` files, and ``output_script`` file.
 **ROLLO** will then run the ``input_script``, ``execute`` files, and 
 ``output_script`` file. 
 All their respective output files will be in the individual directory as well. 
-For each run, **ROLLO** will output a txt file with the terminal output from the run. 
+For each run, **ROLLO** will output a .txt file with the terminal output from the run. 
 The txt file is named `evaluator name` _ `file type` _ `out.txt`. Thus, for evaluator 
-named OpenMC and the input script, the txt file will be named 
+named OpenMC and the input script, the .txt file will be named 
 ``openmc_input_script_out.txt``.
 These terminal outputs assist with debugging and understanding what is happening 
 during a **ROLLO** simulation. 
@@ -76,7 +76,7 @@ the storage of their machine.
 
 ROLLO Terminal Outputs 
 ======================
-After each ROLLO generation runs, ROLLO will output the following table with details about 
+After each **ROLLO** generation runs, **ROLLO** will output the following table with details about 
 that generation's run. 
 
 .. code-block:: sh
