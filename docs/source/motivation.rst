@@ -7,7 +7,6 @@
 ===================
 Motivation
 ===================
-Evolutionary algorithms have been applied to nuclear reactor design optimization. 
 Previously, reactor designers individually customized available evolutionary algorithm 
 packages for their reactor design optimization problems.
 However, the evolutionary algorithm setup is highly customizable with an assortment of 
