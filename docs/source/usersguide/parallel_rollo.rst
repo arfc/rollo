@@ -33,7 +33,7 @@ Job Control
 The job control mode utilizes the Unix system's job control features to give users 
 more flexibility with parallelization setup. This flexibility enables parallelization 
 across distributed memory systems such as clusters and supercomputers.
-This mode does not use the map() function. 
+This mode does not use the `map()` function. 
 **ROLLO** generates a combined bash command that launches multiple 
 evaluation function calls for the different reactor models by backgrounding each 
 command. For example, a **ROLLO** simulation with a population size of 2 generates a 
