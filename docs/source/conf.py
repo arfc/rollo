@@ -37,7 +37,8 @@ extensions = [
     "sphinx.ext.coverage",
     "sphinx.ext.napoleon",
     "sphinx.ext.mathjax",
-    "nbsphinx"
+    "nbsphinx",
+    "sphinx_toolbox.code"
 ]
 
 

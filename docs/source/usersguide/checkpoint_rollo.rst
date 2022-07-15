@@ -76,11 +76,31 @@ The following table describes the keys in the checkpoint file:
 
 Each reactor model individual is an Ind class type with attributes and is a simple 
 list (`DEAP Individual class <https://deap.readthedocs.io/en/master/tutorials/basic/part1.html#individual>`_).
-The following code snippet demonstrates a reactor model individual's attributes. 
+The following code snippet demonstrates a reactor model individual's attributes: 
 
-.. image:: ../pics/ind-demonstrate.png
-  :width: 600
-  :alt: Notebook snippet
+.. code-cell:: Python
+    :execution-count: 1
+
+    ind1 = cp["all"]["populations"][0][0]
+    print(ind1)
+
+.. output-cell::
+    :execution-count: 1
+
+    [7.930883654471881]
+
+.. code-cell:: Python
+    :execution-count: 2
+
+    print(ind1.__dict__)
+
+.. output-cell::
+    :execution-count: 2
+    
+    {'fitness': deap.creator.obj((-7.930883654471881,)),
+    'gen': 0, 
+    'num': 0, 
+    'output': (7.930883654471881, 1.4598642651422447)}
 
 Descriptions of the reactor model individual's attributes: 
 
