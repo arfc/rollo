@@ -34,7 +34,7 @@ This figure depicts the **ROLLO** software architecture.
 
 
 When the user runs a **ROLLO** input file, the `Executor` class drives **ROLLO**'s 
-execution from beginning to end. The Executor calls `InputValidation`` to parse 
+execution from beginning to end. The Executor calls `InputValidation` to parse 
 the input file to ensure that the user defined all mandatory parameters and used the 
 correct formatting. Next, it initializes an `Evaluation` object based on the 
 ``evaluators`` specifications in the input file. It uses the `Evaluation` object to 
