@@ -14,7 +14,7 @@ The installation guide outlines the steps to install **ROLLO** on your computer.
 ROLLO Installation with PyPI
 ----------------------------
 The Python Package Index (PyPI) is a repository of software for the Python 
-programming language. Pip installing ROLLO is the most straightforward way to install 
+programming language. Pip is the most straightforward way to install ROLLO.
 it. 
 
 .. code-block:: sh
