@@ -21,7 +21,7 @@ reactor model.
 
 Multiprocessing 
 ===============
-The multiprocessing mode replaces the default map function with the 
+The multiprocessing mode replaces the default `map()` function with the 
 `multiprocessing_on_dill <https://pypi.org/project/multiprocessing_on_dill/>`_ map.
 The multiprocessing_on_dill map chops the iterable into several chunks which it 
 submits to the process pool as separate tasks. This multiprocessing mode is useful 
