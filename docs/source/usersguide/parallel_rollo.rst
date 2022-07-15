@@ -15,7 +15,7 @@ Running ROLLO in Parallel
 
 Serial (none)
 =============
-The serial run mode runs each reactor model in each generation serially. 
+The serial run mode runs each reactor model in each generation in series. 
 The serial run mode utilizes a `map()` function to run the nuclear software for each 
 reactor model.
 
@@ -23,7 +23,7 @@ Multiprocessing
 ===============
 The multiprocessing mode replaces the default `map()` function with the 
 `multiprocessing_on_dill <https://pypi.org/project/multiprocessing_on_dill/>`_ map.
-The multiprocessing_on_dill map chops the iterable into several chunks which it 
+The `multiprocessing_on_dill` map chops the iterable into several chunks which it 
 submits to the process pool as separate tasks. This multiprocessing mode is useful 
 for parallelizing runs on a local machine or a single node on a computer cluster. 
 However, it is unable to parallelize across distributed memory systems.

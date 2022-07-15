@@ -21,8 +21,8 @@ Restarting Simulation
 The checkpoint file updates after each generation runs successfully. 
 If the **ROLLO** simulation fails half way through a generation, the user can
 restart the simulation from the previous generation. 
-Therefore, if you're running a ROLLO simulation with 10 generations and it fails 
-during generation 3, you can restart the ROLLO simulation from generation 2. 
+Therefore, if you're running a **ROLLO** simulation with 10 generations and it fails 
+during generation 3, you can restart the **ROLLO** simulation from generation 2. 
 
 This capability can also be used for running one generation at a time. For example, 
 you're running a large optimization simulation across many nodes on a 
@@ -91,13 +91,13 @@ Descriptions of the reactor model individual's attributes:
    * - Attribute 
      - Description
    * - ``fitness``
-     - fitness tuple holds the objective values. The sign refers to whether the objective is maximize or minimize. 
+     - fitness tuple holds the objective values. The sign refers to whether the objective is to maximize or minimize. 
    * - ``gen``
      - generation 
    * - ``num``
      - reactor model index in generation
    * - ``output`` 
-     - tuple of reactor model individual's output parameters
+     - tuple of reactor model individual output parameters
 
 Examples of how to analyze ROLLO results can be found in the `Example Notebooks
 <https://github.com/arfc/rollo/wiki/Example-Jupyter-Notebooks/>`_.
