@@ -5,7 +5,7 @@
   :alt: rollo-logo
 
 ===================
-Install Guide
+Installation Guide
 ===================
 
 The installation guide outlines the steps to install **ROLLO** on your computer. 
