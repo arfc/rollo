@@ -16,7 +16,7 @@ Running ROLLO in Parallel
 Serial (none)
 =============
 The serial run mode runs each reactor model in each generation serially. 
-The serial run mode utilizes a map() function to run the nuclear software for each 
+The serial run mode utilizes a `map()` function to run the nuclear software for each 
 reactor model.
 
 Multiprocessing 
