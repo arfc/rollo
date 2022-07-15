@@ -8,7 +8,7 @@
 Install Guide
 ===================
 
-The install guide outlines the steps to install **ROLLO** on your computer. 
+The installation guide outlines the steps to install **ROLLO** on your computer. 
 
 ----------------------------
 ROLLO Installation with PyPI
