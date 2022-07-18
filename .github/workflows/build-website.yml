@@ -24,6 +24,7 @@ jobs:
         python3 -m pip install sphinx_rtd_theme
         python3 -m pip install sphinx_book_theme
         python3 -m pip install sphinx-toolbox --user
+        python3 -m pip install sphinx-autoapi
 
     - name: make the sphinx docs
       run: |
