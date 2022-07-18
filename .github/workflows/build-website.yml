@@ -5,46 +5,32 @@ on:
     branches: [ docs ]
 
 jobs:
-  build-linux:
-    runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 1
-
+  deploy:
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
+      - uses: actions/checkout@v3
+        with:
+          submodules: true  # Fetch Hugo themes (true OR recursive)
+          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get install python3-sphinx
-        python3 -m pip install nbsphinx
-        python3 -m pip install sphinx_rtd_theme
-        python3 -m pip install sphinx_book_theme
-        python3 -m pip install sphinx-toolbox --user
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.85.0'
 
-    - name: make the sphinx docs
-      run: |
-        make -C docs clean 
-        # sphinx-apidoc -f -o docs/source . -H Test -e -t docs/source/_templates
-        make -C docs html
+      - name: Build
+        run: hugo --minify
 
-    - name: Init new repo in dist folder and commit generated files
-      run: |
-        cd docs/build/html/
-        git init
-        touch .nojekyll
-        git add -A
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git commit -m 'deploy'
-
-    - name: Force push to destination branch
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: gh-pages
-        force: true
-        directory: ./docs/build/html
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        # If you're changing the branch from main, 
+        # also change the `main` in `refs/heads/main` 
+        # below accordingly.
+        if: ${{ github.ref == 'refs/heads/docs' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
