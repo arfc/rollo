@@ -38,17 +38,25 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.mathjax",
     "nbsphinx",
-    "sphinx_toolbox.code"
+    "sphinx_toolbox.code",
+    "autoapi.extension"
 ]
-
-
-# Add any paths that contain templates here, relative to this directory.
-templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
+
+autoapi_keep_files = True
+autoapi_dirs = ['../../rollo']
+autoapi_type = "python"
+
+autoapi_options = [
+    "members",
+    "undoc-members"
+]
+
+autodoc_typehints = "signature"
 
 
 # -- Options for HTML output -------------------------------------------------

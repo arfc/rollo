@@ -33,6 +33,7 @@ For more information on ROLLO, feel free to post a message on the
    usersguide/index
    Examples  <https://github.com/arfc/rollo/wiki/Example-Jupyter-Notebooks/>
    devguide/index
+   autoapi/index
    publications
    about_us
    License <https://github.com/arfc/rollo/blob/main/LICENSE/>
