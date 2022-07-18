@@ -20,6 +20,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get install python3-sphinx
+        python3 -m pip install markupsafe
         python3 -m pip install nbsphinx
         python3 -m pip install sphinx_rtd_theme
         python3 -m pip install sphinx_book_theme
