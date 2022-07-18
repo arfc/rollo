@@ -7,9 +7,7 @@
 ===================
 Motivation
 ===================
-Previously, nuclear reactor designers individually customized available evolutionary algorithm 
-packages for their reactor design optimization problems.
-However, the evolutionary algorithm setup is highly customizable with an assortment of 
+The evolutionary algorithm setup is highly customizable with an assortment of 
 genetic algorithm designs and operators. 
 A reactor designer unfamiliar with evolutionary algorithms will have to go through the 
 cumbersome process of customizing a genetic algorithm for their needs and determine 
