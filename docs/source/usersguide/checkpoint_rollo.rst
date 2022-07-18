@@ -13,13 +13,12 @@ The checkpoint file is a `serialized pickle file
 checkpointing system <https://deap.readthedocs.io/en/master/tutorials/advanced/checkpoint.html?highlight=rndstate#checkpointing>`_. 
 
 The checkpoint file holds the **ROLLO** simulation results and acts as a restart 
-file. Thus, if a **ROLLO** simulation ends prematurely, users can use the checkpoint 
-file to restart the code from the most recent population and continue the simulation.
+file.
 
 Restarting Simulation
 =====================
 The checkpoint file updates after each generation runs successfully. 
-If the **ROLLO** simulation fails half way through a generation, the user can
+If the **ROLLO** simulation fails during a generation, the user can
 restart the simulation from the previous generation. 
 Therefore, if you're running a **ROLLO** simulation with 10 generations and it fails 
 during generation 3, you can restart the **ROLLO** simulation from generation 2. 
@@ -74,7 +73,7 @@ The following table describes the keys in the checkpoint file:
    * - ``all`` [``outputs``]
      - list of population outputs, each population list contains a list of reactor model individual's output parameters
 
-Each reactor model individual is an Ind class type with attributes and is a simple 
+Each reactor model individual is an :class:`Ind` class type with attributes and is a simple 
 list (`DEAP Individual class <https://deap.readthedocs.io/en/master/tutorials/basic/part1.html#individual>`_).
 The following code snippet demonstrates a reactor model individual's attributes: 
 

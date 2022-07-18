@@ -45,7 +45,7 @@ continue the simulation. Further description can be found in the
 ROLLO Execution
 ===============
 Users define the **ROLLO** genetic algorithm's number of ``generations`` and 
-``population size`` (more description in :ref:`input file algorithm section 
+``pop_size`` (more description in :ref:`input file algorithm section 
 <algorithm>`).
 During each generation's run, **ROLLO** will create ``population size`` number of 
 sub-directories which contain all the evaluator's evaluation files. 
