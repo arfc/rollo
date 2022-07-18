@@ -7,6 +7,8 @@
 ===================
 Motivation
 ===================
+The motivation for **ROLLO** is to provide a user-friendly tool that helps reactor 
+designers use evolutionary algorithms for reactor design optimization.
 Evolutionary algorithm setup is highly customizable with an assortment of 
 genetic algorithm designs and operators. 
 A reactor designer unfamiliar with evolutionary algorithms will have to go through the 
@@ -17,7 +19,6 @@ expensive, necessitating using supercomputers.
 Reactor designers have to set up parallelization to use the genetic algorithm 
 optimization with nuclear software.
 
-The motivation for **ROLLO** is to provide a user-friendly tool that helps reactor designers use evolutionary algorithms for reactor design optimization.
 **ROLLO** provides a general genetic algorithm framework, sets up parallelization for the 
 user, and promotes usability with an input file that only exposes mandatory parameters.
 **ROLLO** strives to be effective, flexible, open-source, parallel, reproducible, and usable:
