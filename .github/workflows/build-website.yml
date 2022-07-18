@@ -11,9 +11,9 @@ jobs:
       max-parallel: 1
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python 3.8
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: 3.8
 
@@ -27,18 +27,13 @@ jobs:
         python3 -m pip install sphinx-jinja2-compat==0.2.0b1
         python3 -m pip install sphinx-autoapi
 
-    - name: make the sphinx docs
+    - name: Make the sphinx docs
       run: |
-        make -C docs clean 
-        # sphinx-apidoc -f -o docs/source . -H Test -e -t docs/source/_templates
         make -C docs html
 
-    - name: Deploy
+    - name: Deploy docs to github pages
       uses: peaceiris/actions-gh-pages@v3
-      # If you're changing the branch from main, 
-      # also change the `main` in `refs/heads/main` 
-      # below accordingly.
-      if: ${{ github.ref == 'refs/heads/docs' }}
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./docs/build/html
+        commit_message: "update docs at commit: ${{ github.event.head_commit.message }}"

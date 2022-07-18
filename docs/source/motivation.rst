@@ -7,7 +7,7 @@
 ===================
 Motivation
 ===================
-The evolutionary algorithm setup is highly customizable with an assortment of 
+Evolutionary algorithm setup is highly customizable with an assortment of 
 genetic algorithm designs and operators. 
 A reactor designer unfamiliar with evolutionary algorithms will have to go through the 
 cumbersome process of customizing a genetic algorithm for their needs and determine 
