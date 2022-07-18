@@ -1,0 +1,6 @@
+deap
+numpy 
+jsonschema 
+jinja2 
+multiprocessing_on_dill 
+pytest

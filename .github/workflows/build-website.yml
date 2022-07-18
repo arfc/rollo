@@ -1,0 +1,39 @@
+name: build-website 
+
+on:
+  push:
+    branches: [ docs ]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get install python3-sphinx
+        python3 -m pip install nbsphinx
+        python3 -m pip install sphinx_rtd_theme
+        python3 -m pip install sphinx_book_theme
+        python3 -m pip install sphinx-toolbox --user
+        python3 -m pip install sphinx-jinja2-compat==0.2.0b1
+        python3 -m pip install sphinx-autoapi
+
+    - name: Make the sphinx docs
+      run: |
+        make -C docs html
+
+    - name: Deploy docs to github pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/build/html
+        commit_message: "update docs at commit: ${{ github.event.head_commit.message }}"
